@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="DameUsuarioIntranet">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="strUsuario" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strPassword" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DameUsuarioIntranetResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DameUsuarioIntranetResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DamePresupuestDevengadoAcumulado">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="strCuenta" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="shoMes" type="s:short" />
+            <s:element minOccurs="1" maxOccurs="1" name="shoAno" type="s:short" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DamePresupuestDevengadoAcumuladoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DamePresupuestDevengadoAcumuladoResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="DameUsuarioIntranetSoapIn">
+    <wsdl:part name="parameters" element="tns:DameUsuarioIntranet" />
+  </wsdl:message>
+  <wsdl:message name="DameUsuarioIntranetSoapOut">
+    <wsdl:part name="parameters" element="tns:DameUsuarioIntranetResponse" />
+  </wsdl:message>
+  <wsdl:message name="DamePresupuestDevengadoAcumuladoSoapIn">
+    <wsdl:part name="parameters" element="tns:DamePresupuestDevengadoAcumulado" />
+  </wsdl:message>
+  <wsdl:message name="DamePresupuestDevengadoAcumuladoSoapOut">
+    <wsdl:part name="parameters" element="tns:DamePresupuestDevengadoAcumuladoResponse" />
+  </wsdl:message>
+  <wsdl:portType name="WebServiceSoap">
+    <wsdl:operation name="DameUsuarioIntranet">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Devuelve ID Usuario Intranet</wsdl:documentation>
+      <wsdl:input message="tns:DameUsuarioIntranetSoapIn" />
+      <wsdl:output message="tns:DameUsuarioIntranetSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DamePresupuestDevengadoAcumulado">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Devuelve el Presupuesto Vigente, El Devengado del Mes y Devengado Acumulado</wsdl:documentation>
+      <wsdl:input message="tns:DamePresupuestDevengadoAcumuladoSoapIn" />
+      <wsdl:output message="tns:DamePresupuestDevengadoAcumuladoSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="WebServiceSoap" type="tns:WebServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="DameUsuarioIntranet">
+      <soap:operation soapAction="http://tempuri.org/DameUsuarioIntranet" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DamePresupuestDevengadoAcumulado">
+      <soap:operation soapAction="http://tempuri.org/DamePresupuestDevengadoAcumulado" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="WebServiceSoap12" type="tns:WebServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="DameUsuarioIntranet">
+      <soap12:operation soapAction="http://tempuri.org/DameUsuarioIntranet" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DamePresupuestDevengadoAcumulado">
+      <soap12:operation soapAction="http://tempuri.org/DamePresupuestDevengadoAcumulado" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="WebService">
+    <wsdl:port name="WebServiceSoap" binding="tns:WebServiceSoap">
+      <soap:address location="http://168.88.162.253/intranet/webservice_intranet/services.asmx" />
+    </wsdl:port>
+    <wsdl:port name="WebServiceSoap12" binding="tns:WebServiceSoap12">
+      <soap12:address location="http://168.88.162.253/intranet/webservice_intranet/services.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

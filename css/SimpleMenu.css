@@ -1,0 +1,116 @@
+﻿.SimpleEntertainmentMenu ul.AspNet-Menu /* Tier 1 */
+{
+    width: 13em; /* This is more than (013.35em x 2) because we want to leave room for borders around the <li> elements that are selected */
+    cursor:pointer;
+}
+
+.SimpleEntertainmentMenu ul.AspNet-Menu ul  /* Tier 2 */
+{
+    width: 013.35em;
+    top: 100%;
+    left: 0;
+     cursor:pointer;
+}
+
+.SimpleEntertainmentMenu ul.AspNet-Menu ul ul  /* Tier 3+ */
+{
+    top: -0.5em;
+    left: 013.35em;
+}
+
+.SimpleEntertainmentMenu li /* all list items */
+{
+    width:8.9em;
+    background:#E35710;   /*#E35710;#128479*/
+    font-size:small;
+    font-family:Tahoma;
+    font-color:black;
+    color: white;
+    cursor:pointer;
+}
+
+.SimpleEntertainmentMenu li:hover, /* list items being hovered over */
+.SimpleEntertainmentMenu li.AspNet-Menu-Hover
+{
+    background: #55BFB4;
+     cursor:pointer;
+}
+
+.SimpleEntertainmentMenu a, /* all anchors and spans (nodes with no link) */
+.SimpleEntertainmentMenu span
+{
+    color: white;
+    padding: 4px 2px 4px 8px;
+    border:0.1px solid #FFFFFF;
+    background: transparent url(arrowRight.gif) right center no-repeat;
+     cursor:pointer;
+}
+
+.SimpleEntertainmentMenu li.AspNet-Menu-Leaf a, /* leaves */
+.SimpleEntertainmentMenu li.AspNet-Menu-Leaf span
+{
+    background-image: none !important;
+     cursor:pointer;
+}
+
+.SimpleEntertainmentMenu li:hover a, /* hovered text */
+.SimpleEntertainmentMenu li:hover span,
+.SimpleEntertainmentMenu li.AspNet-Menu-Hover a,
+.SimpleEntertainmentMenu li.AspNet-Menu-Hover span,
+.SimpleEntertainmentMenu li:hover li:hover a,
+.SimpleEntertainmentMenu li:hover li:hover span,
+.SimpleEntertainmentMenu li.AspNet-Menu-Hover li.AspNet-Menu-Hover a,
+.SimpleEntertainmentMenu li.AspNet-Menu-Hover li.AspNet-Menu-Hover span,
+.SimpleEntertainmentMenu li:hover li:hover li:hover a,
+.SimpleEntertainmentMenu li:hover li:hover li:hover span,
+.SimpleEntertainmentMenu li.AspNet-Menu-Hover li.AspNet-Menu-Hover li.AspNet-Menu-Hover a,
+.SimpleEntertainmentMenu li.AspNet-Menu-Hover li.AspNet-Menu-Hover li.AspNet-Menu-Hover span
+{
+    color: White;
+    background: transparent url(activeArrowRight.gif) right center no-repeat;
+     cursor:pointer;
+}
+
+.SimpleEntertainmentMenu li:hover li a, /* the tier above this one is hovered */
+.SimpleEntertainmentMenu li:hover li span,
+.SimpleEntertainmentMenu li.AspNet-Menu-Hover li a,
+.SimpleEntertainmentMenu li.AspNet-Menu-Hover li span,
+.SimpleEntertainmentMenu li:hover li:hover li a,
+.SimpleEntertainmentMenu li:hover li:hover li span,
+.SimpleEntertainmentMenu li.AspNet-Menu-Hover li.AspNet-Menu-Hover li a,
+.SimpleEntertainmentMenu li.AspNet-Menu-Hover li.AspNet-Menu-Hover li span
+{
+    color: White;
+    background: transparent url(arrowRight.gif) right center no-repeat;
+     cursor:pointer;
+}
+
+.SimpleEntertainmentMenu .AspNet-Menu-Selected /* this tier is selected */
+{
+    border: solid 1px #00ff00 !important;
+     cursor:pointer;
+}
+
+.SimpleEntertainmentMenu .AspNet-Menu-ChildSelected /* a tier below this one is selected */
+{
+    border: solid 1px #ff0000 !important;
+     cursor:pointer;
+}
+
+.SimpleEntertainmentMenu .AspNet-Menu-ParentSelected /* a tier above this one is selected */
+{
+    border: solid 1px #0000ff !important;
+     cursor:pointer;
+}
+
+#EntertainmentMessage
+{
+    padding-top: 2em;
+    clear: both;
+}
+
+.Calendario .ajax__calendar_container {
+    border:1px solid #646464;
+    background-color: lemonchiffon;
+    color: red;
+}

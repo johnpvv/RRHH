@@ -1,0 +1,925 @@
+﻿/*
+ * layout.css
+ * Estilos centralizados del layout del sistema:
+ *   - Variables de tema (colores, tipografía)
+ *   - Topbar  (frmtopsiab.aspx)
+ *   - Sidemenu (frmleftsiab.aspx)
+ *   - Estilos base compartidos (body/html, filas de grilla)
+ *
+ * Para cambiar el color corporativo solo edite las variables en :root
+ */
+
+/* ==========================================================
+   VARIABLES DE TEMA
+   ========================================================== */
+:root {
+    /* Colores corporativos */
+    --color-primario:        #005EB8;
+    --color-primario-dark:   #004a94;
+    --color-primario-light:  #1a72cc;
+    --color-acento:          #00b4d8;
+    --color-texto-top:       #ffffff;
+    --color-borde-top:       rgba(255,255,255,0.15);
+
+    /* Fondo general de páginas internas */
+    --color-fondo-body:      #e2e7f3;
+
+    /* Filas de grilla */
+    --color-fila-normal:     #EFF3FB;
+    --color-fila-hover:      #D1DDF1;
+    --color-fila-alterna:    #ffffff;
+
+    /* Tipografía */
+    --fuente-base:           Tahoma, Arial, sans-serif;
+    --fuente-size-base:      small;
+
+    /* Topbar */
+    --topbar-height:         76px;
+    --topbar-logo-h:         52px;
+    --topbar-logo-w:         120px;
+    --topbar-transition:     0.2s ease;
+}
+
+/* ==========================================================
+   BASE: body / html
+   (anteriormente inline en srys.master y páginas internas)
+   ========================================================== */
+body, html {
+    font-family: var(--fuente-base);
+    font-size:   var(--fuente-size-base);
+}
+
+/* ==========================================================
+   FILAS DE GRILLA COMPARTIDAS
+   (anteriormente en srys.master y en bloques <style> de páginas)
+   ========================================================== */
+.Normal {
+    background-color: var(--color-fila-normal);
+    cursor: pointer;
+}
+.Normal:hover,
+.Alternate:hover {
+    background-color: var(--color-fila-hover);
+    cursor: pointer;
+}
+.Alternate {
+    background-color: var(--color-fila-alterna);
+    cursor: pointer;
+}
+
+/* ==========================================================
+   TOPBAR  (frmtopsiab.aspx)  –  Diseño moderno con flexbox
+   ========================================================== */
+
+/* El <body> del topbar no debe tener fondo propio */
+.topbar-body {
+    background-color: transparent !important;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+/* ── Barra principal ── */
+.topbar-bar {
+    display: flex;
+    align-items: center;
+    height: var(--topbar-height);
+    background: linear-gradient(135deg, var(--color-primario) 0%, var(--color-primario-light) 100%);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    padding: 0 12px;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 99;
+}
+
+/* ── Zona izquierda: toggle + logo ── */
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+/* Botón hamburguesa */
+.topbar-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 6px;
+    background-color: rgba(255,255,255,0.12);
+    color: var(--color-texto-top);
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color var(--topbar-transition), transform var(--topbar-transition);
+}
+.topbar-toggle:hover {
+    background-color: rgba(255,255,255,0.25);
+}
+/* Rotación suave cuando el menú está cerrado */
+.topbar-toggle:not(.is-open) .fas {
+    transform: rotate(90deg);
+    transition: transform var(--topbar-transition);
+}
+.topbar-toggle.is-open .fas {
+    transform: rotate(0deg);
+    transition: transform var(--topbar-transition);
+}
+
+/* Logo institucional */
+.topbar-logo-wrap {
+    display: flex;
+    align-items: center;
+}
+.topbar-logo-img {
+    height: var(--topbar-logo-h);
+    width: var(--topbar-logo-w);
+    object-fit: contain;
+    border-radius: 4px;
+    background-color: #fff;
+    padding: 2px 4px;
+}
+
+/* ── Zona central: título del sistema ── */
+.topbar-center {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-align: center;
+    overflow: hidden;
+}
+.topbar-title-icon {
+    color: rgba(255,255,255,0.75);
+    font-size: 20px;
+    flex-shrink: 0;
+}
+.topbar-title {
+    font-family: var(--fuente-base);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--color-texto-top);
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ── Zona derecha: usuario + sede + logout ── */
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+/* Chip de usuario */
+.topbar-user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: rgba(255,255,255,0.12);
+    border: 1px solid var(--color-borde-top);
+    border-radius: 8px;
+    padding: 5px 10px;
+}
+.topbar-user-icon {
+    color: var(--color-texto-top);
+    font-size: 26px;
+    opacity: 0.9;
+}
+.topbar-user-details {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+}
+.topbar-user-name {
+    font-family: var(--fuente-base);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-texto-top);
+}
+.topbar-user-sede {
+    font-family: var(--fuente-base);
+    font-size: 10px;
+    color: rgba(255,255,255,0.75);
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+.topbar-sede-text {
+    font-size: 10px;
+}
+
+/* Separador visual */
+.topbar-logout-wrap {
+    border-left: 1px solid var(--color-borde-top);
+    padding-left: 8px;
+}
+
+/* Botón cerrar sesión */
+.topbar-logout-btn,
+.topbar-logout-btn:link,
+.topbar-logout-btn:visited {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 7px 12px;
+    background-color: rgba(255,255,255,0.1);
+    border: 1px solid var(--color-borde-top);
+    border-radius: 6px;
+    color: var(--color-texto-top) !important;
+    font-family: var(--fuente-base);
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none !important;
+    cursor: pointer;
+    transition: background-color var(--topbar-transition), border-color var(--topbar-transition);
+    white-space: nowrap;
+}
+.topbar-logout-btn:hover {
+    background-color: rgba(220, 50, 50, 0.75);
+    border-color: rgba(220, 50, 50, 0.9);
+}
+.topbar-logout-btn .fas {
+    font-size: 14px;
+}
+.topbar-logout-txt {
+    display: inline;
+}
+
+/* compatibilidad con versiones anteriores (clases legacy) */
+.topbar-container,
+.topbar-info,
+.topbar-titulo,
+.topbar-lbl-usuario,
+.topbar-val-usuario,
+.topbar-lbl-sede,
+.topbar-val-sede,
+.topbar-menu-toggle,
+.topbar-logo,
+.topbar-logout,
+.topbar-logout-btn-img,
+.topbar-label { /* ya no se usan, se mantienen vacías por si alguna página las referencia */ }
+
+/* ==========================================================
+   SIDEMENU  (frmleftsiab.aspx)  –  Diseño moderno dark-nav
+   ========================================================== */
+
+/* Variables propias del sidebar */
+:root {
+    --nav-bg:          #1a2f4e;
+    --nav-bg-hover:    rgba(255,255,255,0.07);
+    --nav-bg-sub:      rgba(0,0,0,0.18);
+    --nav-accent:      var(--color-acento);       /* #00b4d8 */
+    --nav-text:        rgba(255,255,255,0.80);
+    --nav-text-muted:  rgba(255,255,255,0.45);
+    --nav-border:      rgba(255,255,255,0.08);
+    --nav-transition:  0.18s ease;
+}
+
+/* ── Body / raíz ── */
+.sidemenu-body {
+    margin: 0;
+    padding: 0;
+    background: var(--nav-bg);
+    overflow: hidden;
+}
+
+/* ── Contenedor <nav> ── */
+.sidemenu-nav {
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(180deg, var(--nav-bg) 0%, #142540 100%);
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    font-family: var(--fuente-base);
+}
+
+/* Scrollbar delgado */
+.sidemenu-nav::-webkit-scrollbar { width: 4px; }
+.sidemenu-nav::-webkit-scrollbar-track { background: transparent; }
+.sidemenu-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
+
+/* ── Lista raíz ── */
+.nav-root {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* ── Brand/cabecera del menú ── */
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 16px 12px;
+    color: var(--nav-text-muted);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--nav-border);
+}
+.nav-brand .fas { font-size: 13px; }
+
+/* ── Grupo colapsable (nivel 1) ── */
+.nav-group { list-style: none; }
+
+.nav-group-header {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    padding: 10px 14px 10px 16px;
+    background: none;
+    border: none;
+    border-left: 3px solid transparent;
+    color: var(--nav-text-muted);
+    font-family: var(--fuente-base);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-align: left;
+    transition: color var(--nav-transition), background var(--nav-transition);
+}
+.nav-group-header:hover {
+    color: var(--nav-text);
+    background: var(--nav-bg-hover);
+}
+.nav-group.is-open > .nav-group-header {
+    color: var(--nav-text);
+    border-left-color: var(--nav-accent);
+}
+
+/* Chevron del grupo */
+.nav-group > .nav-group-header > .nav-chevron {
+    margin-left: auto;
+    font-size: 9px;
+    transition: transform var(--nav-transition);
+}
+.nav-group.is-open > .nav-group-header > .nav-chevron {
+    transform: rotate(180deg);
+}
+
+/* ── Lista de items (nivel 1) ── */
+.nav-items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.28s ease;
+}
+.nav-group.is-open > .nav-items {
+    max-height: 1200px;
+}
+
+/* ── Enlace de item (nivel 1) ── */
+.nav-items > li > a {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 14px 8px 28px;
+    color: var(--nav-text);
+    font-size: 12px;
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    transition: color var(--nav-transition), background var(--nav-transition), border-color var(--nav-transition);
+}
+.nav-items > li > a:hover {
+    color: #ffffff;
+    background: var(--nav-bg-hover);
+    border-left-color: var(--nav-accent);
+}
+
+/* ── Ícono en items ── */
+.nav-icon {
+    width: 15px;
+    text-align: center;
+    flex-shrink: 0;
+    opacity: 0.65;
+    font-size: 12px;
+    transition: opacity var(--nav-transition);
+}
+.nav-items > li > a:hover .nav-icon,
+.nav-group-header:hover .nav-icon,
+.nav-subgroup-header:hover .nav-icon {
+    opacity: 1;
+}
+
+/* ── Sub-grupo (nivel 2 dentro de Reportes) ── */
+.nav-subgroup { list-style: none; }
+
+.nav-subgroup-header {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    padding: 7px 14px 7px 28px;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.60);
+    font-family: var(--fuente-base);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    transition: color var(--nav-transition), background var(--nav-transition);
+}
+.nav-subgroup-header:hover {
+    color: var(--nav-text);
+    background: var(--nav-bg-hover);
+}
+.nav-subgroup.is-open > .nav-subgroup-header {
+    color: var(--nav-text);
+}
+
+/* Chevron del sub-grupo */
+.nav-subgroup > .nav-subgroup-header > .nav-chevron {
+    margin-left: auto;
+    font-size: 9px;
+    transition: transform var(--nav-transition);
+}
+.nav-subgroup.is-open > .nav-subgroup-header > .nav-chevron {
+    transform: rotate(90deg);
+}
+
+/* ── Lista de sub-items (nivel 2) ── */
+.nav-subitems {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 0;
+    overflow: hidden;
+    background: var(--nav-bg-sub);
+    transition: max-height 0.22s ease;
+}
+.nav-subgroup.is-open > .nav-subitems {
+    max-height: 600px;
+}
+
+/* ── Enlace de sub-item (nivel 2) ── */
+.nav-subitems > li > a {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 7px 14px 7px 42px;
+    color: rgba(255,255,255,0.65);
+    font-size: 11px;
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    transition: color var(--nav-transition), background var(--nav-transition), border-color var(--nav-transition);
+}
+.nav-subitems > li > a:hover {
+    color: #ffffff;
+    background: rgba(255,255,255,0.06);
+    border-left-color: var(--nav-accent);
+}
+
+/* ==========================================================
+   MODAL BACKGROUND  (usado por UpdateProgress en varias páginas)
+   ========================================================== */
+.ModalBackground {
+    background-color: gray;
+    filter: alpha(opacity=50);
+    opacity: 0.50;
+}
+
+.modalbackground-dark {
+    background-color: Black;
+    filter: alpha(opacity=25);
+    opacity: 0.8;
+    z-index: 10000;
+}
+
+/* ==========================================================
+   PÁGINAS DE REPORTE  –  componentes reutilizables
+   Diseñados para todas las páginas de contenido/Reportes/
+   ========================================================== */
+
+/* ── Contenedor principal de la página ── */
+.report-container {
+    padding: 18px 20px;
+    background-color: var(--color-fondo-body);
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+/* ── Encabezado de sección ── */
+.report-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+.report-header-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--color-primario);
+    font-family: var(--fuente-base);
+    font-size: 15px;
+    font-weight: 700;
+}
+.report-header-title .fas { font-size: 16px; opacity: 0.85; }
+
+/* ── Card panel (contenedores blancos redondeados) ── */
+.card-panel {
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #dce0e9;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.06);
+    padding: 18px 20px;
+    margin-bottom: 14px;
+}
+
+/* ── Grid de filtros (layout 4 columnas: label-value-label-value) ── */
+.filter-grid {
+    display: grid;
+    grid-template-columns: 130px 1fr 140px 1fr;
+    gap: 8px 14px;
+    align-items: center;
+}
+
+/* ── Etiqueta de campo ── */
+.form-label {
+    font-family: var(--fuente-base);
+    font-size: 12px;
+    font-weight: 600;
+    color: #555566;
+    text-align: right;
+    white-space: nowrap;
+}
+
+/* ── Inputs y selects modernizados ── */
+.form-control {
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 5px 10px;
+    font-family: var(--fuente-base);
+    font-size: 12px;
+    line-height: 1.5;
+    width: 100%;
+    box-sizing: border-box;
+    background: #fff;
+    color: #333;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+.form-control:focus {
+    border-color: var(--color-acento);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0,180,216,0.20);
+}
+
+/* ── Fila de acciones del filtro (botón + exportaciones) ── */
+.filter-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid #edf0f5;
+    flex-wrap: wrap;
+}
+
+/* ── Botón principal ── */
+.btn-main {
+    background-color: var(--color-primario) !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 5px !important;
+    padding: 7px 20px !important;
+    font-family: var(--fuente-base);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s;
+    height: auto !important;
+    width: auto !important;
+    line-height: 1.5;
+}
+.btn-main:hover { background-color: var(--color-primario-dark) !important; }
+
+/* ── Botones de exportación ── */
+.btn-excel,
+.btn-excel:link,
+.btn-excel:visited {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 16px;
+    background-color: #1d6f42;
+    color: #ffffff !important;
+    border: none;
+    border-radius: 5px;
+    font-family: var(--fuente-base);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none !important;
+    cursor: pointer;
+    transition: background-color 0.15s;
+}
+.btn-excel:hover { background-color: #155235 !important; }
+
+.btn-pdf,
+.btn-pdf:link,
+.btn-pdf:visited {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 16px;
+    background-color: #c0392b;
+    color: #ffffff !important;
+    border: none;
+    border-radius: 5px;
+    font-family: var(--fuente-base);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none !important;
+    cursor: pointer;
+    transition: background-color 0.15s;
+}
+.btn-pdf:hover { background-color: #a93226 !important; }
+
+/* ── Título de sección dentro del filter-grid ── */
+.filter-section-title {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--fuente-base);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--color-primario);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 10px 0 4px;
+    border-bottom: 1px solid #edf0f5;
+    margin-top: 4px;
+}
+.filter-section-title:first-child { padding-top: 0; margin-top: 0; }
+.filter-section-title .fas { font-size: 11px; opacity: 0.75; }
+
+/* ── Wrapper de scroll para la grilla ── */
+.grid-scroll-wrapper {
+    overflow: auto;
+    max-height: calc(100vh - 320px);
+    min-height: 150px;
+    border-radius: 6px;
+    border: 1px solid #dce0e9;
+    /* Scrollbar delgado */
+}
+.grid-scroll-wrapper::-webkit-scrollbar       { width: 6px; height: 6px; }
+.grid-scroll-wrapper::-webkit-scrollbar-track { background: #f1f3f6; }
+.grid-scroll-wrapper::-webkit-scrollbar-thumb { background: #c0c8d8; border-radius: 3px; }
+
+/* Dentro del wrapper: header sticky */
+.grid-scroll-wrapper .grid-modern {
+    border-collapse: separate;
+    border-spacing: 0;
+    border: none;
+}
+.grid-scroll-wrapper .grid-modern th {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background-color: var(--color-primario) !important;
+    color: #ffffff !important;
+    /* Sombra inferior para separar el header del contenido */
+    box-shadow: 0 2px 3px rgba(0,0,0,0.12);
+}
+/* Links de ordenamiento en header sticky */
+.grid-scroll-wrapper .grid-modern th a,
+.grid-scroll-wrapper .grid-modern th a:link,
+.grid-scroll-wrapper .grid-modern th a:visited,
+.grid-scroll-wrapper .grid-modern th a:hover,
+.grid-scroll-wrapper .grid-modern th a:active {
+    color: #ffffff !important;
+    text-decoration: none !important;
+}
+
+/* ── Overlay de carga global (postbacks completos y async) ── */
+.loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 9999;
+    display: none;              /* oculto por defecto; JS lo activa */
+    align-items: center;
+    justify-content: center;
+}
+.loading-overlay.is-active {
+    display: flex;
+}
+.loading-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 30px 44px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.22);
+    font-family: var(--fuente-base);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-primario);
+    letter-spacing: 0.3px;
+}
+.loading-box .loading-icon {
+    font-size: 34px;
+    color: var(--color-primario);
+    animation: ldSpin 0.85s linear infinite;
+}
+@keyframes ldSpin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+/* ── Spinner de carga legacy (ModalPopupExtender) - mantenido por compatibilidad ── */
+.spinner-panel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: rgba(255,255,255,0.95);
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    font-family: var(--fuente-base);
+    font-size: 13px;
+    color: var(--color-primario);
+}
+
+/* ── Mensaje de estado del reporte ── */
+.report-msg {
+    display: inline-block;
+    font-family: var(--fuente-base);
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    min-height: 24px;
+}
+
+/* ── GridView moderno ── */
+.grid-modern {
+    border-collapse: collapse;
+    width: 100%;
+    font-family: var(--fuente-base);
+    font-size: 12px;
+}
+/* Cabecera */
+.grid-modern th {
+    background-color: var(--color-primario) !important;
+    color: #ffffff !important;
+    padding: 10px 12px;
+    font-weight: 600;
+    text-align: center;
+    border: none;
+    white-space: nowrap;
+}
+/* Links de ordenamiento dentro del header (AllowSorting="True") */
+.grid-modern th a,
+.grid-modern th a:link,
+.grid-modern th a:visited,
+.grid-modern th a:hover,
+.grid-modern th a:active {
+    color: #ffffff !important;
+    text-decoration: none !important;
+}
+/* Celdas */
+.grid-modern td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #eaedf3;
+    color: #444;
+    text-align: center;
+}
+/* Filas alternas */
+.grid-modern tr.Normal   td { background-color: var(--color-fila-normal); }
+.grid-modern tr.Alternate td { background-color: var(--color-fila-alterna); }
+.grid-modern tr.Normal:hover   td,
+.grid-modern tr.Alternate:hover td { background-color: var(--color-fila-hover) !important; cursor: pointer; }
+
+/* ── Paginador del GridView ── */
+.grid-modern tr.pager td { background-color: #f5f6fa; padding: 8px; text-align: center; }
+.grid-modern tr.pager a,
+.grid-modern tr.pager span {
+    display: inline-block;
+    padding: 3px 10px;
+    border: 1px solid #dce0e9;
+    border-radius: 4px;
+    margin: 0 2px;
+    font-size: 11px;
+    color: var(--color-primario);
+    text-decoration: none;
+}
+
+/* ==========================================================
+   BÚSQUEDA DE MAESTROS  (dropdown sobre inputs de nombre/descripción)
+   ========================================================== */
+
+.search-wrap {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    gap: 4px;
+    width: 100%;
+}
+.search-wrap .form-control {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Botón lupa */
+.search-btn {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    min-height: 29px;
+    background-color: var(--color-primario);
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.15s;
+    padding: 0;
+}
+.search-btn:hover:not(:disabled) { background-color: var(--color-primario-dark); }
+.search-btn:disabled              { background-color: #aab3c8; cursor: not-allowed; }
+
+/* Panel de resultados */
+.search-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 2px);
+    left: 0;
+    right: 0;
+    z-index: 1050;
+    background: #ffffff;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.14);
+    max-height: 230px;
+    overflow-y: auto;
+}
+.search-dropdown::-webkit-scrollbar       { width: 5px; }
+.search-dropdown::-webkit-scrollbar-thumb { background: #c0c8d8; border-radius: 3px; }
+
+/* Ítem de resultado */
+.search-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px 12px;
+    font-family: var(--fuente-base);
+    font-size: 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f2f7;
+    color: #333;
+    transition: background 0.1s;
+}
+.search-item:last-child { border-bottom: none; }
+.search-item:hover      { background-color: #e8f0fe; }
+.search-item strong     { font-weight: 600; color: #1a1a2e; }
+
+/* Etiqueta secundaria (RUT bajo el nombre) */
+.search-item-sub {
+    font-size: 10px;
+    color: #888;
+    font-weight: 400;
+}
+
+/* Código de artículo */
+.search-item-cod {
+    font-weight: 700;
+    font-size: 11px;
+    color: var(--color-primario);
+}
+.search-item-desc {
+    font-size: 11px;
+    color: #555;
+}
+
+/* Mensajes de estado dentro del dropdown */
+.search-msg-info,
+.search-msg-empty,
+.search-msg-error {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px;
+    font-family: var(--fuente-base);
+    font-size: 12px;
+    color: #888;
+}
+.search-msg-error { color: #c0392b; }

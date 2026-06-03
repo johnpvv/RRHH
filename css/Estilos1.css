@@ -1,0 +1,87 @@
+
+/* CSS Document */
+.boton2{ 
+border:solid 1px #DEDEDE; 
+border-radius:5px;
+text-align:center;
+padding:5px; 
+color:#141D30;
+    margin-left: 0px;
+}
+ 
+.boton2:hover{
+background:-moz-linear-gradient(#fff 0%,#DEDEDE 100%);
+color:#999; 
+}
+
+.Titulo {
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font:bold;
+	text-align: center;
+	background-color: #CCFFFF;
+	font-size: 14px;
+}
+
+.Titulo2 {
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font:bold;
+	text-align: center;
+	background-color: #CCFFFF;
+	font-size: 12px;
+}
+.TextoRigth {
+	text-align: right;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font:bold;
+}
+
+.TextoRigthGrilla {
+	text-align: right;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font:bold;
+}
+
+
+.TextoLeft {
+	text-align: left;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+    }
+
+.TextoLeftGrilla {
+	text-align: left;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	}
+
+.TextoCenter {
+	text-align: center;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font:bold;
+}
+
+.TextoCenterGrilla {
+	text-align: center;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font:bold;
+}
+
+
+.TextoForm {
+	text-align: left;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font:bold;
+}
+
+.TextoCheck {
+	text-align: left;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	align:left;
+    }
+

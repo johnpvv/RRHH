@@ -1,0 +1,87 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="srys.master.cs" Inherits="srys" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Sistema de Reclutamiento y Selección</title>
+<%--    <link runat="server" href="~/css/calendario.css" rel="stylesheet" type="text/css" id="SlideCSS" />
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/s3Slider.js"></script>
+    <script src='js/jquery.simplemodal-1.4.2.js' type='text/javascript'></script>
+    <script src='js/basic.js' type='text/javascript'></script>
+    <script src='js/common.js' type='text/javascript'></script>--%>
+
+<%--    <script  language="javascript" type="text/javascript">
+        function abrir(url, par) {
+            var myElemento;
+
+           
+            myElemento = document.getElementById(par);
+
+            if (myElemento.value == 2)
+                open(url, '', 'top=100,left=100,width=500,height=500');
+        }
+
+
+        function abrirVentana(url) {
+                open(url, '', 'top=100,left=100,width=1000,height=500');
+        }
+
+
+    </script> --%>
+
+    <link runat="server" href="~/css/SimpleMenu.css" rel="stylesheet" type="text/css" id="AdaptersInvariantImportCSS" />
+    <link runat="server" href="~/css/Estilos1.css" rel="stylesheet" type="text/css" id="Link1" />
+    
+
+<%--    <style type="text/css">
+        .style1
+        {
+            width: 22px;
+            height: 22px;
+            float: right;
+        }
+        body
+        {
+            text-align:center;
+            margin:auto;   
+        }
+    </style>--%>
+    
+    <style type="text/css">
+        body, html
+        {
+            font-family: Tahoma;
+            font-size: small;
+        }
+        .Normal
+        {
+            background-color: #EFF3FB;
+            cursor: hand;
+        }
+        .Normal:Hover, .Alternate:Hover
+        {
+            background-color: #D1DDF1;
+            cursor: hand;
+        }
+        .Alternate
+        {
+            background-color: White;
+            cursor: hand;
+        }
+    </style>
+
+
+    <asp:ContentPlaceHolder id="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body style="width: 1075px;">
+    <p/>
+    <form id="form1" runat="server">
+
+
+     </form>
+
+</body>
+</html>
