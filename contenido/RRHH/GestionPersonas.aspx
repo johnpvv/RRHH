@@ -16,8 +16,12 @@
         function ExisteRut() {
             __doPostBack('ExisteRutPostBack', '')
         }
-        function ExisteRutT() {
-            __doPostBack('ExisteRutTPostBack', '')
+        function ConfirmarGuardar() {
+            if (confirm('¿Desea guardar los Cambios?')) {
+                document.getElementById('divCargando').style.display = 'block';
+                return true;
+            }
+            return false;
         }
     </script>
     <style type="text/css">
@@ -68,10 +72,6 @@
             width: 353px;
         }
 
-        .auto-style10 {
-            width: 235px;
-        }
-
         .auto-style13 {
             height: 29px;
         }
@@ -81,11 +81,6 @@
             font-family: Verdana, Arial, Helvetica, sans-serif;
             font-size: 12px;
             width: 353px;
-            height: 29px;
-        }
-
-        .auto-style16 {
-            width: 5px;
             height: 29px;
         }
 
@@ -124,16 +119,16 @@
                                 <table border="0" style="width: 600px">
                                     <tr>
                                         <td class="auto-style57">
-                                            <asp:Button ID="btn_Agregar" Height="35px" Text="Grabar" Width="120px"
+                                            <asp:Button ID="btn_Agregar" Height="35px" Text="Grabar" Width="150px"
                                                 class="success" runat="server"
                                                 OnClick="btn_Agregar_Click"
-                                                OnClientClick="javascript:Confirm('Desea realizar la actualización de los Datos..')" />
+                                                OnClientClick="return ConfirmarGuardar();" />
                                         </td>
 
                                         <td class="auto-style58">
                                             <asp:Button ID="btn_habilitar"
-                                                Visible="False" runat="server" class="goldBlack"
-                                                Text="Habilitar" Width="120px" Height="35px"
+                                                runat="server" class="goldBlack"
+                                                Text="Habilitar" Width="150px" Height="35px"
                                                 OnClick="btn_habilitar_Click"
                                                 OnClientClick="javascript:Confirm('Desea realizar la actualización de los Datos..')" />
                                         </td>
@@ -145,43 +140,26 @@
                                         <td></td>
                                     </tr>
                                     <tr>
-                                        <td class="TextoRigth">Programar</td>
-                                        <td class="TextoLeft">
-                                            <asp:CheckBox ID="chkPro" runat="server" />
-                                        </td>
+                                        <td class="TextoRigth"></td>
+                                        <td class="TextoLeft"></td>
                                     </tr>
-
                                     <tr>
                                         <td class="TextoRigth">Estado:</td>
                                         <td class="TextoLeft">
-                                            <asp:Label ID="lbEstado" runat="server"></asp:Label>
+                                            <asp:Label ID="lbEstado" runat="server" Font-Bold="True"></asp:Label>
                                         </td>
                                     </tr>
 
                                     <tr>
-                                        <td class="TextoRigth">Rut:</td>
+                                        <td class="TextoRigth">RUT:</td>
                                         <td class="TextoLeft">
                                             <asp:TextBox ID="TxtRut" runat="server" MaxLength="9"
                                                 onblur="IsInteger(this);ExisteRut();"
-                                                Width="141px" Required="true"></asp:TextBox>
-
-                                            &nbsp;&nbsp;
-                            <asp:TextBox ID="TxtDv" runat="server" MaxLength="1" Width="23px" Required="true"></asp:TextBox>
+                                                Width="141px" Required="true" Font-Bold="True"></asp:TextBox>
+                                            &nbsp;&nbsp;-&nbsp;&nbsp;
+                                                <asp:TextBox ID="TxtDv" runat="server" MaxLength="1" Width="23px" Required="true" Font-Bold="True"></asp:TextBox>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td class="TextoRigth">Rut:</td>
-                                        <td class="TextoLeft">
-                                            <asp:TextBox ID="TxtRutT" runat="server" MaxLength="9"
-                                                onblur="IsInteger(this);ExisteRutT();"
-                                                Width="141px"></asp:TextBox>
-
-                                            &nbsp;&nbsp;
-                            <asp:TextBox ID="TxtDvT" runat="server" MaxLength="1" Width="23px"></asp:TextBox>
-                                            <asp:CheckBox ID="chkLimpiar" runat="server" />
-                                            Limpiar</td>
-                                    </tr>
-
                                     <tr>
                                         <td class="TextoRigth">Nombres:</td>
                                         <td class="TextoLeft">
@@ -226,10 +204,8 @@
 
                                             <asp:DropDownList ID="ddlPrevision" runat="server" Width="200px">
                                             </asp:DropDownList>
-
                                         </td>
                                     </tr>
-
                                     <tr>
                                         <td class="TextoRigth">Región:</td>
 
@@ -244,10 +220,8 @@
                                             </asp:DropDownList>
                                         </td>
                                     </tr>
-
                                     <tr>
                                         <td class="TextoRigth">Comuna:</td>
-
                                         <td class="TextoLeft">
                                             <ajaxToolkit:ListSearchExtender ID="ListSearchExtender3" runat="server"
                                                 TargetControlID="ddlComuna"
@@ -255,6 +229,12 @@
 
                                             <asp:DropDownList ID="ddlComuna" runat="server" Width="250px">
                                             </asp:DropDownList>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="TextoRigth">E-Mail:</td>
+                                        <td>
+                                            <asp:TextBox ID="TMail" runat="server" Height="21px" MaxLength="100" Width="400px"></asp:TextBox>
                                         </td>
                                     </tr>
                                 </table>
@@ -286,12 +266,8 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="TextoRigth">E-Mail:</td>
-                                        <td class="auto-style63" colspan="3">
-                                            <asp:TextBox ID="TMail" runat="server" Height="21px" MaxLength="100" Width="242px"></asp:TextBox>
-                                            @
-                                            <asp:TextBox ID="TMail0" runat="server" Height="21px" MaxLength="100" Width="193px"></asp:TextBox>
-                                        </td>
+                                        <td class="TextoRigth"></td>
+                                        <td class="auto-style63" colspan="3"></td>
                                     </tr>
                                     <tr>
                                         <td class="TextoRigth">Observaciones:</td>
@@ -304,6 +280,18 @@
                             </td>
                         </tr>
                     </table>
+                    <div id="divCargando" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.3); z-index: 9999;">
+
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 300px; height: 180px; background: white; border-radius: 10px; text-align: center; padding-top: 30px; box-shadow: 0 0 15px #666;">
+
+                            <img src="../../imagenes/ajax-loader.gif" style="width: 120px; height: 120px;" alt="Cargando..." />
+                            <br />
+                            <br />
+                            <span style="font-size: 16px; font-weight: bold;">Guardando información...
+                            </span>
+
+                        </div>
+                    </div>
                 </ContentTemplate>
             </ajaxToolkit:TabPanel>
 

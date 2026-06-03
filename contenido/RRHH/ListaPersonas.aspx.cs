@@ -10,14 +10,9 @@ public partial class contenido_RRHH_ListaPersonas : System.Web.UI.Page
 {
     ClassModSys objModSys = new ClassModSys();
     ClassPersona per = new ClassPersona();
-
     Mensaje mens = new Mensaje();
-
     private string id;
     private String stcadena = String.Empty;
-
-
-
     protected void Page_Load(object sender, EventArgs e)
     {
         String lsPer = "";
@@ -94,7 +89,7 @@ public partial class contenido_RRHH_ListaPersonas : System.Web.UI.Page
 
         if (this.bchkEli.Checked) per.ls_elim = "3"; else per.ls_elim = "1";
 
-        ds = per.mfBuscarPersona();
+        ds = per.mfBuscarPersonas();
 
         if (ds != null && ds.Tables.Count > 0)
         {

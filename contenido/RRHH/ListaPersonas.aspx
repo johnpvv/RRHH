@@ -153,15 +153,13 @@
             <tr>
                 <td>
                     <asp:Button ID="btn_Buscar" Height="35px" CssClass="labelBlue" runat="server" OnClick="btn_Buscar_Click" Text="Buscar" Width="120px" />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <asp:Button ID="btnNuevo" Height="35px" class="success" runat="server" OnClick="btnNuevo_Click" Text="Nuevo" Width="120px" />
-
                 </td>
             </tr>
             <tr>
                 <td class="auto-style3">
-
                     <table border="0" style="width: 932px">
-
                         <tr>
                             <td class="auto-style4">Nombre:</td>
                             <td class="auto-style5">
@@ -189,15 +187,15 @@
             AutoGenerateColumns="False" DataKeyNames="rut"
             GridLines="None" OnSelectedIndexChanged="dgData_SelectedIndexChanged"
             OnRowDataBound="dgData_RowDataBound"
-            Width="1127px" OnSorting="dgData_Sorting"
+            Width="100%" OnSorting="dgData_Sorting"
             AllowPaging="True"
             OnPageIndexChanging="dgData_PageIndexChanging"
-            Style="margin-right: 0px" AllowSorting="True"
+            Style="margin-right: 0px;" AllowSorting="True"
             class="table table-hover table-bordered">
             <Columns>
                 <asp:BoundField DataField="rut" HeaderText="Rut" SortExpression="rut">
                     <HeaderStyle CssClass="Titulo2" />
-                    <ItemStyle Width="70px" CssClass="TextoCenter" />
+                    <ItemStyle Width="70px" CssClass="TextoCenter" height="25px" />
                 </asp:BoundField>
                 <asp:BoundField DataField="nombre" HeaderText="Nombre" SortExpression="nombre">
                     <HeaderStyle CssClass="Titulo2" />
