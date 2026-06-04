@@ -45,7 +45,8 @@ public class modConstantes
 
     public const double gdIva = 1.19;
 
-    public const string gsTitAB = "Receta Electrónica HCSBA";
+    public const string gsTitAB = "Sistema RR.HH.";
+    public const string gsInst = "Unidad RR.HH.";
 
     public const string gsSystemAB = "1"; // Abastecimiento.
 

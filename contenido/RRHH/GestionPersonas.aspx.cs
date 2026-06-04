@@ -98,6 +98,7 @@ public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
                             if (aoDs.Tables[0].Rows[0]["IDESTADO"].ToString() == "1")
                             {
                                 this.lbEstado.Text = "VIGENTE";
+                                this.btn_habilitar.Text = "Deshabilitar";
                             }
                             else
                             {
@@ -359,11 +360,11 @@ public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
 
         if (Session["cadena"] == null)
         {
-            Response.Redirect("~/contenido/SysAdmin/ListaPacientes.aspx?id=0");
+            Response.Redirect("~/contenido/RRHH/ListaPersonas.aspx?id=0");
         }
         else
         {
-            Response.Redirect("~/contenido/SysAdmin/ListaPacientes.aspx?id=0" + Session["cadena"].ToString());
+            Response.Redirect("~/contenido/RRHH/ListaPersonas.aspx?id=0" + Session["cadena"].ToString());
         }
     }
 

@@ -103,15 +103,10 @@
         <div class="d-flex justify-content-center h-100">
             <div class="card">
                 <div class="card-header">                    
-                    <h3><asp:Image ID="caps" ImageUrl="~/imagenes/rh.png" runat="server" Width="30px" Height="24px" />Login RR.HH.</h3>
+                    <h3><asp:Image ID="caps" ImageUrl="~/imagenes/user_white.png" runat="server" Width="30px" Height="24px" />Login RR.HH.</h3>
                 </div>
                 <div class="card-body">
                     <form id="form1" runat="server">
-                        <div class="input-group form-group" style="box-sizing: border-box;">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-edit"></i></span>
-                            </div>
-                        </div>
                         <div class="input-group form-group" style="box-sizing: border-box;">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-user"></i></span>

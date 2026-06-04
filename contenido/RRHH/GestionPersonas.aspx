@@ -134,7 +134,11 @@
                                         </td>
                                     </tr>
                                 </table>
-                                <table border="0">
+                                <table style="width: 100%; margin-top: 10px;" border="0">
+                                    <tr>
+                                        <td colspan="2" style="font-weight: bold; background-color: #EAEAEA; padding: 5px;">Información Básica:
+                                        </td>
+                                    </tr>
                                     <tr>
                                         <td style="width: 200px;"></td>
                                         <td></td>
@@ -187,7 +191,38 @@
                                             <asp:TextBox ID="TxtMaterno" runat="server" Width="350px" MaxLength="80" Required="true"></asp:TextBox>
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <td class="TextoRigth">Fecha Nacimiento:</td>
+                                        <td>
+                                            <asp:TextBox ID="txtFechaNacimiento"
+                                                runat="server"
+                                                Width="120px"></asp:TextBox>
+                                        </td>
+                                    </tr>
 
+                                    <tr>
+                                        <td class="TextoRigth">Sexo:</td>
+                                        <td>
+                                            <asp:DropDownList ID="ddlSexo"
+                                                runat="server"
+                                                Width="150px">
+                                                <asp:ListItem Value="">Seleccione</asp:ListItem>
+                                                <asp:ListItem Value="M">Masculino</asp:ListItem>
+                                                <asp:ListItem Value="F">Femenino</asp:ListItem>
+                                                <asp:ListItem Value="O">Otro</asp:ListItem>
+                                            </asp:DropDownList>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="TextoRigth">Estado Civil:</td>
+                                        <td>
+                                            <asp:DropDownList ID="ddlEstadoCivil"
+                                                runat="server"
+                                                Width="200px">
+                                            </asp:DropDownList>
+                                        </td>
+                                    </tr>
                                     <tr>
                                         <td class="TextoRigth">Dirección:</td>
                                         <td class="TextoLeft">
@@ -239,7 +274,7 @@
                                     </tr>
                                 </table>
                                 <table>
-                                    <tr>
+                                    <%--<tr>
                                         <td style="width: 200px"></td>
                                         <td></td>
                                         <td style="width: 250px"></td>
@@ -275,7 +310,88 @@
                                             <asp:TextBox ID="observacion" runat="server" CssClass="TextoLeft" Height="80px" MaxLength="500" MaxLines="5" onkeypress="return HandleEnter(event)" TextMode="MultiLine" Width="500px"></asp:TextBox>
                                             <asp:HiddenField ID="hdIdentificador" runat="server" />
                                         </td>
-                                    </tr>
+                                    </tr>--%>
+                                    <table style="width: 100%; margin-top: 10px;" border="0">
+                                        <tr>
+                                            <td colspan="4" style="font-weight: bold; background-color: #EAEAEA; padding: 5px;">Contacto:
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4">&nbsp;
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="TextoRigth" style="width: 150px;">Fono 1 (+56):
+                                            </td>
+                                            <td style="width: 250px;">
+                                                <asp:TextBox ID="TFono1"
+                                                    runat="server"
+                                                    Width="180px"
+                                                    MaxLength="9"
+                                                    onblur="IsInteger(this)">
+                                                </asp:TextBox>
+                                            </td>
+
+                                            <td class="TextoRigth" style="width: 150px;">Observación 1:
+                                            </td>
+                                            <td>
+                                                <asp:TextBox ID="TObsFono1"
+                                                    runat="server"
+                                                    Width="250px"
+                                                    MaxLength="100">
+                                                </asp:TextBox>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td class="TextoRigth">Fono 2 (+56):
+                                            </td>
+                                            <td>
+                                                <asp:TextBox ID="TFono2"
+                                                    runat="server"
+                                                    Width="180px"
+                                                    MaxLength="9"
+                                                    onblur="IsInteger(this)">
+                                                </asp:TextBox>
+                                            </td>
+
+                                            <td class="TextoRigth">Observación 2:
+                                            </td>
+                                            <td>
+                                                <asp:TextBox ID="TObsFono2"
+                                                    runat="server"
+                                                    Width="250px"
+                                                    MaxLength="100">
+                                                </asp:TextBox>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table style="width: 100%; margin-top: 15px;" border="0">
+                                        <tr>
+                                            <td colspan="2" style="font-weight: bold; background-color: #EAEAEA; padding: 5px;">Observaciones:
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">&nbsp;
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="TextoRigth"
+                                                style="width: 150px; vertical-align: middle;">Observaciones:
+                                            </td>
+                                            <td>
+                                                <asp:TextBox ID="observacion"
+                                                    runat="server"
+                                                    Width="600px"
+                                                    Height="80px"
+                                                    TextMode="MultiLine"
+                                                    MaxLength="500"
+                                                    CssClass="TextoLeft">
+                                                </asp:TextBox>
+                                                <asp:HiddenField ID="hdIdentificador" runat="server" />
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </table>
                             </td>
                         </tr>

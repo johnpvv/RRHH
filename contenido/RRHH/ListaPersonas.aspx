@@ -15,8 +15,12 @@
         function KeyEnter(e) {
             if (e.keyCode == 13) {
                 __doPostBack('KeyEnterPostBack', '')
+                Buscar();
             }
 
+        }
+        function Buscar() {
+            document.getElementById('divCargando').style.display = 'block';
         }
     </script>
     <link runat="server" href="~/css/Estilos1.css" rel="stylesheet" type="text/css" id="Link1" />
@@ -152,7 +156,7 @@
         <table width="90%" border="0" class="table table-hover table-bordered">
             <tr>
                 <td>
-                    <asp:Button ID="btn_Buscar" Height="35px" CssClass="labelBlue" runat="server" OnClick="btn_Buscar_Click" Text="Buscar" Width="120px" />
+                    <asp:Button ID="btn_Buscar" Height="35px" CssClass="labelBlue" runat="server" OnClick="btn_Buscar_Click" OnClientClick="Buscar();" Text="Buscar" Width="120px" />
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <asp:Button ID="btnNuevo" Height="35px" class="success" runat="server" OnClick="btnNuevo_Click" Text="Nuevo" Width="120px" />
                 </td>
@@ -195,7 +199,7 @@
             <Columns>
                 <asp:BoundField DataField="rut" HeaderText="Rut" SortExpression="rut">
                     <HeaderStyle CssClass="Titulo2" />
-                    <ItemStyle Width="70px" CssClass="TextoCenter" height="25px" />
+                    <ItemStyle Width="70px" CssClass="TextoCenter" Height="25px" />
                 </asp:BoundField>
                 <asp:BoundField DataField="nombre" HeaderText="Nombre" SortExpression="nombre">
                     <HeaderStyle CssClass="Titulo2" />
@@ -218,6 +222,19 @@
         </asp:GridView>
         <br />
         <br />
+        <div id="divCargando" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.3); z-index: 9999;">
+
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 300px; height: 180px; background: white; border-radius: 10px; text-align: center; padding-top: 30px; box-shadow: 0 0 15px #666;">
+
+                <img src="../../imagenes/ajax-loader.gif" style="width: 120px; height: 120px;" alt="Cargando..." />
+                <br />
+                <br />
+                <span style="font-size: 16px; font-weight: bold;">Buscando...
+
+                </span>
+
+            </div>
+        </div>
     </form>
 </body>
 </html>

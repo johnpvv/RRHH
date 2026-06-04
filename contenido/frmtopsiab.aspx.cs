@@ -11,9 +11,9 @@ public partial class contenido_frmtopsiab : System.Web.UI.Page
     {
         if (Session["nombre"] != null)
         {
-            this.lblUsr.Text = Session["nombre"].ToString(); // "Walter Pizarro Rojas";
+            this.lblUsr.Text = Session["nombre"].ToString();
             this.lblTit.Text = modConstantes.gsTitAB;
-            this.lblSed.Text = "Hospital Clinico San Borja Arriaran";
+            this.lblSed.Text = modConstantes.gsInst;
         }
         else
         {

@@ -4,7 +4,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
-    <title>Sistema Farmacia</title>
+    <title>Sistema RRHH</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link href="../css/css.css" rel="stylesheet" type="text/css" />
     <link href="../css/layout.css" rel="stylesheet" type="text/css" />
@@ -57,7 +57,7 @@
                     <i class="fas fa-bars"></i>
                 </button>
                 <div class="topbar-logo-wrap">
-                    <img src="../imagenes/logo-HCSBA.jpg" alt="Logo HCSBA" class="topbar-logo-img" />
+                    <img src="../imagenes/user_white.png" alt="Logo" class="topbar-logo-img" />
                 </div>
             </div>
 
