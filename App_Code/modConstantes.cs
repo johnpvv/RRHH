@@ -14,12 +14,12 @@ public class modConstantes
     private const string alserver = "";
 
     public const string gsDatabasePer = alserver + "DB_BOD_PERIFERICA";
-    public const string gsDatabaseRH = alserver + "DB_RRHH";
+    public const string gsDatabaseRH = alserver + "rrhhloes_";
 
 
     public const string gsDbPer = gsDatabasePer + ".dbo.";
     public const string gsDbRH = gsDatabaseRH + ".dbo.";
-    public const string gsDatabaseAB = "DB_HCSBA";
+    public const string gsDatabaseAB = "rrhhloes_";
     public const string gsDbAB = gsDatabaseAB + ".dbo.";
 
 

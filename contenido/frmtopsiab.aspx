@@ -63,7 +63,7 @@
 
             <%-- ── CENTRO: título del sistema ── --%>
             <div class="topbar-center">
-                <i class="fas fa-pills topbar-title-icon"></i>
+                <i class="fa-solid fa-users fa-lg"></i>
                 <asp:Label ID="lblTit" runat="server" CssClass="topbar-title"></asp:Label>
             </div>
 

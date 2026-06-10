@@ -194,9 +194,24 @@
                                     <tr>
                                         <td class="TextoRigth">Fecha Nacimiento:</td>
                                         <td>
-                                            <asp:TextBox ID="txtFechaNacimiento"
-                                                runat="server"
-                                                Width="120px"></asp:TextBox>
+                                            <asp:TextBox ID="txtFechaNacimiento" runat="server" Width="120px"></asp:TextBox>
+                                            <ajaxToolkit:CalendarExtender ID="CE2" TargetControlID="txtFechaNacimiento"
+                                                runat="server">
+                                            </ajaxToolkit:CalendarExtender>
+                                            <ajaxToolkit:MaskedEditExtender ID="MEE"
+                                                TargetControlID="txtFechaNacimiento"
+                                                Mask="99/99/9999" runat="server"
+                                                MessageValidatorTip="true"
+                                                OnFocusCssClass="MaskedEditFocus"
+                                                OnInvalidCssClass="MaskedEditError"
+                                                MaskType="Date">
+                                            </ajaxToolkit:MaskedEditExtender>
+                                            <br />
+                                            <ajaxToolkit:MaskedEditValidator ID="MEV" ControlToValidate="txtFechaNacimiento"
+                                                ControlExtender="MEE"
+                                                InvalidValueMessage="Ingresar Fecha válida" ForeColor="Red"
+                                                runat="server" ErrorMessage="MEV">
+                                            </ajaxToolkit:MaskedEditValidator>
                                         </td>
                                     </tr>
 

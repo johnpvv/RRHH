@@ -102,6 +102,7 @@ public class ClassPersona
             "P.AP_PATERNO, " +
             "ISNULL(P.AP_MATERNO,'') AP_MATERNO, " +
             "P.DIRECCION, " +
+            "P.FECHA_NACIMIENTO, " +
             "P.IDREGION, " +
             "P.IDCOMUNA, " +
             "P.IDPREVISION, " +
@@ -113,8 +114,8 @@ public class ClassPersona
             "P.IDESTADO, " +
             "P.F_H_CREA, " +
             "P.OBSERVACION " +
-            "FROM " + modConstantes.gsDbRH + "M_PERSONAS P" +
-            " WHERE	(P.RUT = " + ls_rut + " ) ";
+            "FROM " + modConstantes.gsDbRH + "M_PERSONAS P " +
+            "WHERE	(P.RUT = " + ls_rut + " ) ";
 
         con = bd.fnGetConnRH();
         aoCod = bd.Fill(con, lsSql);

@@ -83,7 +83,7 @@ public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
                             this.TxtPaterno.Text = aoDs.Tables[0].Rows[0]["AP_PATERNO"].ToString();
                             this.TxtMaterno.Text = aoDs.Tables[0].Rows[0]["AP_MATERNO"].ToString();
                             this.TxtDire.Text = aoDs.Tables[0].Rows[0]["DIRECCION"].ToString();
-
+                            this.txtFechaNacimiento.Text = aoDs.Tables[0].Rows[0]["FECHA_NACIMIENTO"].ToString();
                             this.TFono1.Text = aoDs.Tables[0].Rows[0]["FONO1"].ToString();
                             this.TFono2.Text = aoDs.Tables[0].Rows[0]["FONO2"].ToString();
                             this.TObsFono1.Text = aoDs.Tables[0].Rows[0]["OBS_FONO1"].ToString();
