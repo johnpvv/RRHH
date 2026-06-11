@@ -58,7 +58,7 @@ public class ClassPersona
         //falta agregar estado
         lsSql =
             "SELECT " +
-            "   P.IDPERSONA, " +
+            "   P.IDUSUARIO, " +
             "   P.RUT, " +
             "   P.DV, " +
             "   P.NOMBRE, " +
@@ -74,7 +74,7 @@ public class ClassPersona
             "   P.EMAIL, " +
             "   P.IDESTADO, " +
             "   P.F_H_CREA " +
-            "FROM " + modConstantes.gsDbRH + "M_PERSONAS P " +
+            "FROM " + modConstantes.gsDbRH + "M_USUARIOS_P P " +
             "WHERE P.RUT > 0 " +
             lsWhe + " " +
             "ORDER BY P.AP_PATERNO, P.AP_MATERNO, P.NOMBRE";
@@ -94,7 +94,7 @@ public class ClassPersona
         //' Recupera registros.
         lsSql =
             "SELECT " +
-            "P.IDPERSONA, " +
+            "P.IDUSUARIO, " +
             "P.RUT, " +
             "P.DV, " +
             "P.NOMBRE, " +
@@ -114,7 +114,7 @@ public class ClassPersona
             "P.IDESTADO, " +
             "P.F_H_CREA, " +
             "P.OBSERVACION " +
-            "FROM " + modConstantes.gsDbRH + "M_PERSONAS P " +
+            "FROM " + modConstantes.gsDbRH + "M_USUARIOS_P P " +
             "WHERE	(P.RUT = " + ls_rut + " ) ";
 
         con = bd.fnGetConnRH();
@@ -131,7 +131,7 @@ public class ClassPersona
         {
             string lsSql;
             lsSql = "SELECT P.RUT, " +
-                    "FROM " + modConstantes.gsDbRH + "M_PERSONAS P" +
+                    "FROM " + modConstantes.gsDbRH + "M_USUARIOS_P P" +
                     "WHERE	(P.RUT = '" + ls_rut + "' ) ";
             lsRet = bd.ExecuteScalar(con, lsSql);
             if (lsRet == "") lsRet = "0";

@@ -196,22 +196,17 @@
                                         <td>
                                             <asp:TextBox ID="txtFechaNacimiento" runat="server" Width="120px"></asp:TextBox>
                                             <ajaxToolkit:CalendarExtender ID="CE2" TargetControlID="txtFechaNacimiento"
-                                                runat="server">
+                                                runat="server" BehaviorID="_content_CE2">
                                             </ajaxToolkit:CalendarExtender>
                                             <ajaxToolkit:MaskedEditExtender ID="MEE"
                                                 TargetControlID="txtFechaNacimiento"
                                                 Mask="99/99/9999" runat="server"
-                                                MessageValidatorTip="true"
-                                                OnFocusCssClass="MaskedEditFocus"
-                                                OnInvalidCssClass="MaskedEditError"
-                                                MaskType="Date">
-                                            </ajaxToolkit:MaskedEditExtender>
-                                            <br />
+                                                MaskType="Date" BehaviorID="_content_MEE" Century="2000" CultureAMPMPlaceholder="" CultureCurrencySymbolPlaceholder="" CultureDateFormat="" CultureDatePlaceholder="" CultureDecimalPlaceholder="" CultureThousandsPlaceholder="" CultureTimePlaceholder="">
+                                            </ajaxToolkit:MaskedEditExtender>                                            
                                             <ajaxToolkit:MaskedEditValidator ID="MEV" ControlToValidate="txtFechaNacimiento"
                                                 ControlExtender="MEE"
                                                 InvalidValueMessage="Ingresar Fecha válida" ForeColor="Red"
-                                                runat="server" ErrorMessage="MEV">
-                                            </ajaxToolkit:MaskedEditValidator>
+                                                runat="server" ErrorMessage="MEV"></ajaxToolkit:MaskedEditValidator>
                                         </td>
                                     </tr>
 
@@ -221,7 +216,7 @@
                                             <asp:DropDownList ID="ddlSexo"
                                                 runat="server"
                                                 Width="150px">
-                                                <asp:ListItem Value="">Seleccione</asp:ListItem>
+                                                <asp:ListItem>Seleccione</asp:ListItem>
                                                 <asp:ListItem Value="M">Masculino</asp:ListItem>
                                                 <asp:ListItem Value="F">Femenino</asp:ListItem>
                                                 <asp:ListItem Value="O">Otro</asp:ListItem>
@@ -289,43 +284,6 @@
                                     </tr>
                                 </table>
                                 <table>
-                                    <%--<tr>
-                                        <td style="width: 200px"></td>
-                                        <td></td>
-                                        <td style="width: 250px"></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="TextoRigth">Fono 1 (+56):</td>
-                                        <td class="auto-style63">
-                                            <asp:TextBox ID="TFono1" runat="server" Height="21px" MaxLength="9" Width="181px" onblur="IsInteger(this)"></asp:TextBox>
-                                        </td>
-                                        <td class="TextoRigth">Obs Fono 1:</td>
-                                        <td class="auto-style4">
-                                            <asp:TextBox ID="TObsFono1" runat="server" Height="21px" MaxLength="99" Width="242px"></asp:TextBox>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="TextoRigth">Fono 2 (+56):</td>
-                                        <td class="auto-style13">
-                                            <asp:TextBox ID="TFono2" runat="server" Height="21px" MaxLength="9" Width="180px" onblur="IsInteger(this)"></asp:TextBox>
-                                        </td>
-                                        <td class="TextoRigth">Obs Fono 2:</td>
-                                        <td class="auto-style15">
-                                            <asp:TextBox ID="TObsFono2" runat="server" Height="21px" MaxLength="99" Width="242px"></asp:TextBox>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="TextoRigth"></td>
-                                        <td class="auto-style63" colspan="3"></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="TextoRigth">Observaciones:</td>
-                                        <td class="TextoLeft" colspan="3">
-                                            <asp:TextBox ID="observacion" runat="server" CssClass="TextoLeft" Height="80px" MaxLength="500" MaxLines="5" onkeypress="return HandleEnter(event)" TextMode="MultiLine" Width="500px"></asp:TextBox>
-                                            <asp:HiddenField ID="hdIdentificador" runat="server" />
-                                        </td>
-                                    </tr>--%>
                                     <table style="width: 100%; margin-top: 10px;" border="0">
                                         <tr>
                                             <td colspan="4" style="font-weight: bold; background-color: #EAEAEA; padding: 5px;">Contacto:
@@ -343,8 +301,7 @@
                                                     runat="server"
                                                     Width="180px"
                                                     MaxLength="9"
-                                                    onblur="IsInteger(this)">
-                                                </asp:TextBox>
+                                                    onblur="IsInteger(this)"></asp:TextBox>
                                             </td>
 
                                             <td class="TextoRigth" style="width: 150px;">Observación 1:
@@ -353,8 +310,7 @@
                                                 <asp:TextBox ID="TObsFono1"
                                                     runat="server"
                                                     Width="250px"
-                                                    MaxLength="100">
-                                                </asp:TextBox>
+                                                    MaxLength="100"></asp:TextBox>
                                             </td>
                                         </tr>
 
@@ -366,8 +322,7 @@
                                                     runat="server"
                                                     Width="180px"
                                                     MaxLength="9"
-                                                    onblur="IsInteger(this)">
-                                                </asp:TextBox>
+                                                    onblur="IsInteger(this)"></asp:TextBox>
                                             </td>
 
                                             <td class="TextoRigth">Observación 2:
@@ -376,8 +331,7 @@
                                                 <asp:TextBox ID="TObsFono2"
                                                     runat="server"
                                                     Width="250px"
-                                                    MaxLength="100">
-                                                </asp:TextBox>
+                                                    MaxLength="100"></asp:TextBox>
                                             </td>
                                         </tr>
                                     </table>
@@ -401,8 +355,7 @@
                                                     Height="80px"
                                                     TextMode="MultiLine"
                                                     MaxLength="500"
-                                                    CssClass="TextoLeft">
-                                                </asp:TextBox>
+                                                    CssClass="TextoLeft"></asp:TextBox>
                                                 <asp:HiddenField ID="hdIdentificador" runat="server" />
                                             </td>
                                         </tr>
