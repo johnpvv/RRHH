@@ -9,7 +9,7 @@ using System.Data;
 public partial class contenido_RRHH_ListaPersonas : System.Web.UI.Page
 {
     ClassModSys objModSys = new ClassModSys();
-    ClassPersona per = new ClassPersona();
+    ClassUsuarios per = new ClassUsuarios();
     Mensaje mens = new Mensaje();
     private string id;
     private String stcadena = String.Empty;
@@ -176,7 +176,7 @@ public partial class contenido_RRHH_ListaPersonas : System.Web.UI.Page
 
     protected void btnNuevo_Click(object sender, EventArgs e)
     {
-        Response.Redirect("~/contenido/SysAdmin/GestionPacientes.aspx?key=0");
+        Response.Redirect("~/contenido/RRHH/GestionPersonas.aspx?key=0");
     }
 
 

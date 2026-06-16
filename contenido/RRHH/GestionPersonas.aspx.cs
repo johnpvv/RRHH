@@ -12,7 +12,7 @@ using System.Web.UI.WebControls;
 public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
 {
     Mensaje mens = new Mensaje();
-    ClassPersona per = new ClassPersona();
+    ClassUsuarios per = new ClassUsuarios();
     ClassUnidOperativa cu = new ClassUnidOperativa();
     Usuarios usr = new Usuarios();
     static bool nuevo;
@@ -193,144 +193,97 @@ public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
         System.Web.UI.WebControls.ListItem item = new ListItem();
         item.Text = "Seleccione Unidad";
         item.Value = "0";
-        this.ddlPrevision.Items.Insert(0, item);
+        this.ddlPrevision.Items.Insert(0, item);//////////////solo pruebas, eliminar 
+        System.Web.UI.WebControls.ListItem item1 = new ListItem();
+        item1.Text = "fonasa";
+        item1.Value = "1";
+        this.ddlPrevision.Items.Insert(1, item1);
     }
 
 
     protected void TxtRut_TextChanged(object sender, EventArgs e)
     {
-        /*
-         DataSet aoDs;        
-        aoDs = per.ConsultaPaciente(TxtRut.Text, "");
 
-        if (aoDs != null && aoDs.Tables.Count > 1) {
+        string ls_ret;
+        per.ls_rut = TxtRut.Text;
+        ls_ret = per.mfExistePersona();
+
+        if (ls_ret != null && ls_ret != "")
+        {
             mens.mensaje(Page, "RUT ya existe, por favor verificar");
         }
-        */
+
     }
 
     #region Persona
 
     protected void btn_Agregar_Click(object sender, EventArgs e)
     {
-        //mfAgregar();
+        mfAgregar();
     }
 
-    //private void mfAgregar()
-    //{
+    private void mfAgregar()
+    {
 
-    //    //Validaciones
-    //    if (!ValidarCampos()) { return; }
-
-
-    //    //Revisar si existe RUT
-    //    if (nuevo)
-    //    {
-
-    //        DataSet aoDs;
-    //        aoDs = per.ConsultaPersona(TxtRut.Text, "");
-
-    //        if (aoDs != null && aoDs.Tables.Count > 0)
-    //        {
-    //            if (aoDs.Tables[0].Rows.Count > 0)
-    //            {
-    //                mens.mensaje(Page, "RUT ya existe, por favor verificar");
-    //                return;
-    //            }
-    //        }
-
-    //        if (!ValidaRut(TxtRut.Text, TxtDv.Text))
-    //        {
-    //            mens.mensaje(Page, "RUT NO VALIDO, por favor verificar");
-    //            return;
-    //        };
-    //    }
-    //    else
-    //    {
-
-    //        DataSet aoDs;
-    //        aoDs = per.ConsultaPaciente(TxtRutT.Text, "");
-
-    //        if (aoDs != null && aoDs.Tables.Count > 0 && (TxtRutT.Text != "" && TxtDvT.Text != ""))
-    //        {
-    //            if (aoDs.Tables[0].Rows.Count > 0 && (TxtRutT.Text != "" && TxtDvT.Text != ""))
-    //            {
-    //                mens.mensaje(Page, "RUT ya existe, por favor verificar");
-    //                return;
-    //            }
-    //        }
+        //Validaciones
+        if (!ValidarCampos()) { return; }
 
 
-    //        // Validar Rut y  DV antes de seguir.
-    //        if (!ValidaRut(TxtRutT.Text, TxtDvT.Text) && (TxtRutT.Text != "" && TxtDvT.Text != ""))
-    //        {
-    //            mens.mensaje(Page, "RUT NO VALIDO, por favor verificar");
-    //            return;
-    //        };
-    //    }
+        //Revisar si existe RUT
+        if (nuevo)
+        {
+            per.ls_rut = this.TxtRut.Text;
+            if (Convert.ToInt32(per.mfExistePersona()) > 0)
+            {
+                mens.mensaje(Page, "RUT ya existe, por favor verificar");
+                return;
+            }
 
-    //    // Validar caracteres nombre social
-    //    if (this.TxtNombreSocial.Text.Length <= 3 && this.TxtNombreSocial.Text != "")
-    //    {
-    //        mens.mensaje(Page, "Nombre Social debe tener mas de tres caracteres");
-    //        return;
-    //    };
+            if (!ValidaRut(TxtRut.Text, TxtDv.Text))
+            {
+                mens.mensaje(Page, "RUT NO VALIDO, por favor verificar");
+                return;
+            };
+        }
 
-    //    per.rut = this.TxtRut.Text;
-    //    per.dv = this.TxtDv.Text;
-    //    per.rut_n = this.TxtRutT.Text;
-    //    per.dv_n = this.TxtDvT.Text;
-    //    per.nombre = this.TxtNombre.Text;
-    //    per.nombreSocial = this.TxtNombreSocial.Text;
-    //    per.paterno = this.TxtPaterno.Text;
-    //    per.materno = this.TxtMaterno.Text;
+        // Validar caracteres nombre social
+        if (this.TxtNombreSocial.Text.Length <= 3 && this.TxtNombreSocial.Text != "")
+        {
+            mens.mensaje(Page, "Nombre Social debe tener mas de tres caracteres");
+            return;
+        };
 
-    //    per.direccion = this.TxtDire.Text;
+        per.ls_rut = this.TxtRut.Text;
+        per.ls_dv = this.TxtDv.Text;
+        per.ls_nomb = this.TxtNombre.Text;
+        per.ls_nomb_soc = modFunciones.mfLimpiaString(this.TxtNombreSocial.Text);
+        per.ls_pat = modFunciones.mfLimpiaString(this.TxtPaterno.Text);
+        per.ls_mat = modFunciones.mfLimpiaString(this.TxtMaterno.Text);
+        per.ls_dir = modFunciones.mfLimpiaString(this.TxtDire.Text);
+        per.ls_idcomuna = this.ddlComuna.SelectedItem.Value;
+        per.ls_idregion = this.ddlRegion.SelectedItem.Value;
+        per.ls_idprevision = this.ddlPrevision.SelectedItem.Value;
+        per.ls_tel1 = this.TFono1.Text;
+        per.ls_tel2 = this.TFono2.Text;
+        per.ls_obs1 = this.TObsFono1.Text;
+        per.ls_obs2 = this.TObsFono2.Text;
+        per.ls_mail = this.TMail.Text;
+        per.ls_iduser = Convert.ToInt32(Session["user"].ToString());
+        string lsRet = "";
+        lsRet = per.CrearUsuario(nuevo);
 
-    //    per.idcomuna = this.ddlComuna.SelectedItem.Value;
-    //    per.idregion = this.ddlRegion.SelectedItem.Value;
-    //    per.idprevision = this.ddlPrevision.SelectedItem.Value;
-
-    //    if (this.chkPro.Checked) per.pro = "1"; else per.pro = "0";
-
-    //    string lsRet = "";
-    //    lsRet = per.CrearPaciente(per.rut, per.dv,
-    //                                        per.rut_n, per.dv_n,
-    //                                        per.idprevision,
-    //                                        per.idregion,
-    //                                        per.idcomuna,
-    //                                        modFunciones.mfLimpiaString(per.nombre),
-    //                                        modFunciones.mfLimpiaString(per.nombreSocial),
-    //                                        modFunciones.mfLimpiaString(per.paterno),
-    //                                        modFunciones.mfLimpiaString(per.materno),
-    //                                        modFunciones.mfLimpiaString(per.direccion),
-    //                                        TFono1.Text,
-    //                                        TFono2.Text,
-    //                                        TObsFono1.Text,
-    //                                        TObsFono2.Text,
-    //                                        TMail.Text,
-    //                                        TMail0.Text,
-    //                                        nuevo
-    //                                       );
-
-    //    if (lsRet != "")
-    //        mens.mensaje(Page, "Error: Problemas al Ingresar el Registro.");
-    //    else
-    //    {
-
-    //        // if ((Session["lsIdentificador"]).ToString() == "0")
-    //        if (this.hdIdentificador.Value == "0")
-    //        {
-    //            //Session.Add("lsIdentificador", per.rut);
-    //            this.hdIdentificador.Value = per.rut;
-    //            LbTitulo.Text = per.rut;
-    //        }
-    //        mens.mensaje(Page, "Registro ingresado con Exito.. ");
-    //    }
-    //}
-
-
-
+        if (lsRet != "")
+            mens.mensaje(Page, "Error: Problemas al Ingresar el Registro.");
+        else
+        {
+            if (this.hdIdentificador.Value == "0")
+            {
+                this.hdIdentificador.Value = per.ls_rut;
+                LbTitulo.Text = per.ls_rut;
+            }
+            mens.mensaje(Page, "Registro ingresado con Exito.. ");
+        }
+    }
 
     public bool ValidarCampos()
     {
@@ -481,6 +434,10 @@ public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
         {
             mens.mensaje(Page, "RUT ya tiene cuenta asociada.. ");
             this.TxtRut.Text = "";
+        }
+        else
+        {
+            this.TxtDv.Text = Digito(Convert.ToInt32(this.TxtRut.Text));
         }
     }
 

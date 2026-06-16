@@ -426,12 +426,12 @@ public class ClassPaciente
         DataSet aoDF;
         string lsSql;
 
-        // lsSql = "SELECT IDCOMUNA, DESCRIPCION FROM TG_COMUNA WHERE IDREGION = '" +
-        //idregion + "' OR '"+ idregion + "'=''";
+        lsSql = "SELECT IDCOMUNA, DESCRIPCION FROM TG_COMUNA WHERE IDREGION = '" +
+        idregion + "' OR '"+ idregion + "'=''";
 
-        lsSql = "uspListaComunas " + idregion;
+        //lsSql = "uspListaComunas " + idregion;
 
-        con = bd.fnGetConn();
+        con = bd.fnGetConnRH();
         aoDF = bd.Fill(con, lsSql);
         con.Close();
         return aoDF;
