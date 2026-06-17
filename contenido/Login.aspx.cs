@@ -110,6 +110,7 @@ public partial class contenido_Login : System.Web.UI.Page
                         Session.Add("user", user);
                         Session.Add("serv", serv);
                         Session.Add("tipo", "2");
+                        Session.Add("rut", this.txtUser.Text);
                         //usr.mfLimpiarAcceso(this.txtUser.Text);
                         Response.Redirect("~/contenido/Index.aspx?user=" + user + "&serv=" + serv);
                     }

@@ -84,6 +84,8 @@ public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
                             this.TxtMaterno.Text = aoDs.Tables[0].Rows[0]["AP_MATERNO"].ToString();
                             this.TxtDire.Text = aoDs.Tables[0].Rows[0]["DIRECCION"].ToString();
                             this.txtFechaNacimiento.Text = aoDs.Tables[0].Rows[0]["FECHA_NACIMIENTO"].ToString();
+                            this.ddlEstadoCivil.SelectedValue = aoDs.Tables[0].Rows[0]["EST_CIVIL"].ToString();
+                            this.ddlSexo.SelectedValue= aoDs.Tables[0].Rows[0]["SEXO"].ToString();
                             this.TFono1.Text = aoDs.Tables[0].Rows[0]["FONO1"].ToString();
                             this.TFono2.Text = aoDs.Tables[0].Rows[0]["FONO2"].ToString();
                             this.TObsFono1.Text = aoDs.Tables[0].Rows[0]["OBS_FONO1"].ToString();
@@ -255,10 +257,13 @@ public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
 
         per.ls_rut = this.TxtRut.Text;
         per.ls_dv = this.TxtDv.Text;
-        per.ls_nomb = this.TxtNombre.Text;
+        per.ls_nomb = modFunciones.mfLimpiaString(this.TxtNombre.Text);
         per.ls_nomb_soc = modFunciones.mfLimpiaString(this.TxtNombreSocial.Text);
         per.ls_pat = modFunciones.mfLimpiaString(this.TxtPaterno.Text);
         per.ls_mat = modFunciones.mfLimpiaString(this.TxtMaterno.Text);
+        per.ls_fnac = this.txtFechaNacimiento.Text;
+        per.ls_sexo = this.ddlSexo.SelectedValue;
+        per.ls_estciv = this.ddlEstadoCivil.SelectedValue;
         per.ls_dir = modFunciones.mfLimpiaString(this.TxtDire.Text);
         per.ls_idcomuna = this.ddlComuna.SelectedItem.Value;
         per.ls_idregion = this.ddlRegion.SelectedItem.Value;
@@ -267,6 +272,7 @@ public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
         per.ls_tel2 = this.TFono2.Text;
         per.ls_obs1 = this.TObsFono1.Text;
         per.ls_obs2 = this.TObsFono2.Text;
+        per.ls_obs = modFunciones.mfLimpiaString(this.observacion.Text);
         per.ls_mail = this.TMail.Text;
         per.ls_iduser = Convert.ToInt32(Session["user"].ToString());
         string lsRet = "";
@@ -279,7 +285,7 @@ public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
             if (this.hdIdentificador.Value == "0")
             {
                 this.hdIdentificador.Value = per.ls_rut;
-                LbTitulo.Text = per.ls_rut;
+                LbTitulo.Text = per.ls_rut + "-" + per.ls_dv;
             }
             mens.mensaje(Page, "Registro ingresado con Exito.. ");
         }

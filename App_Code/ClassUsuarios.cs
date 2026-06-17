@@ -36,6 +36,9 @@ public class ClassUsuarios
     public string ls_obs1 { get; set; }
     public string ls_obs2 { get; set; }
     public string ls_mail { get; set; }
+    public string ls_fnac { get; set; }
+    public string ls_sexo { get; set; }
+    public string ls_estciv { get; set; }
 
     public DataSet mfBuscarPersonas()
     {
@@ -110,6 +113,8 @@ public class ClassUsuarios
             "ISNULL(P.AP_MATERNO,'') AP_MATERNO, " +
             "P.DIRECCION, " +
             "P.FECHA_NACIMIENTO, " +
+            "P.SEXO, " +
+            "P.EST_CIVIL, " +
             "P.IDREGION, " +
             "P.IDCOMUNA, " +
             "P.IDPREVISION, " +
@@ -151,24 +156,6 @@ public class ClassUsuarios
         }
         return lsRet;
     }
-    //public string CrearUsuario(string Rut,
-    //                        string Dv,
-    //                        string Rut_n,
-    //                        string Dv_n,
-    //                        string Idprevision,
-    //                        string Idregion,
-    //                        string Idcomuna,
-    //                        string Nombre,
-    //                        string NombreSocial,
-    //                        string Paterno,
-    //                        string Materno,
-    //                        string Direccion,
-    //                        string Tel1,
-    //                        string Tel2,
-    //                        string Obs1,
-    //                        string Obs2,
-    //                        string Mail1,
-    //                        string Mail2,
     public string CrearUsuario(bool Nuevo)
     {
         string lsRet = "";
@@ -185,14 +172,17 @@ public class ClassUsuarios
                     "Nombre,  " +
                     "Nombre_Social,  " +
                     "AP_Paterno, " +
-                    "AP_Materno,  " +
+                    "AP_Materno,  " +                    
+                    "FECHA_NACIMIENTO,  " +
+                    "SEXO,  " +
                     "FONO1,  " +
                     "FONO2,  " +
                     "OBS_FONO1,  " +
                     "OBS_FONO2,  " +
                     "EMAIL,  " +
+                    "OBSERVACION,  " +
                     "IDUSERCREA,  " +
-                    //"ISPROGRAMA,  " +
+                    "F_H_MOD, " +
                     "Direccion) " +
 
             "VALUES ( " + ls_rut + ", " +
@@ -204,36 +194,42 @@ public class ClassUsuarios
                     "'" + ls_nomb_soc.ToUpper() + "', " +
                     "'" + ls_pat.ToUpper() + "', " +
                     "'" + ls_mat.ToUpper() + "', " +
+                    "'" + ls_fnac + "', " +
+                    "'" + ls_sexo + "', " +
                     "'" + ls_tel1 + "', " +
                     "'" + ls_tel2 + "', " +
                     "'" + ls_obs1 + "', " +
                     "'" + ls_obs2 + "', " +
                     "'" + ls_mail + "', " +
+                    "'" + ls_obs + "', " +
                     " " + ls_iduser + ", " +
-                    //"" + pro + ", " +
+                    "NULL', " +
                     "'" + ls_dir + "')";
         }
         else
         {
 
-            lsSql = "UPDATE M_USUARIOS_P  " +
-                 "SET	" +
-                "Idprevision =  " + ls_idprevision + ", " +
-                "Idregion	=  " + ls_idregion + ", " +
-                "Idcomuna	=  " + ls_idcomuna + ", " +
-                "Nombre		=  '" + ls_nomb.ToUpper() + "', " +
-                "Nombre_Social	=  '" + ls_nomb_soc.ToUpper() + "', " +
-                "AP_Paterno	=  '" + ls_pat.ToUpper() + "', " +
-                "AP_Materno	=  '" + ls_mat.ToUpper() + "', " +
-                "FONO1	=  '" + ls_tel1 + "', " +
-                "FONO2	=  '" + ls_tel2 + "', " +
-                "OBS_FONO1	=  '" + ls_obs1 + "', " +
-                "OBS_FONO2	=  '" + ls_obs2 + "', " +
-                "EMAIL	=  '" + ls_mail + "', " +
-                //"MAIL2_CONT	=  '" + Mail2 + "', " +
-                //"ISPROGRAMA	=  " + pro + ", " +
-                "Direccion	=  '" + ls_dir + "' " +
-                "WHERE RUT = " + ls_rut;
+            lsSql = "UPDATE M_USUARIOS_P " +
+                    "SET	" +
+                    "Idprevision =  " + ls_idprevision + ", " +
+                    "Idregion	=  " + ls_idregion + ", " +
+                    "Idcomuna	=  " + ls_idcomuna + ", " +
+                    "Nombre		=  '" + ls_nomb.ToUpper() + "', " +
+                    "Nombre_Social	=  '" + ls_nomb_soc.ToUpper() + "', " +
+                    "AP_Paterno	=  '" + ls_pat.ToUpper() + "', " +
+                    "AP_Materno	=  '" + ls_mat.ToUpper() + "', " +
+                    "FECHA_NACIMIENTO	=  '" + ls_fnac + "', " +
+                    "SEXO	=  '" + ls_sexo + "', " +
+                    "FONO1	=  '" + ls_tel1 + "', " +
+                    "FONO2	=  '" + ls_tel2 + "', " +
+                    "OBS_FONO1	=  '" + ls_obs1 + "', " +
+                    "OBS_FONO2	=  '" + ls_obs2 + "', " +
+                    "EMAIL	=  '" + ls_mail + "', " +
+                    "OBSERVACION	=  '" + ls_obs + "', " +
+                    "Direccion	=  '" + ls_dir + "', " +
+                    "IDUSERMOD	=  " + ls_iduser + ", " +
+                    "F_H_MOD   =   GETDATE() " +
+                    "WHERE RUT = " + ls_rut;
         }
         con = bd.fnGetConnRH();
         lsRet = bd.EjecutarComando(con, lsSql);
