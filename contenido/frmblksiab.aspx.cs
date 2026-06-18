@@ -17,4 +17,10 @@ public partial class contenido_frmblksiab : System.Web.UI.Page
         string gUser = Session["rut"].ToString();//boton pruebas
         Response.Redirect("~/contenido/RRHH/GestionPersonas.aspx?key=" +gUser + "&cadena=");
     }
+
+    protected void btnMarcaciones_Click(object sender, EventArgs e)
+    {
+        string gUser = Session["rut"].ToString();//boton pruebas
+        Response.Redirect("~/contenido/RRHH/GestionMarcaciones.aspx?key=" + gUser + "&cadena=");
+    }
 }

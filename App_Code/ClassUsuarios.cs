@@ -237,4 +237,26 @@ public class ClassUsuarios
         con.Close();
         return lsRet;
     }
+
+    public string mfDevuelveID()
+    {
+        string lsRet = "";
+        con = bd.fnGetConnRH();
+        try
+        {
+            string lsSql;
+            lsSql = "SELECT P.IDUSUARIO " +
+                    "FROM " + modConstantes.gsDbRH + "M_USUARIOS_P P " +
+                    "WHERE (P.RUT = " + ls_rut + " ) ";
+            lsRet = bd.ExecuteScalar(con, lsSql);
+            if (lsRet == "") lsRet = "0";
+            con.Close();
+        }
+        catch (Exception e)
+        {
+            con.Close();
+            lsRet = "0";
+        }
+        return lsRet;
+    }
 }

@@ -80,7 +80,7 @@
                     <div class="MenuCardIcon">👤</div>
                     <div class="MenuCardText">Mis Datos</div>
                 </asp:LinkButton>
-                <asp:LinkButton ID="btnMarcaciones" runat="server" CssClass="MenuCard">
+                <asp:LinkButton ID="btnMarcaciones" runat="server" CssClass="MenuCard" OnClick="btnMarcaciones_Click">
                     <div class="MenuCardIcon">🕒</div>
                     <div class="MenuCardText">Marcaciones</div>
                 </asp:LinkButton>
