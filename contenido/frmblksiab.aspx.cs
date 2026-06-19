@@ -15,7 +15,7 @@ public partial class contenido_frmblksiab : System.Web.UI.Page
     protected void btnPerfil_Click(object sender, EventArgs e)
     {
         string gUser = Session["rut"].ToString();//boton pruebas
-        Response.Redirect("~/contenido/RRHH/GestionPersonas.aspx?key=" +gUser + "&cadena=");
+        Response.Redirect("~/contenido/RRHH/VistaDatosTrabajador.aspx?key=" +gUser + "&cadena=");
     }
 
     protected void btnMarcaciones_Click(object sender, EventArgs e)

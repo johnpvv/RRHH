@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title></title>
+    <title>Sistema RR.HH.</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     <style type="text/css">
@@ -14,7 +14,7 @@
         @import url('https://fonts.googleapis.com/css?family=Numans');
 
         html, body {
-            background-image: url('../imagenes/Frontis-HCSBA.jpg');
+            background-image: url('../imagenes/fachada__LoEspejo.jpg');
             background-size: cover;
             background-repeat: no-repeat;
             height: 100%;
@@ -103,7 +103,7 @@
         <div class="d-flex justify-content-center h-100">
             <div class="card">
                 <div class="card-header">                    
-                    <h3><asp:Image ID="caps" ImageUrl="~/imagenes/user_white.png" runat="server" Width="30px" Height="24px" />Login RR.HH.</h3>
+                    <h3><asp:Image ID="caps" ImageUrl="~/imagenes/user_white.png" runat="server" Width="30px" Height="24px" /> Login RR.HH.</h3>
                 </div>
                 <div class="card-body">
                     <form id="form1" runat="server">

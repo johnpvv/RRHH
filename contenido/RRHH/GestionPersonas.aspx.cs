@@ -49,6 +49,7 @@ public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
                 LlenarPrevision();
                 LlenarRegion();
                 LlenarComuna();
+                LlenarEstCivil();
 
                 if (this.hdIdentificador.Value == "0")
                 {
@@ -128,8 +129,6 @@ public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
     protected void ddlRegion_SelectedIndexChanged(object sender, EventArgs e)
     {
         DataSet dat = new DataSet();
-        ClassPaciente per = new ClassPaciente();
-
         dat = per.ConsultaComuna(ddlRegion.SelectedValue.ToString());
 
         this.ddlComuna.DataTextField = "DESCRIPCION";
@@ -147,8 +146,6 @@ public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
     private void LlenarComuna()
     {
         DataSet dat = new DataSet();
-
-        ClassPaciente per = new ClassPaciente();
         dat = per.ConsultaComuna();
 
         this.ddlComuna.DataTextField = "DESCRIPCION";
@@ -165,8 +162,6 @@ public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
     private void LlenarRegion()
     {
         DataSet dat = new DataSet();
-
-        ClassPaciente per = new ClassPaciente();
         dat = per.ConsultaRegion();
 
         this.ddlRegion.DataTextField = "DESCRIPCION";
@@ -180,11 +175,27 @@ public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
         this.ddlRegion.Items.Insert(0, item);
     }
 
-    private void LlenarPrevision()
+    private void LlenarEstCivil()
     {
         DataSet dat = new DataSet();
 
-        ClassPaciente per = new ClassPaciente();
+        dat = per.ConsultaEstCivil();
+
+        this.ddlEstadoCivil.DataTextField = "DESCRIPCION";
+        this.ddlEstadoCivil.DataValueField = "IDESTADOCIVIL";
+        this.ddlEstadoCivil.DataSource = dat;
+        this.ddlEstadoCivil.DataBind();
+
+        System.Web.UI.WebControls.ListItem item = new ListItem();
+        item.Text = "Seleccione Estado";
+        item.Value = "0";
+        this.ddlEstadoCivil.Items.Insert(0, item);
+
+
+    }
+    private void LlenarPrevision()
+    {
+        DataSet dat = new DataSet();
         dat = per.ConsultaPrevision();
 
         this.ddlPrevision.DataTextField = "DESCRIPCION";
@@ -195,11 +206,7 @@ public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
         System.Web.UI.WebControls.ListItem item = new ListItem();
         item.Text = "Seleccione Unidad";
         item.Value = "0";
-        this.ddlPrevision.Items.Insert(0, item);//////////////solo pruebas, eliminar 
-        System.Web.UI.WebControls.ListItem item1 = new ListItem();
-        item1.Text = "fonasa";
-        item1.Value = "1";
-        this.ddlPrevision.Items.Insert(1, item1);
+        this.ddlPrevision.Items.Insert(0, item);
     }
 
 

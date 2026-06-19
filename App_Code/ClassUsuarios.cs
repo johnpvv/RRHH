@@ -169,6 +169,7 @@ public class ClassUsuarios
                     "Idprevision, " +
                     "Idregion,  " +
                     "Idcomuna, " +
+                    "est_civil, " +
                     "Nombre,  " +
                     "Nombre_Social,  " +
                     "AP_Paterno, " +
@@ -190,6 +191,7 @@ public class ClassUsuarios
                     ls_idprevision + ", " +
                     ls_idregion + ", " +
                     ls_idcomuna + ", " +
+                    ls_estciv + ", " +
                     "'" + ls_nomb.ToUpper() + "', " +
                     "'" + ls_nomb_soc.ToUpper() + "', " +
                     "'" + ls_pat.ToUpper() + "', " +
@@ -214,6 +216,7 @@ public class ClassUsuarios
                     "Idprevision =  " + ls_idprevision + ", " +
                     "Idregion	=  " + ls_idregion + ", " +
                     "Idcomuna	=  " + ls_idcomuna + ", " +
+                    "EST_CIVIL	=  " + ls_estciv + ", " +
                     "Nombre		=  '" + ls_nomb.ToUpper() + "', " +
                     "Nombre_Social	=  '" + ls_nomb_soc.ToUpper() + "', " +
                     "AP_Paterno	=  '" + ls_pat.ToUpper() + "', " +
@@ -258,5 +261,60 @@ public class ClassUsuarios
             lsRet = "0";
         }
         return lsRet;
+    }
+
+    public DataSet ConsultaRegion()
+    {
+        DataSet aoDF;
+        string lsSql;
+
+        lsSql = "SELECT IDREGION, DESCRIPCION FROM TG_REGION ORDER BY DESCRIPCION ";
+
+        con = bd.fnGetConn();
+        aoDF = bd.Fill(con, lsSql);
+        con.Close();
+        return aoDF;
+    }
+
+
+
+    public DataSet ConsultaComuna(string idregion = "")
+    {
+        DataSet aoDF;
+        string lsSql;
+
+        lsSql = "SELECT IDCOMUNA, DESCRIPCION FROM TG_COMUNA WHERE IDREGION = '" +
+        idregion + "' OR '" + idregion + "'=''";
+
+        //lsSql = "uspListaComunas " + idregion;
+
+        con = bd.fnGetConnRH();
+        aoDF = bd.Fill(con, lsSql);
+        con.Close();
+        return aoDF;
+    }
+    public DataSet ConsultaEstCivil()
+    {
+        DataSet aoDF;
+        string lsSql;
+
+        lsSql = "SELECT IDESTADOCIVIL, DESCRIPCION FROM TG_EST_CIVIL ";
+
+        con = bd.fnGetConnRH();
+        aoDF = bd.Fill(con, lsSql);
+        con.Close();
+        return aoDF;
+    }
+    public DataSet ConsultaPrevision()
+    {
+        DataSet aoDF;
+        string lsSql;
+
+        lsSql = "SELECT IDPREVISION, DESCRIPCION FROM TG_PREVISION ";
+
+        con = bd.fnGetConnRH();
+        aoDF = bd.Fill(con, lsSql);
+        con.Close();
+        return aoDF;
     }
 }
