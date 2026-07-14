@@ -205,7 +205,7 @@ public class ClassUsuarios
                     "'" + ls_mail + "', " +
                     "'" + ls_obs + "', " +
                     " " + ls_iduser + ", " +
-                    "NULL', " +
+                    "NULL, " +
                     "'" + ls_dir + "')";
         }
         else

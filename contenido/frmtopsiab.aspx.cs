@@ -19,6 +19,14 @@ public partial class contenido_frmtopsiab : System.Web.UI.Page
         {
             Response.Write("<script language='javascript'>self.parent.location='Login.aspx';</script>");
         }
+        if (Session["ModoPortal"].ToString() == "ADMIN")
+        {
+            btnToggleMenu.Visible = true;
+        }
+        else
+        {
+            btnToggleMenu.Visible = false;
+        }
     }
 
     protected void cierrasesion_Click(object sender, EventArgs e)

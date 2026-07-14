@@ -50,7 +50,7 @@
 
             <%-- ── IZQUIERDA: toggle + logo ── --%>
             <div class="topbar-left">
-                <button id="btnToggleMenu" type="button"
+                <button id="btnToggleMenu" type="button" runat="server"
                         class="topbar-toggle is-open"
                         onclick="fnMenu();"
                         title="Mostrar / Ocultar menú lateral">

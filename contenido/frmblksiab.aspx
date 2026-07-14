@@ -8,13 +8,13 @@
     <link href="../css/css.css" rel="stylesheet" type="text/css" />
     <style type="text/css">
         .PortalContainer {
-            width: 95%;
+            width: 98%;
             margin: 20px auto;
             font-family: Arial, Helvetica, sans-serif;
         }
 
         .PortalTitulo {
-            font-size: 28px;
+            font-size: 30px;
             font-weight: bold;
             color: #2C3E50;
             margin-bottom: 5px;
@@ -23,7 +23,7 @@
         .PortalSubTitulo {
             color: #666666;
             margin-bottom: 25px;
-            font-size: 13px;
+            font-size: 15px;
         }
 
         .MenuGrid {
@@ -35,7 +35,7 @@
         .MenuCard {
             display: block;
             width: 180px;
-            height: 140px;
+            height: 150px;
             background-color: #18578C;
             color: White !important;
             text-decoration: none !important;
@@ -53,12 +53,12 @@
             }
 
         .MenuCardIcon {
-            font-size: 48px;
+            font-size: 52px;
             margin-top: 25px;
         }
 
         .MenuCardText {
-            font-size: 15px;
+            font-size: 18px;
             font-weight: bold;
             margin-top: 10px;
         }
@@ -84,10 +84,14 @@
                     <div class="MenuCardIcon">🕒</div>
                     <div class="MenuCardText">Marcaciones</div>
                 </asp:LinkButton>
-                <asp:LinkButton ID="btnPermisos" runat="server" CssClass="MenuCard">
+                <asp:LinkButton ID="btnTurnos" runat="server" CssClass="MenuCard" OnClick="btnTurnos_Click">
+                    <div class="MenuCardIcon">📁</div>
+                    <div class="MenuCardText">Turnos</div>
+                </asp:LinkButton>
+                <asp:LinkButton ID="btnPermisos" runat="server" CssClass="MenuCard" OnClick="btnPermisos_Click">
                     <div class="MenuCardIcon">📋</div>
                     <div class="MenuCardText">Permisos</div>
-                </asp:LinkButton>
+                </asp:LinkButton>                
                 <asp:LinkButton ID="btnVacaciones" runat="server" CssClass="MenuCard">
                     <div class="MenuCardIcon">🏖</div>
                     <div class="MenuCardText">Vacaciones</div>
@@ -95,11 +99,7 @@
                 <asp:LinkButton ID="btnLiquidaciones" runat="server" CssClass="MenuCard">
                     <div class="MenuCardIcon">💰</div>
                     <div class="MenuCardText">Liquidaciones</div>
-                </asp:LinkButton>
-                <asp:LinkButton ID="btnDocumentos" runat="server" CssClass="MenuCard">
-                    <div class="MenuCardIcon">📁</div>
-                    <div class="MenuCardText">Documentos</div>
-                </asp:LinkButton>
+                </asp:LinkButton>                
                 <asp:LinkButton ID="btnDirectorio" runat="server" CssClass="MenuCard">
                     <div class="MenuCardIcon">📞</div>
                     <div class="MenuCardText">Directorio</div>
