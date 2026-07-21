@@ -84,7 +84,7 @@ public class ClassUsuarios
             "   P.EMAIL, " +
             "   P.IDESTADO, " +
             "   P.F_H_CREA " +
-            "FROM " + modConstantes.gsDbRH + "M_USUARIOS_P P " +
+            "FROM " + modConstantes.gsDbRH + "M_USUARIOS P " +
             "WHERE P.RUT > 0 " +
             lsWhe + " " +
             "ORDER BY P.AP_PATERNO, P.AP_MATERNO, P.NOMBRE";
@@ -125,8 +125,10 @@ public class ClassUsuarios
             "P.EMAIL, " +
             "P.IDESTADO, " +
             "P.F_H_CREA, " +
+            "UOP.DESCRIPCION AS CENTRO, " +
             "P.OBSERVACION " +
-            "FROM " + modConstantes.gsDbRH + "M_USUARIOS_P P " +
+            "FROM " + modConstantes.gsDbRH + "M_USUARIOS P " +
+            "LEFT JOIN " + modConstantes.gsDbRH + "M_UNIDAD_OPERATIVA UOP ON UOP.CODUNIOP = P.CODUNIOP "+
             "WHERE	(P.RUT = " + ls_rut + " ) ";
 
         con = bd.fnGetConnRH();
@@ -143,7 +145,7 @@ public class ClassUsuarios
         {
             string lsSql;
             lsSql = "SELECT P.RUT " +
-                    "FROM " + modConstantes.gsDbRH + "M_USUARIOS_P P " +
+                    "FROM " + modConstantes.gsDbRH + "M_USUARIOS P " +
                     "WHERE (P.RUT = " + ls_rut + " ) ";
             lsRet = bd.ExecuteScalar(con, lsSql);
             if (lsRet == "") lsRet = "0";
@@ -163,7 +165,7 @@ public class ClassUsuarios
 
         if (Nuevo == true)
         {
-            lsSql = "INSERT INTO M_USUARIOS_P( " +
+            lsSql = "INSERT INTO M_USUARIOS( " +
                     "Rut, " +
                     "Dv, " +
                     "Idprevision, " +
@@ -211,7 +213,7 @@ public class ClassUsuarios
         else
         {
 
-            lsSql = "UPDATE M_USUARIOS_P " +
+            lsSql = "UPDATE M_USUARIOS " +
                     "SET	" +
                     "Idprevision =  " + ls_idprevision + ", " +
                     "Idregion	=  " + ls_idregion + ", " +
@@ -249,7 +251,7 @@ public class ClassUsuarios
         {
             string lsSql;
             lsSql = "SELECT P.IDUSUARIO " +
-                    "FROM " + modConstantes.gsDbRH + "M_USUARIOS_P P " +
+                    "FROM " + modConstantes.gsDbRH + "M_USUARIOS P " +
                     "WHERE (P.RUT = " + ls_rut + " ) ";
             lsRet = bd.ExecuteScalar(con, lsSql);
             if (lsRet == "") lsRet = "0";

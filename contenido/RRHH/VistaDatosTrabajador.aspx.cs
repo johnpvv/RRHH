@@ -84,7 +84,7 @@ public partial class contenido_RRHH_VistaDatosTrabajador : System.Web.UI.Page
                     TFono2.Text = dr["FONO2"].ToString();
 
                     // Información Laboral
-                    //lblUnidad.Text = dr["UNIDAD"].ToString();
+                    lblUnidad.Text = dr["CENTRO"].ToString();
 
                     //lblCargo.Text = dr["CARGO"].ToString();
 

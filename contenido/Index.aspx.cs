@@ -16,6 +16,12 @@ public partial class contenido_Index : System.Web.UI.Page
         modFunciones modfunc = new modFunciones();
         string gUsr;
         string asCodSistema;
+
+        if (Session["user"] == null)
+        {
+            Response.Redirect("~/contenido/Login.aspx");
+            return;
+        }
         gUsr = Session["user"].ToString();
         asCodSistema = Session["codHosp"].ToString();
 

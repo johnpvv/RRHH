@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="GestionMarcaciones.aspx.cs" Inherits="contenido_RRHH_GestionMarcaciones" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="GestionRelojes.aspx.cs" Inherits="contenido_Administracion_GestionRelojes" %>
 
 <!DOCTYPE html>
 
@@ -19,14 +19,23 @@
             width: 100%;
             font-family: Arial, Helvetica, sans-serif;
             font-size: 13px;
-            text-align:right;
+            text-align: right;
         }
+
         .textoGrid {
             border-collapse: collapse;
             width: auto;
             font-family: Arial, Helvetica, sans-serif;
             font-size: 13px;
-            text-align:center;
+            text-align: center;
+        }
+        .textoGridBold {
+            border-collapse: collapse;
+            width: auto;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 13px;
+            font-weight:bold;
+            text-align: center;
         }
 
         .GridMarcacionesHeader {
@@ -99,26 +108,21 @@
         <table style="width: 100%; margin-bottom: 10px;">
             <tr>
 
-                <td style="width: 70px;" class="textoNorm">Mes:
+                <td style="width: 70px;" class="textoNorm">IP:
                 </td>
-
                 <td style="width: 180px;">
-                    <asp:DropDownList ID="ddlMes"
-                        runat="server"
-                        Width="150px">
-                    </asp:DropDownList>
+                    <asp:TextBox ID="txtIp" runat="server" Width="150px" />
                 </td>
-
-                <td style="width: 70px;" class="textoNorm">Año:
+                <td style="width: 70px;" class="textoNorm">Serie:
                 </td>
-
                 <td style="width: 120px;">
-                    <asp:DropDownList ID="ddlAnio"
-                        runat="server"
-                        Width="100px">
-                    </asp:DropDownList>
+                    <asp:TextBox ID="txtSerie" runat="server" Width="100px" />
                 </td>
-
+                <td style="width: 70px;" class="textoNorm">Descripción:
+                </td>
+                <td style="width: 120px;">
+                    <asp:TextBox ID="txtDescr" runat="server" Width="200px" />
+                </td>
                 <td>
                     <asp:Button ID="btnBuscar"
                         runat="server"
@@ -126,25 +130,6 @@
                         CssClass="BotonPortal"
                         OnClick="btnBuscar_Click" />
                 </td>
-
-                <td align="right">
-
-                    <asp:Button ID="btnExportar"
-                        runat="server"
-                        Text="Exportar Excel"
-                        CssClass="BotonPortalVerde"
-                        OnClick="btnExportar_Click" />
-
-                    &nbsp;
-
-            <asp:Button ID="btnVolver"
-                runat="server"
-                Text="Volver"
-                CssClass="BotonPortalGris"
-                OnClick="btnVolver_Click" />
-
-                </td>
-
             </tr>
         </table>
         <asp:GridView ID="dgData"
@@ -156,23 +141,44 @@
             CellPadding="6"
             EmptyDataText="Sin Resultados">
             <Columns>
-                <asp:BoundField DataField="F_H_MARCA"
-                    HeaderText="Fecha"
-                    DataFormatString="{0:dd/MM/yyyy}" ItemStyle-CssClass="textoGrid" />
-                
-                <asp:BoundField DataField="F_H_MARCA"
-                    HeaderText="Hora"
-                    DataFormatString="{0:HH:mm:ss}" ItemStyle-CssClass="textoGrid"  />
-                <asp:BoundField DataField="TIPO_MARCA"
-                    HeaderText="Marcación" ItemStyle-CssClass="textoGrid"  />
+                <asp:BoundField DataField="IDRELOJ"
+                    HeaderText="Id" ItemStyle-CssClass="textoGrid" />
+                <asp:BoundField DataField="DESCRIPCION"
+                    HeaderText="Descripción" ItemStyle-CssClass="textoGrid" />
+                <asp:BoundField DataField="IP"
+                    HeaderText="Dir. IP" ItemStyle-CssClass="textoGridBold" />
+                <asp:BoundField DataField="SERIE"
+                    HeaderText="Serie" ItemStyle-CssClass="textoGrid" />
+                <asp:BoundField DataField="Estado"
+                    HeaderText="Estado" ItemStyle-CssClass="textoGrid" />
                 <asp:BoundField DataField="CENTRO"
-                    HeaderText="CENTRO"  ItemStyle-CssClass="textoGrid" />
+                    HeaderText="CENTRO" ItemStyle-CssClass="textoGrid" />
+                <asp:BoundField DataField="F_H_CREACION"
+                    HeaderText="Fecha Creación"
+                    DataFormatString="{0:dd/MM/yyyy HH:mm}" ItemStyle-CssClass="textoGrid" />
             </Columns>
             <HeaderStyle CssClass="GridMarcacionesHeader" />
             <RowStyle CssClass="GridMarcacionesRow" />
             <AlternatingRowStyle CssClass="GridMarcacionesAltRow" />
-
         </asp:GridView>
+        <br />
+        <table style="width: 100%; margin-bottom: 10px;">
+            <tr>
+                <td align="center">
+                    <asp:Button ID="btnExportar"
+                        runat="server"
+                        Text="Exportar Excel"
+                        CssClass="BotonPortalVerde"
+                        OnClick="btnExportar_Click" />
+                    &nbsp;
+                    <asp:Button ID="btnVolver"
+                        runat="server"
+                        Text="Volver"
+                        CssClass="BotonPortalGris"
+                        OnClick="btnVolver_Click" />
+                </td>
+            </tr>
+        </table>
     </form>
 </body>
 </html>

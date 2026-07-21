@@ -11,10 +11,8 @@ public partial class contenido_RRHH_GestionMarcaciones : System.Web.UI.Page
     ClassUsuarios usr = new ClassUsuarios();
     protected void Page_Load(object sender, EventArgs e)
     {
-        
-
         if (!IsPostBack)
-        {            
+        {
             CargarMeses();
             CargarAnios();
             rlj.ls_mes = ddlMes.SelectedValue;
@@ -54,7 +52,7 @@ public partial class contenido_RRHH_GestionMarcaciones : System.Web.UI.Page
     }
     private void CargarMarcaciones()
     {
-        
+
         usr.ls_rut = Session["rut"].ToString();
         rlj.ls_iduser = usr.mfDevuelveID();
         dgData.DataSource = rlj.mfBuscarMarcaciones();
