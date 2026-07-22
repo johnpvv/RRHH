@@ -78,9 +78,7 @@ public partial class contenido_RRHH_VistaDatosTrabajador : System.Web.UI.Page
 
                     // Contacto (editable)
                     TMail.Text = dr["EMAIL"].ToString();
-
                     TFono1.Text = dr["FONO1"].ToString();
-
                     TFono2.Text = dr["FONO2"].ToString();
 
                     // Información Laboral
@@ -204,7 +202,7 @@ public partial class contenido_RRHH_VistaDatosTrabajador : System.Web.UI.Page
 
     protected void btnGuardar_Click(object sender, EventArgs e)
     {
-
+        //falta agregar esta logica - JOHN
     }
 
     protected void btnVolver_Click(object sender, EventArgs e)

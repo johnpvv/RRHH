@@ -54,7 +54,7 @@ public partial class contenido_RRHH_GestionMarcaciones : System.Web.UI.Page
     {
 
         usr.ls_rut = Session["rut"].ToString();
-        rlj.ls_iduser = usr.mfDevuelveID();
+        rlj.ls_iduser = usr.mfDevuelveID();//en caso de homologar con otro id desde los relojes u otros
         dgData.DataSource = rlj.mfBuscarMarcaciones();
         dgData.DataBind();
     }

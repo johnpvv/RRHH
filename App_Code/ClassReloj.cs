@@ -33,7 +33,7 @@ public class ClassReloj
         string lsWhe = "";
         DataSet ds;
 
-        lsWhe = " AND M.CODIGO_EMP_RELOJ = " + ls_iduser;
+        lsWhe = " AND UR.IDUSUARIO = " + ls_iduser;
 
         if (ls_mes != "")
         {
@@ -62,6 +62,7 @@ public class ClassReloj
             "INNER JOIN " + modConstantes.gsDbRH + "M_SINCRONIZACION SC ON SC.IDSINCRONIZA = M.IDSINCRONIZA " +
             "INNER JOIN " + modConstantes.gsDbRH + "M_RELOJES RE ON RE.IDRELOJ = SC.IDRELOJ " +
             "INNER JOIN " + modConstantes.gsDbRH + "M_UNIDAD_OPERATIVA UOP ON UOP.CODUNIOP = RE.CODUNIOP " +
+            "INNER JOIN " + modConstantes.gsDbRH + "M_USR_RELOJ UR ON UR.IDRELOJ = RE.IDRELOJ AND UR.IDUSRELOJ = M.CODIGO_EMP_RELOJ " +
             "WHERE 1=1 " +
             lsWhe +
             " ORDER BY M.F_H_MARCA DESC";

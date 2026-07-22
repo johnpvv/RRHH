@@ -1,0 +1,197 @@
+﻿.GridGral {
+    border-collapse: collapse;
+    width: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+}
+
+.textoNorm {
+    border-collapse: collapse;
+    width: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    text-align: right;
+}
+
+.textoEmpty {
+    border-collapse: collapse;
+    background-color: #E7F1FF;
+    width: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.textoTitCenter {
+    border-collapse: collapse;
+    width: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 26px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.textoTitLeft {
+    border-collapse: collapse;
+    width: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 26px;
+    font-weight: bold;
+    text-align: left;
+}
+
+.textoGrid {
+    border-collapse: collapse;
+    width: auto;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    text-align: center;
+}
+
+.textoGridBold {
+    border-collapse: collapse;
+    width: auto;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.GridGralHeader {
+    background-color: #1F6FB2;
+    color: White;
+    font-weight: bold;
+    text-align: center;
+    height: 35px;
+}
+
+.GridGralRow {
+    background-color: White;
+    height: 32px;
+}
+
+.GridGralAltRow {
+    background-color: #F5F8FC;
+    height: 32px;
+}
+
+.GridGral td:hover {
+    background-color: #E7F1FF;
+}
+/*.GridGral th:hover {
+    background-color: #1F6FB2;
+}*/
+
+.BotonPortal {
+    background-color: #1F6FB2;
+    color: white;
+    border: none;
+    padding: 10px;
+    margin-left: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;    
+}
+
+    .BotonPortal:hover {
+        background-color: #18578C;
+        transform: translateY(-2px);
+        box-shadow: 0px 4px 4px #666666;
+    }
+
+.BotonPortalVerde {
+    background-color: #28A745;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+    .BotonPortalVerde:hover {
+        background-color: #218838;
+        transform: translateY(-2px);
+        box-shadow: 0px 4px 4px #666666;
+    }
+
+.BotonPortalGris {
+    background-color: #6C757D;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+    .BotonPortalGris:hover {
+        background-color: #545B62;
+        transform: translateY(-2px);
+        box-shadow: 0px 4px 4px #666666;
+    }
+
+.TextBoxGral {
+    background-color: #E7F1FF;
+    height: 25px;
+    cursor: text;
+    border-radius: 3px;
+}
+
+/*tarjetas inicio*/
+.PortalContainer {
+    width: 98%;
+    margin: 20px auto;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.PortalTitulo {
+    font-size: 30px;
+    font-weight: bold;
+    color: #2C3E50;
+    margin-bottom: 5px;
+}
+
+.PortalSubTitulo {
+    color: #666666;
+    margin-bottom: 25px;
+    font-size: 15px;
+}
+
+.MenuGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.MenuCard {
+    display: block;
+    width: 180px;
+    height: 150px;
+    background-color: #18578C;
+    color: White !important;
+    text-decoration: none !important;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0px 2px 6px #999999;
+    transition: all 0.2s ease;
+}
+
+    .MenuCard:hover {
+        background-color: #1F6FB2;
+        transform: translateY(-3px);
+        text-decoration: none !important;
+        box-shadow: 0px 4px 10px #666666;
+    }
+
+.MenuCardIcon {
+    font-size: 52px;
+    margin-top: 25px;
+}
+
+.MenuCardText {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 10px;
+}

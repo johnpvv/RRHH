@@ -16,7 +16,6 @@ public partial class contenido_Administracion_GestionRelojes : System.Web.UI.Pag
             CargarRelojes();
         }
     }
-
     private void CargarRelojes()
     {
 
@@ -25,7 +24,6 @@ public partial class contenido_Administracion_GestionRelojes : System.Web.UI.Pag
         rlj.ls_serie = this.txtSerie.Text;
         rlj.ls_ip=this.txtIp.Text;
         rlj.ls_descrip=this.txtDescr.Text;
-
         dgData.DataSource = rlj.mfBuscarRelojes();
         dgData.DataBind();
     }

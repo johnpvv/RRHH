@@ -8,6 +8,7 @@ using System.Web.UI.WebControls;
 public partial class contenido_RRHH_GestionTurnos : System.Web.UI.Page
 {
     ClassReloj rlj = new ClassReloj();
+    ClassTurnos tur = new ClassTurnos();
     ClassUsuarios usr = new ClassUsuarios();
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -15,49 +16,50 @@ public partial class contenido_RRHH_GestionTurnos : System.Web.UI.Page
 
         if (!IsPostBack)
         {            
-            CargarMeses();
-            CargarAnios();
-            rlj.ls_mes = ddlMes.SelectedValue;
-            rlj.ls_anio = ddlAnio.SelectedValue;
-            CargarMarcaciones();
+            //CargarMeses();
+            //CargarAnios();
+            //rlj.ls_mes = ddlMes.SelectedValue;
+            //rlj.ls_anio = ddlAnio.SelectedValue;
+            CargarTurnos();
         }
     }
     private void CargarMeses()
     {
-        if (ddlMes.Items.Count == 0)
-        {
-            ddlMes.Items.Add(new ListItem("Enero", "1"));
-            ddlMes.Items.Add(new ListItem("Febrero", "2"));
-            ddlMes.Items.Add(new ListItem("Marzo", "3"));
-            ddlMes.Items.Add(new ListItem("Abril", "4"));
-            ddlMes.Items.Add(new ListItem("Mayo", "5"));
-            ddlMes.Items.Add(new ListItem("Junio", "6"));
-            ddlMes.Items.Add(new ListItem("Julio", "7"));
-            ddlMes.Items.Add(new ListItem("Agosto", "8"));
-            ddlMes.Items.Add(new ListItem("Septiembre", "9"));
-            ddlMes.Items.Add(new ListItem("Octubre", "10"));
-            ddlMes.Items.Add(new ListItem("Noviembre", "11"));
-            ddlMes.Items.Add(new ListItem("Diciembre", "12"));
-        }
+        //if (ddlMes.Items.Count == 0)
+        //{
+        //    ddlMes.Items.Add(new ListItem("Enero", "1"));
+        //    ddlMes.Items.Add(new ListItem("Febrero", "2"));
+        //    ddlMes.Items.Add(new ListItem("Marzo", "3"));
+        //    ddlMes.Items.Add(new ListItem("Abril", "4"));
+        //    ddlMes.Items.Add(new ListItem("Mayo", "5"));
+        //    ddlMes.Items.Add(new ListItem("Junio", "6"));
+        //    ddlMes.Items.Add(new ListItem("Julio", "7"));
+        //    ddlMes.Items.Add(new ListItem("Agosto", "8"));
+        //    ddlMes.Items.Add(new ListItem("Septiembre", "9"));
+        //    ddlMes.Items.Add(new ListItem("Octubre", "10"));
+        //    ddlMes.Items.Add(new ListItem("Noviembre", "11"));
+        //    ddlMes.Items.Add(new ListItem("Diciembre", "12"));
+        //}
 
-        ddlMes.SelectedValue = DateTime.Now.Month.ToString();
+        //ddlMes.SelectedValue = DateTime.Now.Month.ToString();
     }
 
     private void CargarAnios()
     {
-        ddlAnio.Items.Clear();
+        //ddlAnio.Items.Clear();
 
-        for (int i = DateTime.Now.Year; i >= 2020; i--)
-        {
-            ddlAnio.Items.Add(new ListItem(i.ToString(), i.ToString()));
-        }
+        //for (int i = DateTime.Now.Year; i >= 2020; i--)
+        //{
+        //    ddlAnio.Items.Add(new ListItem(i.ToString(), i.ToString()));
+        //}
     }
-    private void CargarMarcaciones()
+    private void CargarTurnos()
     {
-        
-        usr.ls_rut = Session["rut"].ToString();
-        rlj.ls_iduser = usr.mfDevuelveID();
-        dgData.DataSource = rlj.mfBuscarMarcaciones();
+        //usr.ls_rut = Session["rut"].ToString();
+        //rlj.ls_iduser = usr.mfDevuelveID();
+        tur.ls_codigo = this.txtCod.Text;
+        tur.ls_descrip = this.txtDescr.Text;
+        dgData.DataSource = tur.mfBuscarTurnos();
         dgData.DataBind();
     }
 
@@ -66,13 +68,11 @@ public partial class contenido_RRHH_GestionTurnos : System.Web.UI.Page
         Response.Redirect("~/contenido/frmblksiab.aspx");
     }
 
-
-
     protected void btnBuscar_Click(object sender, EventArgs e)
     {
-        rlj.ls_mes = ddlMes.SelectedValue;
-        rlj.ls_anio = ddlAnio.SelectedValue;
-        CargarMarcaciones();
+        //rlj.ls_mes = ddlMes.SelectedValue;
+        //rlj.ls_anio = ddlAnio.SelectedValue;
+        CargarTurnos();
     }
 
     protected void btnExportar_Click(object sender, EventArgs e)

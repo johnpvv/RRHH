@@ -5,64 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
     <title>Menu Principal</title>
-    <link href="../css/css.css" rel="stylesheet" type="text/css" />
-    <style type="text/css">
-        .PortalContainer {
-            width: 98%;
-            margin: 20px auto;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        .PortalTitulo {
-            font-size: 30px;
-            font-weight: bold;
-            color: #2C3E50;
-            margin-bottom: 5px;
-        }
-
-        .PortalSubTitulo {
-            color: #666666;
-            margin-bottom: 25px;
-            font-size: 15px;
-        }
-
-        .MenuGrid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .MenuCard {
-            display: block;
-            width: 180px;
-            height: 150px;
-            background-color: #18578C;
-            color: White !important;
-            text-decoration: none !important;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0px 2px 6px #999999;
-            transition: all 0.2s ease;
-        }
-
-            .MenuCard:hover {
-                background-color: #1F6FB2;
-                transform: translateY(-3px);
-                text-decoration: none !important;
-                box-shadow: 0px 4px 10px #666666;
-            }
-
-        .MenuCardIcon {
-            font-size: 52px;
-            margin-top: 25px;
-        }
-
-        .MenuCardText {
-            font-size: 18px;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-    </style>
+    <link href="../css/EstiloRRHH.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
     <form id="form1" runat="server">
