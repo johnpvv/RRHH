@@ -204,7 +204,8 @@
                             <asp:TreeNode NavigateUrl="~/contenido/SysAdmin/ListaUsuarios.aspx?id=1" Target="main" ImageUrl="~/imagenes/menu/ajustesusuario.png" Text="Usuarios" ToolTip="Usuarios" Value="MANT_USUARIO"></asp:TreeNode>
                             <asp:TreeNode NavigateUrl="~/contenido/SysAdmin/ListaAccesos.aspx?id=1" Target="main" ImageUrl="~/imagenes/menu/ajustesaccesos.png" Text="Accesos" ToolTip="Accesos" Value="MANT_ACCESO"></asp:TreeNode>
                             <asp:TreeNode NavigateUrl="~/contenido/SysAdmin/ListaRoles.aspx?id=1" Target="main" ImageUrl="~/imagenes/menu/ajustesroles.png" Text="Roles" ToolTip="Roles" Value="MANT_ROLES"></asp:TreeNode>
-                            <asp:TreeNode NavigateUrl="~/contenido/Administracion/GestionRelojes.aspx" Target="main" ImageUrl="~/imagenes/menu/firmas.png" Text="Relojes" ToolTip="Relojes" Value="MANT_ROLES"></asp:TreeNode>
+                            <asp:TreeNode NavigateUrl="~/contenido/Administracion/GestionRelojes.aspx" Target="main" ImageUrl="~/imagenes/menu/firmas.png" Text="Gestión Relojes" ToolTip="Relojes" Value="MANT_ROLES"></asp:TreeNode>
+                            <asp:TreeNode NavigateUrl="~/contenido/Administracion/GestionTurnos.aspx" Target="main" ImageUrl="~/imagenes/menu/ajustesroles.png" Text="Gestión Turnos" ToolTip="Turnos" Value="MANT_ROLES"></asp:TreeNode>
 
                             <asp:TreeNode NavigateUrl="~/contenido/Administracion/ListaUniOperativa.aspx?id=1" Target="main" ImageUrl="~/imagenes/menu/ajustesunidadoperativa.png" Text="Lista Operativa" ToolTip="Unidad Operativa" Value="MANT_UNIDAD"></asp:TreeNode>
                             <asp:TreeNode NavigateUrl="~/contenido/Administracion/ListaArticulos.aspx?id=1" Target="main" ImageUrl="~/imagenes/menu/compras.png" Text="Articulos" ToolTip="Articulos" Value="MANT_ARTICULOS"></asp:TreeNode>

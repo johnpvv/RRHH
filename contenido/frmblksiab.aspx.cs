@@ -29,6 +29,6 @@ public partial class contenido_frmblksiab : System.Web.UI.Page
 
     protected void btnTurnos_Click(object sender, EventArgs e)
     {
-        Response.Redirect("~/contenido/RRHH/GestionTurnos.aspx");
+        Response.Redirect("~/contenido/RRHH/VistaTurnosTrab.aspx");
     }
 }

@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="GestionTurnos.aspx.cs" Inherits="contenido_RRHH_GestionTurnos" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="GestionTurnos.aspx.cs" Inherits="contenido_Administracion_GestionTurnos" %>
 
 <!DOCTYPE html>
 
@@ -29,6 +29,12 @@
                         Text="Buscar"
                         CssClass="BotonPortal"
                         OnClick="btnBuscar_Click" />
+                    &nbsp;
+                    <asp:Button ID="btnCrear"
+                        runat="server"
+                        Text="Agregar Nuevo"
+                        CssClass="BotonPortalAmarillo"
+                        OnClick="btnCrear_Click"/>
                 </td>
             </tr>
         </table>

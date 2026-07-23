@@ -438,7 +438,7 @@ public class Usuarios
         {
             String lsSql = "";
             //Dim loObj As New jaxData.dbExecute
-            lsSql = "select nombre from " + modConstantes.gsDbAB + "m_usuarios where rut = " + asrut;
+            lsSql = "select nombre + ' ' + isnull(ap_paterno,'') + ' ' + isnull(ap_materno,'') from " + modConstantes.gsDbAB + "m_usuarios where rut = " + asrut;
 
             con = bd.fnGetConn();
             asNombre = bd.ExecuteScalar(con, lsSql);

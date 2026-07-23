@@ -5,9 +5,10 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-public partial class contenido_RRHH_GestionMarcaciones : System.Web.UI.Page
+public partial class contenido_RRHH_VistaTurnosTrab : System.Web.UI.Page
 {
     ClassReloj rlj = new ClassReloj();
+    ClassTurnos tur = new ClassTurnos();
     ClassUsuarios usr = new ClassUsuarios();
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -15,9 +16,9 @@ public partial class contenido_RRHH_GestionMarcaciones : System.Web.UI.Page
         {
             CargarMeses();
             CargarAnios();
-            rlj.ls_mes = ddlMes.SelectedValue;
-            rlj.ls_anio = ddlAnio.SelectedValue;
-            CargarMarcaciones();
+            //rlj.ls_mes = ddlMes.SelectedValue;
+            //rlj.ls_anio = ddlAnio.SelectedValue;
+            CargarTurnosTrab();
         }
     }
     private void CargarMeses()
@@ -50,12 +51,12 @@ public partial class contenido_RRHH_GestionMarcaciones : System.Web.UI.Page
             ddlAnio.Items.Add(new ListItem(i.ToString(), i.ToString()));
         }
     }
-    private void CargarMarcaciones()
+    private void CargarTurnosTrab()
     {
 
         usr.ls_rut = Session["rut"].ToString();
-        rlj.ls_iduser = usr.mfDevuelveID();//en caso de homologar con otro id desde los relojes u otros
-        dgData.DataSource = rlj.mfBuscarMarcaciones();
+        tur.ls_user = usr.mfDevuelveID();//en caso de homologar con otro id desde los relojes u otros
+        dgData.DataSource = tur.mfBuscarTurnosTrab();
         dgData.DataBind();
     }
 
@@ -66,9 +67,9 @@ public partial class contenido_RRHH_GestionMarcaciones : System.Web.UI.Page
 
     protected void btnBuscar_Click(object sender, EventArgs e)
     {
-        rlj.ls_mes = ddlMes.SelectedValue;
-        rlj.ls_anio = ddlAnio.SelectedValue;
-        CargarMarcaciones();
+        //rlj.ls_mes = ddlMes.SelectedValue;
+        //rlj.ls_anio = ddlAnio.SelectedValue;
+        CargarTurnosTrab();
     }
 
     protected void btnExportar_Click(object sender, EventArgs e)
