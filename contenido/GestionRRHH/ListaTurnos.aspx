@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="GestionTurnos.aspx.cs" Inherits="contenido_Administracion_GestionTurnos" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="ListaTurnos.aspx.cs" Inherits="contenido_Administracion_ListaTurnos" %>
 
 <!DOCTYPE html>
 
@@ -34,7 +34,7 @@
                         runat="server"
                         Text="Agregar Nuevo"
                         CssClass="BotonPortalAmarillo"
-                        OnClick="btnCrear_Click"/>
+                        OnClick="btnCrear_Click" />
                 </td>
             </tr>
         </table>
@@ -46,7 +46,9 @@
             GridLines="None"
             CellPadding="6"
             EmptyDataText="Sin Resultados"
-            EmptyDataRowStyle-CssClass="textoEmpty">
+            EmptyDataRowStyle-CssClass="textoEmpty"
+            OnRowCommand="dgData_RowCommand"
+            DataKeyNames="IDTURNOS">
             <Columns>
                 <asp:BoundField DataField="IDTURNOS"
                     HeaderText="Id" ItemStyle-CssClass="textoGrid" />
@@ -59,6 +61,19 @@
                 <asp:BoundField DataField="F_H_CREACION"
                     HeaderText="Fecha Creación"
                     DataFormatString="{0:dd/MM/yyyy HH:mm}" ItemStyle-CssClass="textoGrid" />
+                <asp:TemplateField HeaderText="Editar">
+                    <ItemTemplate>
+                        <asp:ImageButton ID="btnEditar"
+                            runat="server"
+                            ImageUrl="~/imagenes/edit.png"
+                            ToolTip="Editar Turno"
+                            CommandName="Editar"
+                            CommandArgument='<%# Eval("IDTURNOS") %>'
+                            Width="22px"
+                            Height="22px" />
+                    </ItemTemplate>
+                    <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" />
+                </asp:TemplateField>
             </Columns>
             <HeaderStyle CssClass="GridGralHeader" />
             <RowStyle CssClass="GridGralRow" />

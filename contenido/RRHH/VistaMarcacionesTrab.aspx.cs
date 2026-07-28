@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-public partial class contenido_RRHH_GestionMarcaciones : System.Web.UI.Page
+public partial class contenido_RRHH_VistaMarcacionesTrab : System.Web.UI.Page
 {
     ClassReloj rlj = new ClassReloj();
     ClassUsuarios usr = new ClassUsuarios();

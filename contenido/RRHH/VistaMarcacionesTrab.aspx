@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="GestionMarcaciones.aspx.cs" Inherits="contenido_RRHH_GestionMarcaciones" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="VistaMarcacionesTrab.aspx.cs" Inherits="contenido_RRHH_VistaMarcacionesTrab" %>
 
 <!DOCTYPE html>
 

@@ -19,16 +19,16 @@ public partial class contenido_frmblksiab : System.Web.UI.Page
 
     protected void btnMarcaciones_Click(object sender, EventArgs e)
     {
-        Response.Redirect("~/contenido/RRHH/GestionMarcaciones.aspx");
+        Response.Redirect("~/contenido/RRHH/VistaMarcacionesTrab.aspx");
     }
-
-    protected void btnPermisos_Click(object sender, EventArgs e)
-    {
-
-    }
+    
 
     protected void btnTurnos_Click(object sender, EventArgs e)
     {
         Response.Redirect("~/contenido/RRHH/VistaTurnosTrab.aspx");
+    }
+    protected void btnPermisos_Click(object sender, EventArgs e)
+    {
+
     }
 }

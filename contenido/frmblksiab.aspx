@@ -35,19 +35,19 @@
                     <div class="MenuCardIcon">📋</div>
                     <div class="MenuCardText">Permisos</div>
                 </asp:LinkButton>                
-                <asp:LinkButton ID="btnVacaciones" runat="server" CssClass="MenuCard">
+                <asp:LinkButton ID="btnVacaciones" runat="server" CssClass="MenuCard" Visible="false">
                     <div class="MenuCardIcon">🏖</div>
                     <div class="MenuCardText">Vacaciones</div>
                 </asp:LinkButton>
-                <asp:LinkButton ID="btnLiquidaciones" runat="server" CssClass="MenuCard">
+                <asp:LinkButton ID="btnLiquidaciones" runat="server" CssClass="MenuCard" Visible="false">
                     <div class="MenuCardIcon">💰</div>
                     <div class="MenuCardText">Liquidaciones</div>
                 </asp:LinkButton>                
-                <asp:LinkButton ID="btnDirectorio" runat="server" CssClass="MenuCard">
+                <asp:LinkButton ID="btnDirectorio" runat="server" CssClass="MenuCard" Visible="false">
                     <div class="MenuCardIcon">📞</div>
                     <div class="MenuCardText">Directorio</div>
                 </asp:LinkButton>
-                <asp:LinkButton ID="btnNoticias" runat="server" CssClass="MenuCard">
+                <asp:LinkButton ID="btnNoticias" runat="server" CssClass="MenuCard" >
                     <div class="MenuCardIcon">📢</div>
                     <div class="MenuCardText">Noticias</div>
                 </asp:LinkButton>

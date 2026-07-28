@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-public partial class contenido_Administracion_GestionTurnos : System.Web.UI.Page
+public partial class contenido_Administracion_ListaTurnos : System.Web.UI.Page
 {
     ClassReloj rlj = new ClassReloj();
     ClassTurnos tur = new ClassTurnos();
@@ -42,6 +42,7 @@ public partial class contenido_Administracion_GestionTurnos : System.Web.UI.Page
     {
         tur.ls_codigo = this.txtCod.Text;
         tur.ls_descrip = this.txtDescr.Text;
+        tur.ls_turno = "";
         dgData.DataSource = tur.mfBuscarTurnos();
         dgData.DataBind();
     }
@@ -68,6 +69,22 @@ public partial class contenido_Administracion_GestionTurnos : System.Web.UI.Page
             {
                 mens.mensaje(Page, "Ha Ocurrido un error al Insertar... ");
             }
+        }
+    }
+    protected void dgData_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        if (e.CommandName == "Editar")
+        {
+            int index = Convert.ToInt32(e.CommandArgument);
+
+            Response.Redirect("~/contenido/GestionRRHH/GestionTurnos.aspx?key=" + index.ToString());
+        }
+    }
+    protected void dgData_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType == DataControlRowType.DataRow)
+        {
+            e.Row.CssClass = e.Row.RowState.ToString();
         }
     }
 }
