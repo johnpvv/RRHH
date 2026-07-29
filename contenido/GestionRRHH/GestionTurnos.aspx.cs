@@ -185,10 +185,9 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
         //}
         return true;
     }
-
-    protected void ImgBtnBack_Click(object sender, ImageClickEventArgs e)
+    #region Botones
+    protected void btnVolver_Click(object sender, EventArgs e)
     {
-
         if (Session["cadena"] == null)
         {
             Response.Redirect("~/contenido/GestionRRHH/ListaTurnos.aspx");
@@ -220,7 +219,35 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
         }
     }
 
+    protected void btnGuardarDetalle_Click(object sender, EventArgs e)
+    {
+        string ret = "";
+        foreach (GridViewRow row in dgSemana.Rows)
+        {
+            string idTurnoDia = dgSemana.DataKeys[row.RowIndex]["IDTURNODIA"].ToString();
+            string idDia = dgSemana.DataKeys[row.RowIndex]["IDDIA"].ToString();
+            CheckBox chkTrabaja = (CheckBox)row.FindControl("chkTrabaja");
+            DropDownList ddlHorario = (DropDownList)row.FindControl("ddlHorario");
+            bool trabaja = chkTrabaja.Checked;
+            int idHorario = 0;
+            if (ddlHorario.SelectedValue != "")
+                idHorario = Convert.ToInt32(ddlHorario.SelectedValue);
 
+            tur.ls_idturnodia = idTurnoDia;
+            tur.ls_idturno = this.hdIdTurno.Value;
+            tur.ls_iddia = idDia;
+            tur.ls_idhora = idHorario.ToString();
+            ret += tur.mfGuardarDiaTurno(trabaja);
+        }
+        if(ret != "")
+        {
+            this.lblResultado.Text = " Ha Ocurrido un error: " + ret;
+            return;
+        }
+        mens.mensaje(Page, "Turno Actualizado con Exito.. ");
+        this.lblResultado.Text = "Turno Actualizado con Exito..";
+    }
+    #endregion
 
     private void CambiarEstadoTurno()
     {
@@ -264,6 +291,7 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
             CheckBox chk = (CheckBox)e.Row.FindControl("chkTrabaja");
             TextBox txtIni = (TextBox)e.Row.FindControl("txtIni");
             TextBox txtFin = (TextBox)e.Row.FindControl("txtFin");
+            TextBox txtHr = (TextBox)e.Row.FindControl("txtHr");
             DataRowView dr = (DataRowView)e.Row.DataItem;
 
             //Llenar horarios
@@ -272,18 +300,22 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
             ddl.DataValueField = "IDHORA";
             ddl.DataBind();
             ddl.Items.Insert(0, new ListItem("--Seleccione--", ""));
+
             if (dr["IDHORA"] != DBNull.Value)
             {
                 chk.Checked = true;
                 ddl.SelectedValue = dr["IDHORA"].ToString();
                 txtIni.Text = Convert.ToDateTime(dr["HORA_INI"]).ToString("HH:mm");
                 txtFin.Text = Convert.ToDateTime(dr["HORA_FIN"]).ToString("HH:mm");
+                txtHr.Text = dr["HORA"].ToString() + "h, " + dr["MINUTO"].ToString() + "m";
             }
             else
             {
                 chk.Checked = false;
+                ddl.Enabled = false;
                 txtIni.Text = "";
                 txtFin.Text = "";
+                txtHr.Text = "";
             }
         }
     }
@@ -298,6 +330,7 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
             ddl.SelectedIndex = 0;
             ((TextBox)row.FindControl("txtIni")).Text = "";
             ((TextBox)row.FindControl("txtFin")).Text = "";
+            ((TextBox)row.FindControl("txtHr")).Text = "";
         }
     }
     protected void ddlHorario_SelectedIndexChanged(object sender, EventArgs e)
@@ -307,11 +340,13 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
 
         TextBox txtIni = (TextBox)row.FindControl("txtIni");
         TextBox txtFin = (TextBox)row.FindControl("txtFin");
+        TextBox txtHr = (TextBox)row.FindControl("txtHr");
 
         if (ddl.SelectedValue == "")
         {
             txtIni.Text = "";
             txtFin.Text = "";
+            txtHr.Text = "";
             return;
         }
         tur.ls_hora = ddl.SelectedValue;
@@ -320,6 +355,7 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
         {
             txtIni.Text = Convert.ToDateTime(ds.Tables[0].Rows[0]["HORA_INI"]).ToString("HH:mm");
             txtFin.Text = Convert.ToDateTime(ds.Tables[0].Rows[0]["HORA_FIN"]).ToString("HH:mm");
+            txtHr.Text = ds.Tables[0].Rows[0]["HORA"].ToString() + "h, " + ds.Tables[0].Rows[0]["MINUTO"].ToString() +"m";
         }
     }
 }

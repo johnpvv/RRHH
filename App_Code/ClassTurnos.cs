@@ -25,6 +25,10 @@ public class ClassTurnos
     public string ls_descrip { get; set; }
     public string ls_user { get; set; }
     public string ls_hora { get; set; }
+    public string ls_idturnodia { get; set; }
+    public string ls_idturno { get; set; }
+    public string ls_iddia { get; set; }
+    public string ls_idhora { get; set; }
 
     public DataSet mfBuscarTurnos()
     {
@@ -155,19 +159,19 @@ public class ClassTurnos
         string lsWhe = "";
         DataSet ds;
 
-        lsSql = "SELECT "  +
+        lsSql = "SELECT " +
             "D.IDDIA," +
             "D.DESCRIPCION AS DIA," +
-            "TD.IDTURNODIA," +
+            "ISNULL(TD.IDTURNODIA,0) IDTURNODIA ," +
             "TD.IDTURNOS," +
-            "TD.IDHORA," +
-            "H.DESCRIPCION," +
-            "H.HORA," +
-            "H.MINUTO," +
-            "H.HORA_INI," +
-            "H.HORA_FIN " +
+            "TD.IDHORA IDHORA, " +
+            "ISNULL(H.HORA_INI, '') HORA_INI, " +
+            "ISNULL(H.HORA_FIN, '') HORA_FIN, " +
+            "H.DESCRIPCION, " +
+            "H.HORA, " +
+            "H.MINUTO " +
             "FROM " + modConstantes.gsDbRH + "TG_DIAS D " +
-            "LEFT JOIN " + modConstantes.gsDbRH + "M_TURNO_DIA TD ON TD.IDDIA = D.IDDIA AND TD.IDTURNOS = " + ls_turno + " " +
+            "LEFT JOIN " + modConstantes.gsDbRH + "M_TURNO_DIA TD ON TD.IDDIA = D.IDDIA AND TD.IDTURNOS = " + ls_turno + " AND TD.IDESTADO <>3 " +
             "LEFT JOIN " + modConstantes.gsDbRH + "TG_HORAS H ON H.IDHORA = TD.IDHORA " +
             "ORDER BY D.IDDIA";
         con = bd.fnGetConn();
@@ -204,6 +208,8 @@ public class ClassTurnos
             "SELECT " +
             "IDHORA, " +
             "DESCRIPCION, " +
+            "HORA," +
+            "MINUTO," +
             "HORA_INI, " +
             "HORA_FIN " +
             "FROM " + modConstantes.gsDbRH + "TG_HORAS " +
@@ -214,5 +220,51 @@ public class ClassTurnos
         con.Close();
 
         return ds;
+    }
+    public string mfGuardarDiaTurno(bool trabaja)
+    {
+        string lsSql = "";
+        string lsRes = "";
+
+        if (trabaja)
+        {
+            if (ls_idturnodia == "" || ls_idturnodia == "0")
+            {
+                lsSql =
+                "INSERT INTO " + modConstantes.gsDbRH + "M_TURNO_DIA " +
+                "(IDTURNOS, IDDIA, IDHORA, F_H_CREACION, IDESTADO) " +
+                "VALUES (" +
+                ls_idturno + "," +
+                ls_iddia + "," +
+                ls_idhora + "," +
+                "GETDATE()," +
+                "1)";
+            }
+            else
+            {
+                lsSql =
+                "UPDATE " + modConstantes.gsDbRH + "M_TURNO_DIA SET " +
+                "IDHORA = " + ls_idhora + ", " +
+                "F_H_CREACION = GETDATE() " +
+                "WHERE IDTURNODIA = " + ls_idturnodia;
+            }
+        }
+        else
+        {
+            if (ls_idturnodia != "" && ls_idturnodia != "0")
+            {
+                lsSql =
+                "DELETE FROM " + modConstantes.gsDbRH +
+                "M_TURNO_DIA " +
+                "WHERE IDTURNODIA = " + ls_idturnodia;
+            }
+        }
+        if (lsSql != "")
+        {
+            con = bd.fnGetConn();
+            lsRes = bd.ExecuteScalar(con, lsSql);
+            con.Close();
+        }
+        return lsRes;
     }
 }

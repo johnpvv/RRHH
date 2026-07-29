@@ -79,21 +79,19 @@
                         </label>
                 </td>
                 <td style="text-align: right">
-                    <asp:ImageButton ID="ImgBtnBack" runat="server" ImageUrl="~/imagenes/back.png"
-                        OnClick="ImgBtnBack_Click" Style="width: 24px; text-align: right" />
                 </td>
             </tr>
         </table>
-        <ajaxToolkit:TabContainer runat="server" ID="TC_1" Height="700px" Width="800px"
+        <ajaxToolkit:TabContainer runat="server" ID="TC_1" Height="700px" Width="900px"
             Font-Names="Tahoma" Font-Size="13px" ForeColor="#666666" ScrollBars="Auto" ActiveTabIndex="0">
 
             <ajaxToolkit:TabPanel runat="server" ID="TabPanel1" Font-Names="Tahoma" ForeColor="#666666" Font-Size="13px">
                 <HeaderTemplate>Información General</HeaderTemplate>
                 <ContentTemplate>
-                    <table border="0" style="width: 700px" class="table table-hover table-bordered">
+                    <table border="0" style="width: 860px;" class="table table-hover table-bordered">
                         <tr>
                             <td class="auto-style52">
-                                <table border="0" style="width: 600px">
+                                <table border="0" style="width: 860px;">
                                     <tr>
                                         <td class="auto-style57">
                                             <asp:Button ID="btn_Agregar" Height="35px" Text="Grabar" Width="150px"
@@ -155,6 +153,12 @@
                                         </td>
                                     </tr>
                                     <tr>
+                                        <td class="TextoRigth">Considera Feriados:</td>
+                                        <td class="TextoLeft">
+                                            <asp:CheckBox ID="chkFer" runat="server" Required="true" Font-Bold="True"></asp:CheckBox>
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <td class="TextoRigth">Fecha Creacion:</td>
                                         <td>
                                             <asp:TextBox ID="txtFCrea" runat="server" Width="120px" Enabled="False"></asp:TextBox>
@@ -170,6 +174,7 @@
                                         <td>
                                             <asp:HiddenField ID="hdIdTurno" runat="server" />
                                         </td>
+                                    </tr>
                                 </table>
                             </td>
                         </tr>
@@ -198,15 +203,12 @@
                         CssClass="GridGral"
                         Width="100%"
                         GridLines="None"
-                        OnRowDataBound="dgSemana_RowDataBound">
+                        OnRowDataBound="dgSemana_RowDataBound"
+                        DataKeyNames="IDTURNODIA,IDDIA">
                         <Columns>
                             <asp:TemplateField HeaderText="Día" ItemStyle-CssClass="textoGridBold">
                                 <ItemTemplate>
                                     <%# Eval("DIA") %>
-                                    <asp:HiddenField
-                                        ID="hdDia"
-                                        runat="server"
-                                        Value='<%# Eval("IDDIA") %>' />
                                 </ItemTemplate>
                             </asp:TemplateField>
                             <asp:TemplateField HeaderText="Trabaja" ItemStyle-CssClass="textoGrid">
@@ -214,20 +216,30 @@
                                     <asp:CheckBox
                                         ID="chkTrabaja"
                                         runat="server"
-                                        Checked='<%# Convert.ToBoolean(Eval("IDDIA")) %>'
+                                        Checked='<%# Eval("IDTURNODIA") != DBNull.Value %>'
                                         AutoPostBack="true"
                                         OnCheckedChanged="chkTrabaja_CheckedChanged" />
                                 </ItemTemplate>
                                 <ItemStyle HorizontalAlign="Center" />
                             </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Horario" ItemStyle-CssClass="textoGrid">
+                            <asp:TemplateField HeaderText="Descripción" ItemStyle-CssClass="textoGrid">
                                 <ItemTemplate>
-                                    <asp:DropDownList ID="ddlHorario" runat="server" 
-                                        CssClass="GridGralRow" 
+                                    <asp:DropDownList ID="ddlHorario" runat="server"
+                                        CssClass="GridGralRow"
                                         Width="240px"
                                         AutoPostBack="true"
                                         OnSelectedIndexChanged="ddlHorario_SelectedIndexChanged">
                                     </asp:DropDownList>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Duración Horas" ItemStyle-CssClass="textoGridBold">
+                                <ItemTemplate>
+                                    <asp:TextBox ID="txtHr"
+                                        runat="server"
+                                        Width="50px"
+                                        ReadOnly="true"
+                                        Enabled="false"
+                                        CssClass="textoGridBold" />
                                 </ItemTemplate>
                             </asp:TemplateField>
                             <asp:TemplateField HeaderText="Entrada" ItemStyle-CssClass="textoGridBold">
@@ -255,10 +267,26 @@
                         <RowStyle CssClass="GridGralRow" />
                         <AlternatingRowStyle CssClass="GridGralAltRow" />
                     </asp:GridView>
+                    <br />
+                    <table style="width: 100%; margin-bottom: 10px;">
+                        <tr>
+                            <td align="center">
+                                <asp:Button ID="btnGuardarDetalle"
+                                    runat="server"
+                                    Text="Guardar Turno"
+                                    CssClass="BotonPortalAzul"
+                                    OnClick="btnGuardarDetalle_Click" />
+                                <asp:Button ID="btnVolver"
+                                    runat="server"
+                                    Text="Volver"
+                                    CssClass="BotonPortalGris"
+                                    OnClick="btnVolver_Click" />
+                            </td>
+                        </tr>
+                    </table>
+                    <asp:Label ID="lblResultado" runat="server" ForeColor="Red"></asp:Label>
                 </ContentTemplate>
-
             </ajaxToolkit:TabPanel>
-
             <ajaxToolkit:TabPanel ID="TabPanel3" runat="server" HeaderText="TabPanel3">
                 <HeaderTemplate>Personas</HeaderTemplate>
             </ajaxToolkit:TabPanel>
