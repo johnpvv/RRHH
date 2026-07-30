@@ -29,6 +29,9 @@ public class ClassTurnos
     public string ls_idturno { get; set; }
     public string ls_iddia { get; set; }
     public string ls_idhora { get; set; }
+    public string ls_iduselim { get; set; }
+    public string ls_rut { get; set; }
+    public string ls_nombre { get; set; }
 
     public DataSet mfBuscarTurnos()
     {
@@ -179,48 +182,7 @@ public class ClassTurnos
         con.Close();
         return ds;
     }
-    public DataSet mfBuscarHoras()
-    {
-        string lsSql;
-        string lsWhe = "";
-        DataSet ds;
 
-        lsSql = "SELECT " +
-            "H.IDHORA," +
-            "H.DESCRIPCION," +
-            "H.HORA," +
-            "H.MINUTO," +
-            "H.HORA_INI," +
-            "H.HORA_FIN " +
-            "FROM " + modConstantes.gsDbRH + "TG_HORAS H " +
-            "ORDER BY H.IDHORA";
-        con = bd.fnGetConn();
-        ds = bd.Fill(con, lsSql);
-        con.Close();
-        return ds;
-    }
-    public DataSet mfBuscarHoraID()
-    {
-        string lsSql;
-        DataSet ds;
-
-        lsSql =
-            "SELECT " +
-            "IDHORA, " +
-            "DESCRIPCION, " +
-            "HORA," +
-            "MINUTO," +
-            "HORA_INI, " +
-            "HORA_FIN " +
-            "FROM " + modConstantes.gsDbRH + "TG_HORAS " +
-            "WHERE IDHORA = " + ls_hora;
-
-        con = bd.fnGetConn();
-        ds = bd.Fill(con, lsSql);
-        con.Close();
-
-        return ds;
-    }
     public string mfGuardarDiaTurno(bool trabaja)
     {
         string lsSql = "";
@@ -265,6 +227,139 @@ public class ClassTurnos
             lsRes = bd.ExecuteScalar(con, lsSql);
             con.Close();
         }
+        return lsRes;
+    }
+    public DataSet mfBuscarUserDisp()
+    {
+        string lsSql;
+        DataSet ds;
+        string lsWhe = "";
+
+        if (ls_rut != "")
+        {
+            lsWhe += " AND P.RUT = '" + ls_rut + "'";
+        }
+
+        if (ls_nombre != "")
+        {
+            lsWhe += " AND (P.NOMBRE LIKE '%" + ls_nombre + "%' OR " +
+                "P.AP_PATERNO LIKE '%" + ls_nombre + "%' OR " +
+                "P.AP_MATERNO LIKE '%" + ls_nombre + "%')";
+        }
+
+        lsSql =
+            "SELECT " +
+            "P.IDUSUARIO, " +
+            "P.RUT, " +
+            "P.DV, " +
+            "P.NOMBRE + ' ' + " +
+            "ISNULL(P.AP_PATERNO,'') + ' ' + " +
+            "ISNULL(P.AP_MATERNO,'') as NOMBRE " +
+            "FROM " + modConstantes.gsDbRH + "M_USUARIOS P " +
+            "WHERE P.IDESTADO = 1 " +
+            "AND NOT EXISTS ( " +
+            "   SELECT 1 " +
+            "   FROM " + modConstantes.gsDbRH + "M_TURNO_USUARIOS TU " +
+            "   WHERE TU.IDUSUARIO = P.IDUSUARIO " +
+            //"   AND TU.IDTURNOS = " + ls_idturno +//si se desea solo user de turno especifico
+            "   AND TU.IDESTADO = 1 ) " +
+            " " + lsWhe +
+            "ORDER BY P.AP_PATERNO, P.AP_MATERNO, P.NOMBRE";
+
+        con = bd.fnGetConn();
+        ds = bd.Fill(con, lsSql);
+        con.Close();
+
+        return ds;
+    }
+    public DataSet mfBuscarUserTurno()
+    {
+        string lsSql;
+        DataSet ds;
+        string lsWhe = "";
+
+        if (ls_rut != "")
+        {
+            lsWhe += " AND P.RUT = '" + ls_rut + "'";
+        }
+
+        if (ls_nombre != "")
+        {
+            lsWhe += " AND (P.NOMBRE LIKE '%" + ls_nombre + "%' OR " +
+                "P.AP_PATERNO LIKE '%" + ls_nombre + "%' OR " +
+                "P.AP_MATERNO LIKE '%" + ls_nombre + "%')";
+        }
+
+        lsSql =
+            "SELECT " +
+            "TU.IDTURNUS, " +
+            "P.IDUSUARIO, " +
+            "P.RUT, " +
+            "P.DV, " +
+            "P.NOMBRE + ' ' + " +
+            "ISNULL(P.AP_PATERNO,'') + ' ' + " +
+            "ISNULL(P.AP_MATERNO,'') as NOMBRE " +
+            "FROM " + modConstantes.gsDbRH + "M_TURNO_USUARIOS TU " +
+            "INNER JOIN " + modConstantes.gsDbRH + "M_USUARIOS P " +
+            "ON TU.IDUSUARIO = P.IDUSUARIO " +
+            "WHERE TU.IDTURNOS = " + ls_idturno +
+            " " + lsWhe +
+            " AND TU.IDESTADO = 1 " +
+            "ORDER BY P.AP_PATERNO, P.AP_MATERNO, P.NOMBRE";
+
+        con = bd.fnGetConn();
+        ds = bd.Fill(con, lsSql);
+        con.Close();
+        return ds;
+    }
+    public string mfAgregarUserTurno()
+    {
+        string lsSql;
+        string lsRes;
+
+        lsSql =
+            "IF EXISTS ( " +
+            "SELECT 1 FROM " + modConstantes.gsDbRH + "M_TURNO_USUARIOS " +
+            "WHERE IDUSUARIO = " + ls_user + ") " +
+            "BEGIN " +
+            "UPDATE " + modConstantes.gsDbRH + "M_TURNO_USUARIOS SET " +
+            "IDESTADO = 1, " +
+            "F_H_ELIM = NULL, " +
+            "IDUSELIM = NULL " +
+            "WHERE IDTURNOS = " + ls_idturno +
+            " AND IDUSUARIO = " + ls_user +
+            " END " +
+            "ELSE " +
+            "BEGIN " +
+            "INSERT INTO " + modConstantes.gsDbRH + "M_TURNO_USUARIOS " +
+            "(IDTURNOS,IDUSUARIO,F_H_CREACION,IDESTADO) VALUES (" +
+            ls_idturno + "," +
+            ls_user + "," +
+            "GETDATE(),1)" +
+            " END";
+
+        con = bd.fnGetConn();
+        lsRes = bd.ExecuteScalar(con, lsSql);
+        con.Close();
+        return lsRes;
+    }
+    public string mfQuitarUserTurno()
+    {
+        string lsSql;
+        string lsRes;
+
+        lsSql =
+            "UPDATE " + modConstantes.gsDbRH + "M_TURNO_USUARIOS SET " +
+            "IDESTADO = 3, " +
+            "F_H_ELIM = GETDATE(), " +
+            "IDUSELIM = " + ls_iduselim +
+            " WHERE IDTURNOS = " + ls_idturno +
+            " AND IDTURNUS = " + ls_user;
+
+        con = bd.fnGetConn();
+        lsRes = bd.ExecuteScalar(con, lsSql);
+        con.Close();
+
         return lsRes;
     }
 }

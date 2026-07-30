@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
+public partial class contenido_GestionRRHH_GestionHorarios : System.Web.UI.Page
 {
     Mensaje mens = new Mensaje();
     Usuarios usr = new Usuarios();
@@ -30,13 +30,13 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
             try
             {
                 // Captura Datos
-                Session.Add("lsIdTurno", Request.QueryString["key"].ToString());
-                this.hdIdTurno.Value = Request.QueryString["key"].ToString();
+                Session.Add("lsIdHora", Request.QueryString["key"].ToString());
+                this.hdIdHora.Value = Request.QueryString["key"].ToString();
                 cargaTurnoSemana();
                 //lsGrabar = modfunc.fnValidaUsrApp("BTN_CHK_PAC", gUsr, asCodSistema);
                 //if (lsGrabar != "M" && lsGrabar != "L") { this.chkLimpiar.Enabled = false; }
 
-                if (this.hdIdTurno.Value == "0")
+                if (this.hdIdHora.Value == "0")
                 {
                     Session.Add("lbNvo", true);
                     nuevo = true;
@@ -47,7 +47,7 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
                     Session.Add("lbNvo", false);
                     nuevo = false;
                     this.btn_Agregar.Text = "Actualizar";
-                    tur.ls_turno = this.hdIdTurno.Value;
+                    tur.ls_turno = this.hdIdHora.Value;
                     tur.ls_codigo = "";
                     tur.ls_descrip = "";
                     aoDs = tur.mfBuscarTurnos();
@@ -108,7 +108,7 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
         string lsRet = "";
         tur.ls_descrip = this.TxtDescr.Text;
         tur.ls_codigo = this.txtCod.Text;
-        tur.ls_turno = this.hdIdTurno.Value;
+        tur.ls_turno = this.hdIdHora.Value;
         lsRet = tur.mfUpdateTurnos();
         if (lsRet != "")
             mens.mensaje(Page, "Error: Problemas al Modificar el Registro.");
@@ -180,7 +180,7 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
             if (ddlHorario.SelectedValue != "")
                 idHorario = Convert.ToInt32(ddlHorario.SelectedValue);
             tur.ls_idturnodia = idTurnoDia;
-            tur.ls_idturno = this.hdIdTurno.Value;
+            tur.ls_idturno = this.hdIdHora.Value;
             tur.ls_iddia = idDia;
             tur.ls_idhora = idHorario.ToString();
             ret += tur.mfGuardarDiaTurno(trabaja);
@@ -220,7 +220,7 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
     }
     private void cargaTurnoSemana()
     {
-        tur.ls_turno = this.hdIdTurno.Value;
+        tur.ls_turno = this.hdIdHora.Value;
         dgSemana.DataSource = tur.mfBuscarTurnoDia();
         dgSemana.DataBind();
     }
@@ -318,7 +318,7 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
     private void mfCargaUser()
     {
         DataSet aoDsUser;
-        tur.ls_idturno = this.hdIdTurno.Value;
+        tur.ls_idturno = this.hdIdHora.Value;
         tur.ls_rut = this.TRut.Text;
         tur.ls_nombre = this.TNombreUsr.Text;
         aoDsUser = tur.mfBuscarUserTurno();
@@ -328,7 +328,7 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
     private void mfCargaUserDisp()
     {
         DataSet aoDsDisp;
-        tur.ls_idturno = this.hdIdTurno.Value;
+        tur.ls_idturno = this.hdIdHora.Value;
         tur.ls_rut = this.TRut.Text;
         tur.ls_nombre = this.TNombreUsr.Text;
         aoDsDisp = tur.mfBuscarUserDisp();
@@ -338,7 +338,7 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
     private void mfAgregarUser(string asIdentificador)
     {
         string lsRet = "";
-        tur.ls_idturno = this.hdIdTurno.Value;
+        tur.ls_idturno = this.hdIdHora.Value;
         tur.ls_user = asIdentificador;
         tur.mfAgregarUserTurno();
         if (lsRet != "")
@@ -362,7 +362,7 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
     {
         string lsRet = "";
         
-        tur.ls_idturno = hdIdTurno.Value;
+        tur.ls_idturno = hdIdHora.Value;
         tur.ls_user = asIdentificador;
         tur.ls_iduselim = Session["user"].ToString();
         lsRet= tur.mfQuitarUserTurno();

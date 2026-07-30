@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="GestionTurnos.aspx.cs" Inherits="contenido_GestionRRHH_GestionTurnos" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="GestionHorarios.aspx.cs" Inherits="contenido_GestionRRHH_GestionHorarios" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
 
@@ -153,7 +153,7 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            <asp:HiddenField ID="hdIdTurno" runat="server" />
+                                            <asp:HiddenField ID="hdIdHora" runat="server" />
                                         </td>
                                     </tr>
                                 </table>
