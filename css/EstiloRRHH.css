@@ -226,9 +226,14 @@
 }
 
 .MenuGrid {
+    width: 100%;
+    min-height: calc(100vh - 90px);
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 20px;
 }
 
 .MenuCard {

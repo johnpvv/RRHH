@@ -195,7 +195,7 @@
                                 <ItemTemplate>
                                     <asp:TextBox ID="txtHr"
                                         runat="server"
-                                        Width="50px"
+                                        Width="60px"
                                         ReadOnly="true"
                                         Enabled="false"
                                         CssClass="textoGridBold" />

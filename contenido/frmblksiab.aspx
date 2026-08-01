@@ -13,11 +13,9 @@
             <div class="PortalTitulo">
                 Portal del Trabajador
             </div>
-
             <div class="PortalSubTitulo">
                 Bienvenido al sistema de autoservicio institucional
             </div>
-
             <div class="MenuGrid">
                 <asp:LinkButton ID="btnPerfil" runat="server" CssClass="MenuCard" OnClick="btnPerfil_Click">
                     <div class="MenuCardIcon">👤</div>

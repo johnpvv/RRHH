@@ -32,7 +32,6 @@ public partial class contenido_GestionRRHH_GestionHorarios : System.Web.UI.Page
                 // Captura Datos
                 Session.Add("lsIdHora", Request.QueryString["key"].ToString());
                 this.hdIdHora.Value = Request.QueryString["key"].ToString();
-                //cargaTurnoSemana();
                 //lsGrabar = modfunc.fnValidaUsrApp("BTN_CHK_PAC", gUsr, asCodSistema);
                 //if (lsGrabar != "M" && lsGrabar != "L") { this.chkLimpiar.Enabled = false; }
 
@@ -58,7 +57,12 @@ public partial class contenido_GestionRRHH_GestionHorarios : System.Web.UI.Page
                             this.TxtId.Text = aoDs.Tables[0].Rows[0]["IDHORA"].ToString();
                             this.TxtDescr.Text = aoDs.Tables[0].Rows[0]["DESCRIPCION"].ToString();
                             this.txtFCrea.Text = aoDs.Tables[0].Rows[0]["F_H_CREACION"].ToString();
-                            //this.txtCod.Text = aoDs.Tables[0].Rows[0]["CODIGO"].ToString();
+                            //crear horas para hacer calculo
+                            DateTime horaEnt = DateTime.Parse(aoDs.Tables[0].Rows[0]["HORA_INI"].ToString());
+                            DateTime horaSal = DateTime.Parse(aoDs.Tables[0].Rows[0]["HORA_FIN"].ToString());
+                            this.ddlHoraEntrada.Items.Add(new ListItem(horaEnt.ToString("HH:mm"), horaEnt.ToString("HH:mm")));
+                            this.ddlHoraSalida.Items.Add(new ListItem(horaSal.ToString("HH:mm"), horaSal.ToString("HH:mm")));
+
                             if (aoDs.Tables[0].Rows[0]["ESTADO"].ToString() == "ACTIVO")
                             {
                                 this.lbEstado.Text = "ACTIVO";
@@ -70,8 +74,7 @@ public partial class contenido_GestionRRHH_GestionHorarios : System.Web.UI.Page
                                 this.btn_habilitar.Text = "Habilitar";
                             }
                             this.LbTitulo.Text = aoDs.Tables[0].Rows[0]["IDHORA"].ToString();
-                            //mfCargaUser();
-                            //mfCargaUserDisp();
+                            calculaHorario();
                         }
                     }
                 }
@@ -89,7 +92,11 @@ public partial class contenido_GestionRRHH_GestionHorarios : System.Web.UI.Page
     private void mfAgregar()
     {
         //Validaciones
-        if (!ValidarCampos()) { return; }
+        if (this.TxtDescr.Text == "")
+        {
+            mens.mensaje(Page, "Debe Escribir una Descripción");
+            return;
+        }
         //Revisar si existe turno
         string lsRet = "";
         string lsID = "";
@@ -127,9 +134,24 @@ public partial class contenido_GestionRRHH_GestionHorarios : System.Web.UI.Page
     }
     public bool ValidarCampos()
     {
-        if (this.TxtDescr.Text == "")
+        if (ddlHoraEntrada.SelectedIndex < 0)
         {
-            mens.mensaje(Page, "Debe Escribir una Descripción");
+            mens.mensaje(Page, "Debe seleccionar la hora de entrada.");
+            return false;
+        }
+        if (ddlHoraSalida.SelectedIndex < 0)
+        {
+            mens.mensaje(Page, "Debe seleccionar la hora de salida.");
+            return false;
+        }
+        if (txtHoras.Text.Trim() == "" || Convert.ToInt32(txtHoras.Text) == 0)
+        {
+            mens.mensaje(Page, "Debe calcular la cantidad de horas, y ser mayor a cero.");
+            return false;
+        }
+        if (txtMinuto.Text.Trim() == "")
+        {
+            mens.mensaje(Page, "Debe calcular los minutos.");
             return false;
         }
         return true;
@@ -167,6 +189,9 @@ public partial class contenido_GestionRRHH_GestionHorarios : System.Web.UI.Page
     {
         string ret = "";
 
+        if (!ValidarCampos())//validar que esten los datos necesarios para guardar detalle
+            return;
+
         hor.ls_user = Session["user"].ToString();
         hor.ls_idhora = this.hdIdHora.Value;
         hor.ls_hora = this.txtHoras.Text;
@@ -174,11 +199,13 @@ public partial class contenido_GestionRRHH_GestionHorarios : System.Web.UI.Page
         hor.ls_horaini = this.ddlHoraEntrada.SelectedValue;
         hor.ls_horafin = this.ddlHoraSalida.SelectedValue;
         ret = hor.mfUpdateHorarioDet();
+
         if (ret != "")
         {
             this.lblResultado.Text = " Ha Ocurrido un error: " + ret;
             return;
         }
+
         mens.mensaje(Page, "Horario Actualizado con Exito.. ");
         this.lblResultado.Text = "Horario Actualizado con Exito..";
     }
@@ -217,22 +244,40 @@ public partial class contenido_GestionRRHH_GestionHorarios : System.Web.UI.Page
     }
 
 
-    protected void CalcularHorario(object sender, EventArgs e)
+    protected void calcHoras(object sender, EventArgs e)
+    {
+        calculaHorario();
+    }
+
+    public void calculaHorario()
     {
         DateTime inicio = DateTime.Parse(ddlHoraEntrada.SelectedValue);
         DateTime fin = DateTime.Parse(ddlHoraSalida.SelectedValue);
 
+        if (inicio == fin)//calculo 24 horas
+        {
+            txtHoras.Text = "24";
+            txtMinuto.Text = "00";
+            return;
+        }
+
         if (fin < inicio)
+        {
             fin = fin.AddDays(1);
+        }
 
         TimeSpan ts = fin - inicio;
-
         txtHoras.Text = ts.Hours.ToString();
         txtMinuto.Text = ts.Minutes.ToString("00");
     }
 
     private void CargarHoras(int intervalo)
     {
+        if(intervalo <= 0)
+        {
+            mens.mensaje(Page, "Error: El intervalo debe ser mayor a cero. Pruebe con un número mayor.");
+            return;
+        }
         ddlHoraEntrada.Items.Clear();
         ddlHoraSalida.Items.Clear();
         txtHoras.Text = "";

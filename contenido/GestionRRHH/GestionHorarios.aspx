@@ -20,6 +20,20 @@
             }
             return false;
         }
+        function ValidarTexto(obj) {
+            var strNumero
+            strNumero = document.getElementById(obj).value
+
+            strNumero = strNumero.replace(",", ".");
+            if (isNaN(strNumero) == true) {
+                alert("El valor " + document.getElementById(obj).value + " no es un número.");
+                document.getElementById(obj).value = "";
+                document.getElementById(obj).focus();
+            }
+            else {
+                document.getElementById(obj).value = strNumero;
+            }
+        }
     </script>
 </head>
 <body>
@@ -107,13 +121,13 @@
                             <td align="center">
                                 <asp:Button ID="btn_Agregar"
                                     Text="Grabar"
-                                    Cssclass="BotonPortalAzul"
+                                    CssClass="BotonPortalAzul"
                                     runat="server"
                                     OnClick="btn_Agregar_Click"
                                     OnClientClick="return ConfirmarGuardar();" />&nbsp
                                 <asp:Button ID="btn_habilitar"
                                     runat="server"
-                                    Cssclass="BotonPortalAmarillo"
+                                    CssClass="BotonPortalAmarillo"
                                     Text="Habilitar"
                                     OnClick="btn_habilitar_Click"
                                     OnClientClick="javascript:Confirm('Desea realizar la actualización de los Datos..')" />&nbsp
@@ -144,8 +158,7 @@
                 <ContentTemplate>
                     <table class="GridGral" style="width: 900px; margin: auto;">
                         <tr>
-                            <td colspan="2" class="TituloSeccion">
-                                Detalle del Horario
+                            <td colspan="2" class="TituloSeccion">Detalle del Horario
                             </td>
                         </tr>
                         <tr>
@@ -156,7 +169,7 @@
                             <td class="textoNormRigth">Intervalo en Minutos:
                             </td>
                             <td class="textoNormLeft">
-                                <asp:TextBox ID="txtint" runat="server" Width="60px" CssClass="TextBoxHora"></asp:TextBox>
+                                <asp:TextBox ID="txtint" runat="server" Width="60px" CssClass="TextBoxHora" MaxLength="3" onblur="ValidarTexto(this.id)"></asp:TextBox>
                                 <asp:Button ID="btnCalcular"
                                     runat="server"
                                     Text="Generar Intervalos"
@@ -177,7 +190,7 @@
                                     Width="120px"
                                     CssClass="GridGralRow"
                                     AutoPostBack="true"
-                                    OnSelectedIndexChanged="CalcularHorario">
+                                    OnSelectedIndexChanged="calcHoras">
                                 </asp:DropDownList>
                             </td>
                         </tr>
@@ -190,7 +203,7 @@
                                     Width="120px"
                                     AutoPostBack="true"
                                     CssClass="GridGralRow"
-                                    OnSelectedIndexChanged="CalcularHorario">
+                                    OnSelectedIndexChanged="calcHoras">
                                 </asp:DropDownList>
                             </td>
                         </tr>
