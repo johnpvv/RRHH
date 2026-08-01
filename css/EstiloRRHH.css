@@ -49,6 +49,26 @@
     text-align: center;
 }
 
+.textoNormLeft {
+    border-collapse: collapse;
+    width: auto;
+    height: 30px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: left;
+}
+
+.textoNormRigth {
+    border-collapse: collapse;
+    width: auto;
+    height: 30px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: right;
+}
+
 .textoGridBold {
     border-collapse: collapse;
     width: auto;
@@ -175,6 +195,16 @@
     border-radius: 3px;
 }
 
+.TextBoxHora {
+    background-color: #E7F1FF;
+    height: 26px;
+    cursor: text;
+    border-radius: 3px;
+    font-size: 16px;
+    text-align: center;
+    font-weight: bold;
+}
+
 /*tarjetas inicio*/
 .PortalContainer {
     width: 98%;
@@ -230,4 +260,104 @@
     font-size: 18px;
     font-weight: bold;
     margin-top: 10px;
+}
+
+.GridPager {
+    background: #f5f7fa;
+    border-top: 1px solid #d9e2ec;
+    padding: 5px;
+    text-align: center;
+}
+
+    .GridPager table {
+        margin: auto;
+    }
+
+    .GridPager td {
+        padding: 2px;
+    }
+
+    .GridPager a {
+        display: inline-block;
+        min-width: 10px;
+        padding: 5px;
+        margin: 2px;
+        text-decoration: none;
+        color: #1976d2;
+        border: 1px solid #1976d2;
+        border-radius: 5px;
+        font-weight: 400;
+        font-size: 11px;
+        transition: all .2s;
+    }
+
+        .GridPager a:hover {
+            background: #1976d2;
+            color: white;
+        }
+
+    .GridPager span {
+        display: inline-block;
+        min-width: 10px;
+        padding: 6px;
+        margin: 2px;
+        background: #1976d2;
+        color: white;
+        border-radius: 5px;
+        font-weight: 500;
+        font-size: 11px;
+    }
+
+.TituloSeccion {
+    background: #1976d2;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 10px;
+}
+
+.TextoCentro {
+    text-align: center;
+    font-weight: bold;
+    background: #F7F7F7;
+}
+
+.success {
+    background-color: #4CAF50;
+    color: #FDFEFE;
+}
+
+.info {
+    background-color: #2196F3;
+    color: #FDFEFE;
+}
+
+.labelBlue {
+    background-color: #4682B4;
+    color: #FDFEFE;
+}
+
+.warning {
+    background-color: #ff9800;
+    color: #FDFEFE;
+}
+
+.warningDark {
+    background-color: darkmagenta;
+    color: white;
+}
+
+.goldBlack {
+    background-color: gold;
+    color: black;
+}
+
+.danger {
+    background-color: #f44336;
+    color: #FDFEFE;
+}
+
+.other {
+    background-color: #e7e7e7;
+    color: black;
 }

@@ -21,51 +21,6 @@
             return false;
         }
     </script>
-    <style type="text/css">
-        .success {
-            background-color: #4CAF50;
-            color: #FDFEFE;
-        }
-
-        .info {
-            background-color: #2196F3;
-            color: #FDFEFE;
-        }
-
-        .labelBlue {
-            background-color: #4682B4;
-            color: #FDFEFE;
-        }
-
-        .warning {
-            background-color: #ff9800;
-            color: #FDFEFE;
-        }
-
-        .warningDark {
-            background-color: darkmagenta;
-            color: white;
-        }
-
-        .goldBlack {
-            background-color: gold;
-            color: black;
-        }
-
-        .danger {
-            background-color: #f44336;
-            color: #FDFEFE;
-        }
-
-        .other {
-            background-color: #e7e7e7;
-            color: black;
-        }
-
-        .auto-style18 {
-            width: 787px;
-        }
-    </style>
 </head>
 <body>
     <form id="form1" runat="server">
@@ -373,7 +328,7 @@
                                                 AllowPaging="True"
                                                 OnPageIndexChanging="gbUserDisp_PageIndexChanging"
                                                 DataKeyNames="idusuario"
-                                                PageSize="30">
+                                                PageSize="20">
                                                 <Columns>
                                                     <asp:BoundField DataField="idusuario" HeaderText="Id" ReadOnly="True">
                                                         <ItemStyle CssClass="TextoCenter" />
@@ -395,7 +350,8 @@
                                                 </Columns>
                                                 <HeaderStyle CssClass="GridGralHeader" />
                                                 <RowStyle CssClass="GridGralRow" />
-                                                <AlternatingRowStyle CssClass="GridGralAltRow" />
+                                                <AlternatingRowStyle CssClass="GridGralAltRow" /> 
+                                                <PagerStyle CssClass="GridPager" HorizontalAlign="Center" />
                                                 <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" />
                                             </asp:GridView>
                                         </td>
@@ -420,7 +376,7 @@
                                                 EmptyDataText="No Hay Profesionales Asociados"
                                                 OnPageIndexChanging="gbUser_PageIndexChanging"
                                                 DataKeyNames="IDTURNUS"
-                                                PageSize="30">
+                                                PageSize="20">
                                                 <Columns>
                                                     <asp:BoundField DataField="IDTURNUS" HeaderText="Id" ReadOnly="True">
                                                         <ItemStyle CssClass="TextoCenter" />
@@ -443,6 +399,7 @@
                                                 <HeaderStyle CssClass="GridGralHeader" />
                                                 <RowStyle CssClass="GridGralRow" />
                                                 <AlternatingRowStyle CssClass="GridGralAltRow" />
+                                                <PagerStyle CssClass="GridPager" HorizontalAlign="Center" />
                                                 <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" />
                                             </asp:GridView>
                                         </td>

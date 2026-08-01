@@ -5,10 +5,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
-    <title>RRHH_GestionTurnos</title>
+    <title>RRHH_GestionHoras</title>
     <script language="text/javascript" src="../../js/common.js" type="text/javascript"></script>
     <link runat="server" href="~/css/Estilos1.css" rel="stylesheet" type="text/css" id="Link1" />
-    <link href="~/css/css.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/all.min.css" rel="stylesheet" />
     <link href="~/css/EstiloRRHH.css" rel="stylesheet" />
 
     <script type="text/javascript">
@@ -21,60 +21,15 @@
             return false;
         }
     </script>
-    <style type="text/css">
-        .success {
-            background-color: #4CAF50;
-            color: #FDFEFE;
-        }
-
-        .info {
-            background-color: #2196F3;
-            color: #FDFEFE;
-        }
-
-        .labelBlue {
-            background-color: #4682B4;
-            color: #FDFEFE;
-        }
-
-        .warning {
-            background-color: #ff9800;
-            color: #FDFEFE;
-        }
-
-        .warningDark {
-            background-color: darkmagenta;
-            color: white;
-        }
-
-        .goldBlack {
-            background-color: gold;
-            color: black;
-        }
-
-        .danger {
-            background-color: #f44336;
-            color: #FDFEFE;
-        }
-
-        .other {
-            background-color: #e7e7e7;
-            color: black;
-        }
-
-        .auto-style18 {
-            width: 787px;
-        }
-    </style>
 </head>
 <body>
     <form id="form1" runat="server">
         <asp:ScriptManager ID="TS_1" runat="server" EnableScriptGlobalization="True"></asp:ScriptManager>
-        <table class="auto-style18">
+        <table class="TextoLeft">
             <tr>
                 <td class="TextoLeft">Gestión
                         <label>
-                            Turnos --&gt; Antecedentes --&gt;
+                            Horarios --&gt; Antecedentes --&gt;
                         <asp:Label ID="LbTitulo" runat="server" Text="Label"></asp:Label>
                         </label>
                 </td>
@@ -109,7 +64,6 @@
                                             <asp:Label ID="lbEstado" runat="server" Font-Bold="True"></asp:Label>
                                         </td>
                                     </tr>
-
                                     <tr>
                                         <td class="TextoRigth">ID:</td>
                                         <td class="TextoLeft">
@@ -125,18 +79,6 @@
                                                 Height="80px"
                                                 TextMode="MultiLine"
                                                 MaxLength="700" Required="true"></asp:TextBox>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="TextoRigth">Código:</td>
-                                        <td class="TextoLeft">
-                                            <asp:TextBox ID="txtCod" runat="server" Width="141px" Required="true" Font-Bold="True"></asp:TextBox>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="TextoRigth">Considera Feriados:</td>
-                                        <td class="TextoLeft">
-                                            <asp:CheckBox ID="chkFer" runat="server" Required="true" Font-Bold="True"></asp:CheckBox>
                                         </td>
                                     </tr>
                                     <tr>
@@ -165,13 +107,13 @@
                             <td align="center">
                                 <asp:Button ID="btn_Agregar"
                                     Text="Grabar"
-                                    class="BotonPortalAzul"
+                                    Cssclass="BotonPortalAzul"
                                     runat="server"
                                     OnClick="btn_Agregar_Click"
                                     OnClientClick="return ConfirmarGuardar();" />&nbsp
                                 <asp:Button ID="btn_habilitar"
                                     runat="server"
-                                    class="BotonPortalAmarillo"
+                                    Cssclass="BotonPortalAmarillo"
                                     Text="Habilitar"
                                     OnClick="btn_habilitar_Click"
                                     OnClientClick="javascript:Confirm('Desea realizar la actualización de los Datos..')" />&nbsp
@@ -197,87 +139,91 @@
                     </div>
                 </ContentTemplate>
             </ajaxToolkit:TabPanel>
-
             <ajaxToolkit:TabPanel ID="TabPanel2" runat="server" HeaderText="TabPanel2">
-                <HeaderTemplate>Detalle Turno Días</HeaderTemplate>
+                <HeaderTemplate>Detalle Horario</HeaderTemplate>
                 <ContentTemplate>
-                    <asp:GridView ID="dgSemana"
-                        runat="server"
-                        AutoGenerateColumns="False"
-                        CssClass="GridGral"
-                        Width="100%"
-                        GridLines="None"
-                        OnRowDataBound="dgSemana_RowDataBound"
-                        DataKeyNames="IDTURNODIA,IDDIA">
-                        <Columns>
-                            <asp:TemplateField HeaderText="Día" ItemStyle-CssClass="textoGridBold">
-                                <ItemTemplate>
-                                    <%# Eval("DIA") %>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Trabaja" ItemStyle-CssClass="textoGrid">
-                                <ItemTemplate>
-                                    <asp:CheckBox
-                                        ID="chkTrabaja"
-                                        runat="server"
-                                        Checked='<%# Eval("IDTURNODIA") != DBNull.Value %>'
-                                        AutoPostBack="true"
-                                        OnCheckedChanged="chkTrabaja_CheckedChanged" />
-                                </ItemTemplate>
-                                <ItemStyle HorizontalAlign="Center" />
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Descripción" ItemStyle-CssClass="textoGrid">
-                                <ItemTemplate>
-                                    <asp:DropDownList ID="ddlHorario" runat="server"
-                                        CssClass="GridGralRow"
-                                        Width="240px"
-                                        AutoPostBack="true"
-                                        OnSelectedIndexChanged="ddlHorario_SelectedIndexChanged">
-                                    </asp:DropDownList>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Duración Horas" ItemStyle-CssClass="textoGridBold">
-                                <ItemTemplate>
-                                    <asp:TextBox ID="txtHr"
-                                        runat="server"
-                                        Width="50px"
-                                        ReadOnly="true"
-                                        Enabled="false"
-                                        CssClass="textoGridBold" />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Entrada" ItemStyle-CssClass="textoGridBold">
-                                <ItemTemplate>
-                                    <asp:TextBox ID="txtIni"
-                                        runat="server"
-                                        Width="50px"
-                                        ReadOnly="true"
-                                        Enabled="false"
-                                        CssClass="textoGridBold" />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Salida" ItemStyle-CssClass="textoGridBold">
-                                <ItemTemplate>
-                                    <asp:TextBox ID="txtFin"
-                                        runat="server"
-                                        Width="50px"
-                                        ReadOnly="true"
-                                        Enabled="false"
-                                        CssClass="textoGridBold" />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                        </Columns>
-                        <HeaderStyle CssClass="GridGralHeader" />
-                        <RowStyle CssClass="GridGralRow" />
-                        <AlternatingRowStyle CssClass="GridGralAltRow" />
-                    </asp:GridView>
+                    <table class="GridGral" style="width: 900px; margin: auto;">
+                        <tr>
+                            <td colspan="2" class="TituloSeccion">
+                                Detalle del Horario
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TextoLeft">&nbsp;</td>
+                            <td class="TextoLeft">&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td class="textoNormRigth">Intervalo en Minutos:
+                            </td>
+                            <td class="textoNormLeft">
+                                <asp:TextBox ID="txtint" runat="server" Width="60px" CssClass="TextBoxHora"></asp:TextBox>
+                                <asp:Button ID="btnCalcular"
+                                    runat="server"
+                                    Text="Generar Intervalos"
+                                    CssClass="BotonPortalVerde"
+                                    OnClick="btnCalcular_Click" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TextoLeft">&nbsp;</td>
+                            <td class="TextoLeft">&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td class="textoNormRigth">Hora de Entrada:
+                            </td>
+                            <td class="textoNormLeft">
+                                <asp:DropDownList ID="ddlHoraEntrada"
+                                    runat="server"
+                                    Width="120px"
+                                    CssClass="GridGralRow"
+                                    AutoPostBack="true"
+                                    OnSelectedIndexChanged="CalcularHorario">
+                                </asp:DropDownList>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="textoNormRigth">Hora de Salida:
+                            </td>
+                            <td class="textoNormLeft">
+                                <asp:DropDownList ID="ddlHoraSalida"
+                                    runat="server"
+                                    Width="120px"
+                                    AutoPostBack="true"
+                                    CssClass="GridGralRow"
+                                    OnSelectedIndexChanged="CalcularHorario">
+                                </asp:DropDownList>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TextoLeft">&nbsp;</td>
+                            <td class="TextoLeft">&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td class="textoNormRigth">Duración:
+                            </td>
+                            <td class="textoNormLeft">
+                                <asp:TextBox ID="txtHoras"
+                                    runat="server"
+                                    Width="60px"
+                                    Enabled="false"
+                                    CssClass="TextBoxHora" />
+                                <span>Horas</span>
+                                <asp:TextBox ID="txtMinuto"
+                                    runat="server"
+                                    Width="60px"
+                                    Enabled="false"
+                                    CssClass="TextBoxHora" />
+                                <span>Minutos</span>
+                            </td>
+                        </tr>
+                    </table>
                     <br />
                     <table style="width: 100%; margin-bottom: 10px;">
                         <tr>
                             <td align="center">
                                 <asp:Button ID="btnGuardarDetalle"
                                     runat="server"
-                                    Text="Guardar Turno"
+                                    Text="Guardar Horario"
                                     CssClass="BotonPortalAzul"
                                     OnClick="btnGuardarDetalle_Click" />
                                 <asp:Button ID="btnVolver"
@@ -289,168 +235,6 @@
                         </tr>
                     </table>
                     <asp:Label ID="lblResultado" runat="server" ForeColor="Red"></asp:Label>
-                </ContentTemplate>
-            </ajaxToolkit:TabPanel>
-            <ajaxToolkit:TabPanel ID="TabPanel3" runat="server" HeaderText="TabPanel3">
-                <HeaderTemplate>Personas</HeaderTemplate>
-                <ContentTemplate>
-                    <table border="0" style="width: 811px">
-                        <tr>
-                            <td width="170">
-                                <asp:Button ID="BtBuscarUser"
-                                    runat="server"
-                                    Text="Buscar"
-                                    OnClick="BtBuscarUser_Click"
-                                    CssClass="BotonPortalAzul" />
-                            </td>
-                            <td width="147">
-                                <asp:Button ID="btnVolver_2"
-                                    runat="server"
-                                    Text="Volver"
-                                    CssClass="BotonPortalGris"
-                                    OnClick="btnVolver_Click" /></td>
-                            <td class="auto-style5">&nbsp;</td>
-                            <td class="auto-style3">&nbsp;</td>
-                            <td width="93">&nbsp;</td>
-                            <td width="235">&nbsp;</td>
-                        </tr>
-                        <tr>
-                            <td class="TextoRigth">&nbsp;</td>
-                            <td class="TextoLeft">&#160;</td>
-                            <td class="TextoRigth">&nbsp;</td>
-                            <td class="TextoLeft">&#160;</td>
-                            <td class="TextoRigth">&nbsp;</td>
-                            <td class="TextoLeft">&#160;</td>
-                        </tr>
-                        <tr>
-                            <td class="TextoRigth">Nombre:</td>
-                            <td colspan="5" class="TextoLeft">
-                                <asp:TextBox ID="TNombreUsr" runat="server" Height="24px" Width="307px" MaxLength="80"></asp:TextBox></td>
-                        </tr>
-                        <tr>
-                            <td class="TextoRigth">Rut:</td>
-                            <td class="TextoLeft">
-                                <asp:TextBox ID="TRut" runat="server"></asp:TextBox></td>
-                            <td class="auto-style2"></td>
-                            <td class="auto-style4">
-                                <asp:RadioButtonList ID="rbLista" runat="server" CssClass="TextoCheck" RepeatDirection="Horizontal" Width="258px">
-                                    <asp:ListItem Selected="True" Value="1">Disponibles</asp:ListItem>
-                                    <asp:ListItem Value="2">Asignados</asp:ListItem>
-                                </asp:RadioButtonList>
-                            </td>
-                            <td class="TextoRigth">&nbsp;</td>
-                            <td class="TextoLeft">&#160;</td>
-                        </tr>
-                        <tr>
-                            <td class="TextoRigth">&nbsp;</td>
-                            <td class="TextoLeft">&#160;</td>
-                            <td class="TextoRigth">&nbsp;</td>
-                            <td class="TextoLeft">&#160;</td>
-                            <td class="TextoRigth">&nbsp;</td>
-                            <td class="TextoLeft">&#160;</td>
-                        </tr>
-                    </table>
-                    <table border="0" style="width: 900px">
-                        <tr>
-                            <td class="TextoCenter">Disponibles</td>
-                            <td align="left" class="style1">&nbsp;</td>
-                            <td class="TextoCenter">Asociados</td>
-                        </tr>
-                        <tr>
-                            <td valign="top">
-                                <table border="1">
-                                    <tr>
-                                        <td>
-                                            <asp:GridView ID="gbUserDisp" runat="server" AutoGenerateColumns="False"
-                                                Font-Names="Tahoma" Font-Size="Small" ForeColor="#333333"
-                                                GridLines="None"
-                                                OnRowDataBound="gbUserDisp_RowDataBound"
-                                                OnSelectedIndexChanged="gbUserDisp_SelectedIndexChanged"
-                                                Width="420px"
-                                                CssClass="GridGral"
-                                                EmptyDataRowStyle-CssClass="textoEmpty"
-                                                EmptyDataText="No Hay Profesionales Disponibles"
-                                                AllowPaging="True"
-                                                OnPageIndexChanging="gbUserDisp_PageIndexChanging"
-                                                DataKeyNames="idusuario"
-                                                PageSize="30">
-                                                <Columns>
-                                                    <asp:BoundField DataField="idusuario" HeaderText="Id" ReadOnly="True">
-                                                        <ItemStyle CssClass="TextoCenter" />
-                                                    </asp:BoundField>
-                                                    <asp:BoundField DataField="RUT" HeaderText="RUT">
-                                                        <ItemStyle CssClass="TextoCenter" Font-Bold="true" Width="100px" />
-                                                    </asp:BoundField>
-                                                    <asp:BoundField DataField="NOMBRE" HeaderText="Nombre">
-                                                        <ItemStyle CssClass="TextoLeft" />
-                                                    </asp:BoundField>
-                                                    <asp:TemplateField HeaderText="Add">
-                                                        <ItemTemplate>
-                                                            <asp:ImageButton ID="btn_Add" runat="server" ImageUrl="~/imagenes/check.png" OnClick="AddUser" />
-                                                        </ItemTemplate>
-                                                        <HeaderStyle Width="50px" />
-                                                        <ItemStyle Width="50px" HorizontalAlign="Center" VerticalAlign="Middle" />
-                                                    </asp:TemplateField>
-                                                    <asp:CommandField SelectText="Enroll" ShowSelectButton="True" Visible="False" />
-                                                </Columns>
-                                                <HeaderStyle CssClass="GridGralHeader" />
-                                                <RowStyle CssClass="GridGralRow" />
-                                                <AlternatingRowStyle CssClass="GridGralAltRow" />
-                                                <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" />
-                                            </asp:GridView>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td align="left">&nbsp;</td>
-                            <td valign="top">
-                                <table border="1">
-                                    <tr>
-                                        <td>
-                                            <asp:GridView ID="gbUser" runat="server"
-                                                AutoGenerateColumns="False"
-                                                Font-Names="Tahoma" Font-Size="Small"
-                                                ForeColor="#333333" GridLines="None"
-                                                OnRowDataBound="gbUser_RowDataBound"
-                                                OnSelectedIndexChanged="gbUser_SelectedIndexChanged"
-                                                Width="420px"
-                                                AllowPaging="True"
-                                                CssClass="GridGral"
-                                                EmptyDataRowStyle-CssClass="textoEmpty"
-                                                EmptyDataText="No Hay Profesionales Asociados"
-                                                OnPageIndexChanging="gbUser_PageIndexChanging"
-                                                DataKeyNames="IDTURNUS"
-                                                PageSize="30">
-                                                <Columns>
-                                                    <asp:BoundField DataField="IDTURNUS" HeaderText="Id" ReadOnly="True">
-                                                        <ItemStyle CssClass="TextoCenter" />
-                                                    </asp:BoundField>
-                                                    <asp:BoundField DataField="RUT" HeaderText="RUT">
-                                                        <ItemStyle CssClass="TextoCenter" Font-Bold="true" Width="100px" />
-                                                    </asp:BoundField>
-                                                    <asp:BoundField DataField="NOMBRE" HeaderText="Nombre">
-                                                        <ItemStyle CssClass="TextoLeft" />
-                                                    </asp:BoundField>
-                                                    <asp:TemplateField HeaderText="Elim">
-                                                        <ItemTemplate>
-                                                            <asp:ImageButton ID="btn_Elim" runat="server" ImageUrl="~/imagenes/close.png" OnClick="ElimUser" />
-                                                        </ItemTemplate>
-                                                        <HeaderStyle Width="50px" />
-                                                        <ItemStyle Width="50px" HorizontalAlign="Center" VerticalAlign="Middle" />
-                                                    </asp:TemplateField>
-                                                    <asp:CommandField SelectText="Enroll" ShowSelectButton="True" Visible="False" />
-                                                </Columns>
-                                                <HeaderStyle CssClass="GridGralHeader" />
-                                                <RowStyle CssClass="GridGralRow" />
-                                                <AlternatingRowStyle CssClass="GridGralAltRow" />
-                                                <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" />
-                                            </asp:GridView>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
                 </ContentTemplate>
             </ajaxToolkit:TabPanel>
         </ajaxToolkit:TabContainer>

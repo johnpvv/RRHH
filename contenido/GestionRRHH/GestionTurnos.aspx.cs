@@ -286,7 +286,7 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
             txtHr.Text = "";
             return;
         }
-        tur.ls_hora = ddl.SelectedValue;
+        hor.ls_hora = ddl.SelectedValue;
         DataSet ds = hor.mfBuscarHoraID();
         if (ds.Tables[0].Rows.Count > 0)
         {

@@ -54,7 +54,7 @@ public class ClassHorarios
             "FROM " + modConstantes.gsDbRH + "TG_HORAS H " +
             "WHERE 1=1 " +
             lsWhe +
-            " ORDER BY H.HORA_INI";
+            " ORDER BY H.IDHORA";
 
         con = bd.fnGetConn();
         ds = bd.Fill(con, lsSql);
@@ -68,8 +68,19 @@ public class ClassHorarios
         DataSet ds;
 
         lsSql =
-            "SELECT * " +
-            "FROM " + modConstantes.gsDbRH + "TG_HORAS " +
+            "SELECT " +
+            "H.IDHORA, " +
+            "H.DESCRIPCION, " +
+            "CONVERT(VARCHAR,H.HORA) + 'h, ' + " +
+            "CONVERT(VARCHAR,H.MINUTO) +'m' as DURACION, " +
+            "H.HORA_INI, " +
+            "H.HORA_FIN, " +
+            "H.F_H_CREACION, " +
+            "CASE " +
+            " WHEN H.IDESTADO = 1 THEN 'ACTIVO' " +
+            " WHEN H.IDESTADO = 3 THEN 'INACTIVO' " +
+            " ELSE 'S/E' END ESTADO " +
+            "FROM " + modConstantes.gsDbRH + "TG_HORAS H " +
             "WHERE IDHORA = " + ls_idhora;
 
         con = bd.fnGetConn();
@@ -129,28 +140,22 @@ public class ClassHorarios
             "INSERT INTO " + modConstantes.gsDbRH + "TG_HORAS " +
             "(" +
             "DESCRIPCION," +
-            "HORA," +
-            "MINUTO," +
             "IDESTADO," +
             "F_H_CREACION," +
-            "HORA_INI," +
-            "HORA_FIN" +
+            "IDUSUARIO " +
             ") VALUES (" +
             "'" + ls_descrip + "'," +
-            ls_hora + "," +
-            ls_minuto + "," +
             "1," +
             "GETDATE()," +
-            "'" + ls_horaini + "'," +
-            "'" + ls_horafin + "'" +
-            ")";
+            " "+ ls_user +");" +
+            "SELECT CAST(SCOPE_IDENTITY() AS INT);";
 
         con = bd.fnGetConn();
         lsRes = bd.ExecuteScalar(con, lsSql);
         con.Close();
-
         return lsRes;
     }
+
     public string mfUpdateHorario()
     {
         string lsSql;
@@ -158,11 +163,29 @@ public class ClassHorarios
 
         lsSql =
             "UPDATE " + modConstantes.gsDbRH + "TG_HORAS SET " +
-            "DESCRIPCION = '" + ls_descrip + "'," +
-            "HORA = " + ls_hora + "," +
-            "MINUTO = " + ls_minuto + "," +
-            "HORA_INI = '" + ls_horaini + "'," +
-            "HORA_FIN = '" + ls_horafin + "' " +
+            "DESCRIPCION = '" + ls_descrip + "', " +
+            "IDESTADO = 1, " +
+            "F_H_CREACION = GETDATE(), " +
+            "IDUSUARIO =  " + ls_user + " " +
+            "WHERE IDHORA = " + ls_idhora;
+        con = bd.fnGetConn();
+        lsRes = bd.ExecuteScalar(con, lsSql);
+        con.Close();
+        return lsRes;
+    }
+
+    public string mfUpdateHorarioDet()
+    {
+        string lsSql;
+        string lsRes;
+
+        lsSql =
+            "UPDATE " + modConstantes.gsDbRH + "TG_HORAS SET " +
+            "HORA = " + ls_hora + ", " +
+            "MINUTO = " + ls_minuto + ", " +
+            "HORA_INI = '" + ls_horaini + "', " +
+            "HORA_FIN = '" + ls_horafin + "', " +
+            "IDUSUARIO =  " + ls_user + " "+
             "WHERE IDHORA = " + ls_idhora;
 
         con = bd.fnGetConn();
@@ -178,14 +201,13 @@ public class ClassHorarios
 
         lsSql =
             "UPDATE " + modConstantes.gsDbRH + "TG_HORAS " +
-            "SET IDESTADO = " + ls_estado +
+            "SET IDESTADO = " + ls_estado + ", " +
+            "IDUSUARIO =  " + ls_user + " " +
             " WHERE IDHORA = " + ls_idhora;
 
         con = bd.fnGetConn();
         lsRes = bd.ExecuteScalar(con, lsSql);
         con.Close();
-
         return lsRes;
     }
-
 }

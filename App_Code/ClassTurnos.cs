@@ -264,7 +264,7 @@ public class ClassTurnos
             //"   AND TU.IDTURNOS = " + ls_idturno +//si se desea solo user de turno especifico
             "   AND TU.IDESTADO = 1 ) " +
             " " + lsWhe +
-            "ORDER BY P.AP_PATERNO, P.AP_MATERNO, P.NOMBRE";
+            "ORDER BY P.NOMBRE, P.AP_PATERNO, P.AP_MATERNO";
 
         con = bd.fnGetConn();
         ds = bd.Fill(con, lsSql);
@@ -305,7 +305,7 @@ public class ClassTurnos
             "WHERE TU.IDTURNOS = " + ls_idturno +
             " " + lsWhe +
             " AND TU.IDESTADO = 1 " +
-            "ORDER BY P.AP_PATERNO, P.AP_MATERNO, P.NOMBRE";
+            "ORDER BY P.NOMBRE, P.AP_PATERNO, P.AP_MATERNO";
 
         con = bd.fnGetConn();
         ds = bd.Fill(con, lsSql);
@@ -325,9 +325,10 @@ public class ClassTurnos
             "UPDATE " + modConstantes.gsDbRH + "M_TURNO_USUARIOS SET " +
             "IDESTADO = 1, " +
             "F_H_ELIM = NULL, " +
-            "IDUSELIM = NULL " +
-            "WHERE IDTURNOS = " + ls_idturno +
-            " AND IDUSUARIO = " + ls_user +
+            "IDUSELIM = NULL, " +
+            "IDTURNOS = " + ls_idturno + ", "+
+            "OBSERVACION = 'Re-Asignado' " +            
+            "WHERE IDUSUARIO = " + ls_user +
             " END " +
             "ELSE " +
             "BEGIN " +

@@ -32,7 +32,7 @@ public partial class contenido_GestionRRHH_GestionHorarios : System.Web.UI.Page
                 // Captura Datos
                 Session.Add("lsIdHora", Request.QueryString["key"].ToString());
                 this.hdIdHora.Value = Request.QueryString["key"].ToString();
-                cargaTurnoSemana();
+                //cargaTurnoSemana();
                 //lsGrabar = modfunc.fnValidaUsrApp("BTN_CHK_PAC", gUsr, asCodSistema);
                 //if (lsGrabar != "M" && lsGrabar != "L") { this.chkLimpiar.Enabled = false; }
 
@@ -40,6 +40,8 @@ public partial class contenido_GestionRRHH_GestionHorarios : System.Web.UI.Page
                 {
                     Session.Add("lbNvo", true);
                     nuevo = true;
+                    this.btn_habilitar.Enabled = false;
+                    this.btn_habilitar.CssClass = "BotonPortalAmarillo";
                 }
                 else
                 {
@@ -47,31 +49,29 @@ public partial class contenido_GestionRRHH_GestionHorarios : System.Web.UI.Page
                     Session.Add("lbNvo", false);
                     nuevo = false;
                     this.btn_Agregar.Text = "Actualizar";
-                    tur.ls_turno = this.hdIdHora.Value;
-                    tur.ls_codigo = "";
-                    tur.ls_descrip = "";
-                    aoDs = tur.mfBuscarTurnos();
+                    hor.ls_idhora = this.hdIdHora.Value;
+                    aoDs = hor.mfConsultarHorario();
                     if (aoDs != null && aoDs.Tables.Count > 0)
                     {
                         if (aoDs.Tables[0].Rows.Count > 0)
                         {
-                            this.TxtId.Text = aoDs.Tables[0].Rows[0]["IDTURNOS"].ToString();
+                            this.TxtId.Text = aoDs.Tables[0].Rows[0]["IDHORA"].ToString();
                             this.TxtDescr.Text = aoDs.Tables[0].Rows[0]["DESCRIPCION"].ToString();
                             this.txtFCrea.Text = aoDs.Tables[0].Rows[0]["F_H_CREACION"].ToString();
-                            this.txtCod.Text = aoDs.Tables[0].Rows[0]["CODIGO"].ToString();
-                            if (aoDs.Tables[0].Rows[0]["ESTADO"].ToString() == "VIGENTE")
+                            //this.txtCod.Text = aoDs.Tables[0].Rows[0]["CODIGO"].ToString();
+                            if (aoDs.Tables[0].Rows[0]["ESTADO"].ToString() == "ACTIVO")
                             {
-                                this.lbEstado.Text = "VIGENTE";
+                                this.lbEstado.Text = "ACTIVO";
                                 this.btn_habilitar.Text = "Deshabilitar";
                             }
                             else
                             {
-                                this.lbEstado.Text = "REVISAR ESTADO";
-                                this.btn_habilitar.Text = "Deshabilitar";
+                                this.lbEstado.Text = "INACTIVO";
+                                this.btn_habilitar.Text = "Habilitar";
                             }
-                            this.LbTitulo.Text = aoDs.Tables[0].Rows[0]["CODIGO"].ToString();
-                            mfCargaUser();
-                            mfCargaUserDisp();
+                            this.LbTitulo.Text = aoDs.Tables[0].Rows[0]["IDHORA"].ToString();
+                            //mfCargaUser();
+                            //mfCargaUserDisp();
                         }
                     }
                 }
@@ -91,49 +91,47 @@ public partial class contenido_GestionRRHH_GestionHorarios : System.Web.UI.Page
         //Validaciones
         if (!ValidarCampos()) { return; }
         //Revisar si existe turno
+        string lsRet = "";
+        string lsID = "";
         if (nuevo)
         {
-            //per.ls_rut = this.TxtRut.Text;
-            //if (Convert.ToInt32(per.mfExistePersona()) > 0)
-            //{
-            //    mens.mensaje(Page, "RUT ya existe, por favor verificar");
-            //    return;
-            //}
-            //if (!ValidaRut(TxtRut.Text, TxtDv.Text))
-            //{
-            //    mens.mensaje(Page, "RUT NO VALIDO, por favor verificar");
-            //    return;
-            //};
+            hor.ls_user = Session["user"].ToString();
+            hor.ls_descrip = this.TxtDescr.Text;
+            lsID = hor.mfCrearHorario();
         }
-        string lsRet = "";
-        tur.ls_descrip = this.TxtDescr.Text;
-        tur.ls_codigo = this.txtCod.Text;
-        tur.ls_turno = this.hdIdHora.Value;
-        lsRet = tur.mfUpdateTurnos();
-        if (lsRet != "")
-            mens.mensaje(Page, "Error: Problemas al Modificar el Registro.");
         else
         {
-            mens.mensaje(Page, "Registro ingresado con Exito.. ");
+            hor.ls_user = Session["user"].ToString();
+            hor.ls_idhora = this.hdIdHora.Value;
+            hor.ls_descrip = this.TxtDescr.Text;
+            lsRet = hor.mfUpdateHorario();
+        }
+
+        if (lsID != "")
+        {
+            this.hdIdHora.Value = lsID;
+            Session.Add("lbNvo", false);
+            this.TxtId.Text = lsID;
+            this.lbEstado.Text = "ACTIVO";
+            this.btn_habilitar.Text = "Deshabilitar";
+        }
+
+        if (lsRet != "" && lsID == "")
+        {
+            mens.mensaje(Page, "Error: Problemas al Insertar y/o Modificar el Registro.");
+        }
+        else
+        {
+            mens.mensaje(Page, "Registro Ingresado y/o Actualizado con Exito.. ");
         }
     }
     public bool ValidarCampos()
     {
-        //if (this.ddlPrevision.SelectedIndex == 0)
-        //{
-        //    mens.mensaje(Page, "Debe seleccionar Prevision");
-        //    return false;
-        //}
-        //if (this.ddlRegion.SelectedIndex == 0)
-        //{
-        //    mens.mensaje(Page, "Debe seleccionar Region");
-        //    return false;
-        //}
-        //if (this.ddlComuna.SelectedIndex == 0)
-        //{
-        //    mens.mensaje(Page, "Debe seleccionar Comuna");
-        //    return false;
-        //}
+        if (this.TxtDescr.Text == "")
+        {
+            mens.mensaje(Page, "Debe Escribir una Descripción");
+            return false;
+        }
         return true;
     }
     #region Botones
@@ -141,14 +139,13 @@ public partial class contenido_GestionRRHH_GestionHorarios : System.Web.UI.Page
     {
         if (Session["cadena"] == null)
         {
-            Response.Redirect("~/contenido/GestionRRHH/ListaTurnos.aspx");
+            Response.Redirect("~/contenido/GestionRRHH/ListaHorarios.aspx");
         }
         else
         {
-            Response.Redirect("~/contenido/GestionRRHH/ListaTurnoss.aspx?" + Session["cadena"].ToString());
+            Response.Redirect("~/contenido/GestionRRHH/ListaHorarios.aspx?" + Session["cadena"].ToString());
         }
     }
-    //A integrar lo siguiente ???
     protected void btn_habilitar_Click(object sender, EventArgs e)
     {
         try
@@ -158,7 +155,7 @@ public partial class contenido_GestionRRHH_GestionHorarios : System.Web.UI.Page
             confirmValue = fun.ConfirmValor(confirmValue);
             if (confirmValue == "Yes")
             {
-                CambiarEstadoTurno();
+                CambiarEstadoHorario();
             }
         }
         catch
@@ -169,265 +166,86 @@ public partial class contenido_GestionRRHH_GestionHorarios : System.Web.UI.Page
     protected void btnGuardarDetalle_Click(object sender, EventArgs e)
     {
         string ret = "";
-        foreach (GridViewRow row in dgSemana.Rows)
-        {
-            string idTurnoDia = dgSemana.DataKeys[row.RowIndex]["IDTURNODIA"].ToString();
-            string idDia = dgSemana.DataKeys[row.RowIndex]["IDDIA"].ToString();
-            CheckBox chkTrabaja = (CheckBox)row.FindControl("chkTrabaja");
-            DropDownList ddlHorario = (DropDownList)row.FindControl("ddlHorario");
-            bool trabaja = chkTrabaja.Checked;
-            int idHorario = 0;
-            if (ddlHorario.SelectedValue != "")
-                idHorario = Convert.ToInt32(ddlHorario.SelectedValue);
-            tur.ls_idturnodia = idTurnoDia;
-            tur.ls_idturno = this.hdIdHora.Value;
-            tur.ls_iddia = idDia;
-            tur.ls_idhora = idHorario.ToString();
-            ret += tur.mfGuardarDiaTurno(trabaja);
-        }
+
+        hor.ls_user = Session["user"].ToString();
+        hor.ls_idhora = this.hdIdHora.Value;
+        hor.ls_hora = this.txtHoras.Text;
+        hor.ls_minuto = this.txtMinuto.Text;
+        hor.ls_horaini = this.ddlHoraEntrada.SelectedValue;
+        hor.ls_horafin = this.ddlHoraSalida.SelectedValue;
+        ret = hor.mfUpdateHorarioDet();
         if (ret != "")
         {
             this.lblResultado.Text = " Ha Ocurrido un error: " + ret;
             return;
         }
-        mens.mensaje(Page, "Turno Actualizado con Exito.. ");
-        this.lblResultado.Text = "Turno Actualizado con Exito..";
+        mens.mensaje(Page, "Horario Actualizado con Exito.. ");
+        this.lblResultado.Text = "Horario Actualizado con Exito..";
+    }
+    protected void btnCalcular_Click(object sender, EventArgs e)
+    {
+        int intervalo = Convert.ToInt32(this.txtint.Text);
+        CargarHoras(intervalo);
     }
     #endregion
-    #region Turnos
-    private void CambiarEstadoTurno()
+
+    #region Horarios
+    private void CambiarEstadoHorario()
     {
-        string asEstado = "2";
-        if (this.lbEstado.Text == "VIGENTE") asEstado = "3";
-        //string lsRet = per.UpdateEstado(Session["lsIdentificador"].ToString(), asEstado);
-        //string lsRet = per.UpdateEstado(this.hdIdTurno.Value, asEstado);
-        //if (lsRet != "")
-        //    mens.mensaje(Page, "Error: Problemas al Ingresar el Registro.");
+        string asEstado = "1";
+        if (this.lbEstado.Text == "ACTIVO") asEstado = "3";
+        hor.ls_estado = asEstado;
+        hor.ls_user = Session["user"].ToString();
+        hor.ls_idhora = this.hdIdHora.Value;
+        string lsRet = hor.mfEstadoHorario();
+        if (lsRet != "")
+            mens.mensaje(Page, "Error: Problemas al Ingresar el Registro.");
         else
         {
             if (asEstado == "3")
             {
-                this.lbEstado.Text = "NO VIGENTE";
+                this.lbEstado.Text = "INACTIVO";
                 this.btn_habilitar.Text = "Habilitar";
             }
             else
             {
-                this.lbEstado.Text = "VIGENTE";
+                this.lbEstado.Text = "ACTIVO";
                 this.btn_habilitar.Text = "Deshabilitar";
             }
             mens.mensaje(Page, "Registro Actualizado con Exito.. ");
         }
     }
-    private void cargaTurnoSemana()
-    {
-        tur.ls_turno = this.hdIdHora.Value;
-        dgSemana.DataSource = tur.mfBuscarTurnoDia();
-        dgSemana.DataBind();
-    }
-    protected void dgSemana_RowDataBound(object sender, GridViewRowEventArgs e)
-    {
-        if (e.Row.RowType == DataControlRowType.DataRow)
-        {
-            DropDownList ddl = (DropDownList)e.Row.FindControl("ddlHorario");
-            CheckBox chk = (CheckBox)e.Row.FindControl("chkTrabaja");
-            TextBox txtIni = (TextBox)e.Row.FindControl("txtIni");
-            TextBox txtFin = (TextBox)e.Row.FindControl("txtFin");
-            TextBox txtHr = (TextBox)e.Row.FindControl("txtHr");
-            DataRowView dr = (DataRowView)e.Row.DataItem;
-            //Llenar horarios
-            ddl.DataSource = hor.mfBuscarHoras().Tables[0];
-            ddl.DataTextField = "DESCRIPCION";
-            ddl.DataValueField = "IDHORA";
-            ddl.DataBind();
-            ddl.Items.Insert(0, new ListItem("--Seleccione--", ""));
-            if (dr["IDHORA"] != DBNull.Value)
-            {
-                chk.Checked = true;
-                ddl.SelectedValue = dr["IDHORA"].ToString();
-                txtIni.Text = Convert.ToDateTime(dr["HORA_INI"]).ToString("HH:mm");
-                txtFin.Text = Convert.ToDateTime(dr["HORA_FIN"]).ToString("HH:mm");
-                txtHr.Text = dr["HORA"].ToString() + "h, " + dr["MINUTO"].ToString() + "m";
-            }
-            else
-            {
-                chk.Checked = false;
-                ddl.Enabled = false;
-                txtIni.Text = "";
-                txtFin.Text = "";
-                txtHr.Text = "";
-            }
-        }
-    }
-    protected void chkTrabaja_CheckedChanged(object sender, EventArgs e)
-    {
-        CheckBox chk = (CheckBox)sender;
-        GridViewRow row = (GridViewRow)chk.NamingContainer;
-        DropDownList ddl = (DropDownList)row.FindControl("ddlHorario");
-        ddl.Enabled = chk.Checked;
-        if (!chk.Checked)
-        {
-            ddl.SelectedIndex = 0;
-            ((TextBox)row.FindControl("txtIni")).Text = "";
-            ((TextBox)row.FindControl("txtFin")).Text = "";
-            ((TextBox)row.FindControl("txtHr")).Text = "";
-        }
-    }
-    protected void ddlHorario_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        DropDownList ddl = (DropDownList)sender;
-        GridViewRow row = (GridViewRow)ddl.NamingContainer;
-        TextBox txtIni = (TextBox)row.FindControl("txtIni");
-        TextBox txtFin = (TextBox)row.FindControl("txtFin");
-        TextBox txtHr = (TextBox)row.FindControl("txtHr");
-        if (ddl.SelectedValue == "")
-        {
-            txtIni.Text = "";
-            txtFin.Text = "";
-            txtHr.Text = "";
-            return;
-        }
-        tur.ls_hora = ddl.SelectedValue;
-        DataSet ds = hor.mfBuscarHoraID();
-        if (ds.Tables[0].Rows.Count > 0)
-        {
-            txtIni.Text = Convert.ToDateTime(ds.Tables[0].Rows[0]["HORA_INI"]).ToString("HH:mm");
-            txtFin.Text = Convert.ToDateTime(ds.Tables[0].Rows[0]["HORA_FIN"]).ToString("HH:mm");
-            txtHr.Text = ds.Tables[0].Rows[0]["HORA"].ToString() + "h, " + ds.Tables[0].Rows[0]["MINUTO"].ToString() + "m";
-        }
-    }
-    #endregion
-    #region User Turnos
-    protected void AddUser(object sender, EventArgs e)
-    {
-        ImageButton boton = (ImageButton)sender;
-        GridViewRow row = (GridViewRow)boton.NamingContainer;
-        string cid = row.Cells[0].Text;
-        mfAgregarUser(cid);
-    }
-    protected void BtIngUser_Click(object sender, EventArgs e)
-    {
-        try
-        {
-            mfCargaUserDisp();
-        }
-        catch
-        {
-            Response.Redirect("~/contenido/frmerrgen.aspx");
-        }
-    }
-    private void mfCargaUser()
-    {
-        DataSet aoDsUser;
-        tur.ls_idturno = this.hdIdHora.Value;
-        tur.ls_rut = this.TRut.Text;
-        tur.ls_nombre = this.TNombreUsr.Text;
-        aoDsUser = tur.mfBuscarUserTurno();
-        gbUser.DataSource = aoDsUser;
-        gbUser.DataBind();
-    }
-    private void mfCargaUserDisp()
-    {
-        DataSet aoDsDisp;
-        tur.ls_idturno = this.hdIdHora.Value;
-        tur.ls_rut = this.TRut.Text;
-        tur.ls_nombre = this.TNombreUsr.Text;
-        aoDsDisp = tur.mfBuscarUserDisp();
-        gbUserDisp.DataSource = aoDsDisp;
-        gbUserDisp.DataBind();
-    }
-    private void mfAgregarUser(string asIdentificador)
-    {
-        string lsRet = "";
-        tur.ls_idturno = this.hdIdHora.Value;
-        tur.ls_user = asIdentificador;
-        tur.mfAgregarUserTurno();
-        if (lsRet != "")
-        {
-            mens.mensaje(Page, "Error: NO se pudo insertar Profesional");
-        }
-        else
-        {
-            mfCargaUser();
-            mfCargaUserDisp();
-        }
-    }
-    protected void ElimUser(object sender, EventArgs e)
-    {
-        ImageButton boton = (ImageButton)sender;
-        GridViewRow row = (GridViewRow)boton.NamingContainer;
-        string cid = row.Cells[0].Text;
-        mfElimUser(cid);
-    }
-    private void mfElimUser(string asIdentificador)
-    {
-        string lsRet = "";
-        
-        tur.ls_idturno = hdIdHora.Value;
-        tur.ls_user = asIdentificador;
-        tur.ls_iduselim = Session["user"].ToString();
-        lsRet= tur.mfQuitarUserTurno();
 
-        if (lsRet != "")
-        {
-            mens.mensaje(Page, "Error: NO se pudo Eliminar Profesional");
-        }
-        else
-        {
-            mfCargaUser();
-            mfCargaUserDisp();
-        }
 
-    }
-    protected void gbUser_SelectedIndexChanged(object sender, EventArgs e)
+    protected void CalcularHorario(object sender, EventArgs e)
     {
-        mfAgregarUser(gbUser.DataKeys[gbUser.SelectedIndex].Values[0].ToString());
+        DateTime inicio = DateTime.Parse(ddlHoraEntrada.SelectedValue);
+        DateTime fin = DateTime.Parse(ddlHoraSalida.SelectedValue);
+
+        if (fin < inicio)
+            fin = fin.AddDays(1);
+
+        TimeSpan ts = fin - inicio;
+
+        txtHoras.Text = ts.Hours.ToString();
+        txtMinuto.Text = ts.Minutes.ToString("00");
     }
-    protected void gbUser_RowDataBound(object sender, GridViewRowEventArgs e)
+
+    private void CargarHoras(int intervalo)
     {
-        if (e.Row.RowType == DataControlRowType.DataRow)
+        ddlHoraEntrada.Items.Clear();
+        ddlHoraSalida.Items.Clear();
+        txtHoras.Text = "";
+        txtMinuto.Text = "";
+        DateTime hora = DateTime.Today;
+        while (hora < DateTime.Today.AddDays(1))
         {
-            //add css to GridViewrow based on rowState
-            e.Row.CssClass = e.Row.RowState.ToString();
-            //Add onclick attribute to select row.
-            //e.Row.Attributes.Add("ondblclick", String.Format("javascript:__doPostBack('dvUser','Select${0}')", e.Row.RowIndex));
+            string texto = hora.ToString("HH:mm");
+            ddlHoraEntrada.Items.Add(new ListItem(texto, texto));
+            ddlHoraSalida.Items.Add(new ListItem(texto, texto));
+            hora = hora.AddMinutes(intervalo);
         }
     }
-    protected void gbUser_PageIndexChanging(object sender, GridViewPageEventArgs e)
-    {
-        gbUser.PageIndex = e.NewPageIndex;
-        mfCargaUser();
-    }
-    protected void gbUserDisp_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        mfElimUser(gbUserDisp.DataKeys[gbUserDisp.SelectedIndex].Values[0].ToString());
-    }
-    protected void gbUserDisp_RowDataBound(object sender, GridViewRowEventArgs e)
-    {
-        if (e.Row.RowType == DataControlRowType.DataRow)
-        {
-            //add css to GridViewrow based on rowState
-            e.Row.CssClass = e.Row.RowState.ToString();
-            //Add onclick attribute to select row.            
-        }
-    }
-    protected void gbUserDisp_PageIndexChanging(object sender, GridViewPageEventArgs e)
-    {
-        gbUserDisp.PageIndex = e.NewPageIndex;
-        mfCargaUserDisp();
-    }
-    protected void BtBuscarUser_Click(object sender, EventArgs e)
-    {
-        try
-        {
-            if (this.rbLista.SelectedValue == "1")
-                mfCargaUserDisp();
-            else
-                mfCargaUser();
-        }
-        catch
-        {
-            Response.Redirect("~/contenido/frmerrgen.aspx");
-        }
-    }
+
     #endregion
 }
