@@ -202,18 +202,19 @@
                         </asp:TreeNode>--%>
                         <asp:TreeNode Expanded="True" SelectAction="Expand" ImageUrl="~/imagenes/menu/ajustes.png" Text="Gestión RR.HH." Value="Gestión" ToolTip="Gestion RRHH">
                             <asp:TreeNode NavigateUrl="~/contenido/GestionRRHH/GestionRelojes.aspx" Target="main" ImageUrl="~/imagenes/menu/firmas.png" Text="Gestión Relojes" ToolTip="Relojes" Value="MANT_ROLES"></asp:TreeNode>
-                            <asp:TreeNode NavigateUrl="~/contenido/GestionRRHH/ListaTurnos.aspx" Target="main" ImageUrl="~/imagenes/menu/ajustesroles.png" Text="Gestión Turnos" ToolTip="Turnos" Value="MANT_ROLES"></asp:TreeNode>      
+                            <asp:TreeNode NavigateUrl="~/contenido/GestionRRHH/ListaTurnos.aspx" Target="main" ImageUrl="~/imagenes/menu/ajustesroles.png" Text="Gestión Turnos" ToolTip="Turnos" Value="MANT_ROLES"></asp:TreeNode>
+                            <asp:TreeNode NavigateUrl="~/contenido/GestionRRHH/GestionTurnosExcel.aspx" Target="main" ImageUrl="~/imagenes/menu/firmas.png" Text="Cargar Turnos <br> desde Excel" ToolTip="Turnos" Value="MANT_ROLES"></asp:TreeNode>
                             <asp:TreeNode NavigateUrl="~/contenido/GestionRRHH/ListaHorarios.aspx" Target="main" ImageUrl="~/imagenes/menu/ajustesunidadoperativa.png" Text="Gestión Horarios" ToolTip="Horarios" Value="MANT_ROLES"></asp:TreeNode>
                         </asp:TreeNode>
                         <asp:TreeNode Expanded="False" SelectAction="Expand" ImageUrl="~/imagenes/menu/ajustesb.png" Text="Administracion" Value="Administracion" ToolTip="Administracion">
-<%--                            <asp:TreeNode NavigateUrl="~/contenido/SysAdmin/ListaUsuarios.aspx?id=1" Target="main" ImageUrl="~/imagenes/menu/ajustesusuario.png" Text="Usuarios" ToolTip="Usuarios" Value="MANT_USUARIO"></asp:TreeNode>--%>
+                            <%--                            <asp:TreeNode NavigateUrl="~/contenido/SysAdmin/ListaUsuarios.aspx?id=1" Target="main" ImageUrl="~/imagenes/menu/ajustesusuario.png" Text="Usuarios" ToolTip="Usuarios" Value="MANT_USUARIO"></asp:TreeNode>--%>
                             <asp:TreeNode NavigateUrl="~/contenido/SysAdmin/ListaAccesos.aspx?id=1" Target="main" ImageUrl="~/imagenes/menu/ajustesaccesos.png" Text="Accesos" ToolTip="Accesos" Value="MANT_ACCESO"></asp:TreeNode>
                             <asp:TreeNode NavigateUrl="~/contenido/SysAdmin/ListaRoles.aspx?id=1" Target="main" ImageUrl="~/imagenes/menu/ajustesroles.png" Text="Roles" ToolTip="Roles" Value="MANT_ROLES"></asp:TreeNode>
 
 
                             <asp:TreeNode NavigateUrl="~/contenido/Administracion/ListaUniOperativa.aspx?id=1" Target="main" ImageUrl="~/imagenes/menu/ajustesunidadoperativa.png" Text="Lista Operativa" ToolTip="Unidad Operativa" Value="MANT_UNIDAD"></asp:TreeNode>
-<%--                            <asp:TreeNode NavigateUrl="~/contenido/Administracion/ListaArticulos.aspx?id=1" Target="main" ImageUrl="~/imagenes/menu/compras.png" Text="Articulos" ToolTip="Articulos" Value="MANT_ARTICULOS"></asp:TreeNode>--%>
-<%--                            <asp:TreeNode NavigateUrl="~/contenido/SysAdmin/ListaPacientes.aspx?id=1" Target="main" ImageUrl="~/imagenes/menu/ajustesunidadoperativa.png" Text="Pacientes" ToolTip="Pacientes" Value="MANT_PACIENTE"></asp:TreeNode>--%>
+                            <%--                            <asp:TreeNode NavigateUrl="~/contenido/Administracion/ListaArticulos.aspx?id=1" Target="main" ImageUrl="~/imagenes/menu/compras.png" Text="Articulos" ToolTip="Articulos" Value="MANT_ARTICULOS"></asp:TreeNode>--%>
+                            <%--                            <asp:TreeNode NavigateUrl="~/contenido/SysAdmin/ListaPacientes.aspx?id=1" Target="main" ImageUrl="~/imagenes/menu/ajustesunidadoperativa.png" Text="Pacientes" ToolTip="Pacientes" Value="MANT_PACIENTE"></asp:TreeNode>--%>
                             <asp:TreeNode NavigateUrl="~/contenido/SysAdmin/Constantes.aspx?id=1" Target="main" ImageUrl="~/imagenes/menu/firmas.png" Text="Const. Config" ToolTip="Const. de Configuracion" Value="MANT_CONST"></asp:TreeNode>
                             <asp:TreeNode NavigateUrl="~/contenido/SysAdmin/Feriados.aspx?id=1" Target="main" ImageUrl="~/imagenes/menu/firmas.png" Text="Feriados" ToolTip="Feriados" Value="MANT_CONST"></asp:TreeNode>
                             <asp:TreeNode NavigateUrl="~/contenido/Administracion/GestionEstadistica.aspx?id=1" Target="main" ImageUrl="~/imagenes/menu/compras.png" Text="Estadistica" ToolTip="Estadistica" Value="ADM_ESTAD"></asp:TreeNode>

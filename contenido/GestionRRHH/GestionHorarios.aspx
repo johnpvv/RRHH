@@ -6,7 +6,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
     <title>RRHH_GestionHoras</title>
-    <script language="text/javascript" src="../../js/common.js" type="text/javascript"></script>
+    <script src="../../js/common.js" type="text/javascript"></script>
     <link runat="server" href="~/css/Estilos1.css" rel="stylesheet" type="text/css" id="Link1" />
     <link href="~/css/all.min.css" rel="stylesheet" />
     <link href="~/css/EstiloRRHH.css" rel="stylesheet" />
@@ -81,7 +81,7 @@
                                     <tr>
                                         <td class="TextoRigth">ID:</td>
                                         <td class="TextoLeft">
-                                            <asp:TextBox ID="TxtId" runat="server" Width="141px" Required="true" Font-Bold="True" Enabled="False"></asp:TextBox>
+                                            <asp:TextBox ID="TxtId" runat="server" Width="141px" Font-Bold="True" Enabled="False"></asp:TextBox>
                                         </td>
                                     </tr>
                                     <tr>
@@ -92,7 +92,7 @@
                                                 Width="350px"
                                                 Height="80px"
                                                 TextMode="MultiLine"
-                                                MaxLength="700" Required="true"></asp:TextBox>
+                                                MaxLength="700"></asp:TextBox>
                                         </td>
                                     </tr>
                                     <tr>

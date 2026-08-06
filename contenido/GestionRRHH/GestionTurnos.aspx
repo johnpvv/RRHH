@@ -6,9 +6,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
     <title>RRHH_GestionTurnos</title>
-    <script language="text/javascript" src="../../js/common.js" type="text/javascript"></script>
+    <script src="../../js/common.js" type="text/javascript"></script>
     <link runat="server" href="~/css/Estilos1.css" rel="stylesheet" type="text/css" id="Link1" />
-    <link href="~/css/css.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/all.min.css" rel="stylesheet" />
     <link href="~/css/EstiloRRHH.css" rel="stylesheet" />
 
     <script type="text/javascript">
@@ -25,7 +25,7 @@
 <body>
     <form id="form1" runat="server">
         <asp:ScriptManager ID="TS_1" runat="server" EnableScriptGlobalization="True"></asp:ScriptManager>
-        <table class="auto-style18">
+        <table class="TextoLeft">
             <tr>
                 <td class="TextoLeft">Gestión
                         <label>
@@ -68,7 +68,7 @@
                                     <tr>
                                         <td class="TextoRigth">ID:</td>
                                         <td class="TextoLeft">
-                                            <asp:TextBox ID="TxtId" runat="server" Width="141px" Required="true" Font-Bold="True" Enabled="False"></asp:TextBox>
+                                            <asp:TextBox ID="TxtId" runat="server" Width="141px" Font-Bold="True" Enabled="False"></asp:TextBox>
                                         </td>
                                     </tr>
                                     <tr>
@@ -79,19 +79,19 @@
                                                 Width="350px"
                                                 Height="80px"
                                                 TextMode="MultiLine"
-                                                MaxLength="700" Required="true"></asp:TextBox>
+                                                MaxLength="700"></asp:TextBox>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="TextoRigth">Código:</td>
                                         <td class="TextoLeft">
-                                            <asp:TextBox ID="txtCod" runat="server" Width="141px" Required="true" Font-Bold="True"></asp:TextBox>
+                                            <asp:TextBox ID="txtCod" runat="server" Width="141px" Font-Bold="True"></asp:TextBox>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="TextoRigth">Considera Feriados:</td>
                                         <td class="TextoLeft">
-                                            <asp:CheckBox ID="chkFer" runat="server" Required="true" Font-Bold="True"></asp:CheckBox>
+                                            <asp:CheckBox ID="chkFer" runat="server" Font-Bold="True"></asp:CheckBox>
                                         </td>
                                     </tr>
                                     <tr>

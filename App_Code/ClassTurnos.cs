@@ -32,6 +32,7 @@ public class ClassTurnos
     public string ls_iduselim { get; set; }
     public string ls_rut { get; set; }
     public string ls_nombre { get; set; }
+    public string ls_fer { get; set; }
 
     public DataSet mfBuscarTurnos()
     {
@@ -58,6 +59,7 @@ public class ClassTurnos
             "SELECT " +
             "T.IDTURNOS, " +
             "T.DESCRIPCION, " +
+            "ISNULL(T.FERIADOS,0) FERIADOS, " +
             "CASE " +
             "   WHEN T.IDESTADO = 1 THEN 'ACTIVO' " +
             "   WHEN T.IDESTADO = 3 THEN 'INACTIVO' " +
@@ -83,13 +85,13 @@ public class ClassTurnos
         string lsRes = "";
 
         lsSql = "INSERT INTO " + modConstantes.gsDbRH + "M_TURNOS " +
-                "(DESCRIPCION, CODIGO, IDESTADO, F_H_CREACION) " +
+                "(DESCRIPCION, CODIGO, IDESTADO, F_H_CREACION, FERIADOS) " +
                 "VALUES (" +
                 "'" + ls_descrip + "', " +
                 "'" + ls_codigo + "', " +
                 "1, " +
                 "GETDATE()" +
-                ")";
+                "0)";
 
         con = bd.fnGetConn();
         lsRes = bd.ExecuteScalar(con, lsSql);
@@ -103,7 +105,8 @@ public class ClassTurnos
 
         lsSql = "UPDATE " + modConstantes.gsDbRH + "M_TURNOS SET " +
                 "DESCRIPCION = '" + ls_descrip + "', " +
-                "CODIGO = '" + ls_codigo + "' " +
+                "CODIGO = '" + ls_codigo + "', " +
+                "FERIADOS = " + ls_fer + " " +
                 "WHERE IDTURNOS = " + ls_turno;
 
         con = bd.fnGetConn();
@@ -127,6 +130,7 @@ public class ClassTurnos
             "SELECT " +
             "TU.IDTURNUS, " +
             "T.IDTURNOS, " +
+            "ISNULL(T.FERIADOS,0) FERIADOS, " +
             "T.DESCRIPCION AS TURNO, " +
             "D.IDDIA, " +
             "D.DESCRIPCION AS DIA, " +

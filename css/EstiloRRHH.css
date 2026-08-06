@@ -227,13 +227,13 @@
 
 .MenuGrid {
     width: 100%;
-    min-height: calc(100vh - 90px);
+    min-height: calc(100vh - 120px);
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
     justify-content: center;
     align-items: flex-start;
-    padding-top: 20px;
+    padding-top: 10px;
 }
 
 .MenuCard {
@@ -366,3 +366,39 @@
     background-color: #e7e7e7;
     color: black;
 }
+/*---------------------------------------
+    FILEUPLOAD
+----------------------------------------*/
+
+.upload-container {
+    margin: px 0;
+    padding: 10px;
+    background: #ffffff;
+    border: 1px solid #dfe6ec;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.05);
+}
+
+.form-control {
+    width: 80%;
+    max-width: 500px;
+    padding: 10px;
+    border: 1px solid #cfd8dc;
+    border-radius: 8px;
+    background: #fafafa;
+    color: #444;
+    font-size: 14px;
+    transition: all .2s ease;
+    box-sizing: border-box;
+}
+
+    .form-control:hover {
+        border-color: #42a5f5;
+        background: #fff;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #1976d2;
+        box-shadow: 0 0 6px rgba(25,118,210,.25);
+    }

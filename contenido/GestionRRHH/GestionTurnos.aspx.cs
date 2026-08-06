@@ -69,6 +69,10 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
                                 this.lbEstado.Text = "REVISAR ESTADO";
                                 this.btn_habilitar.Text = "Deshabilitar";
                             }
+                            if (aoDs.Tables[0].Rows[0]["FERIADOS"].ToString() == "1")
+                            {
+                                this.chkFer.Checked = true;
+                            }
                             this.LbTitulo.Text = aoDs.Tables[0].Rows[0]["CODIGO"].ToString();
                             mfCargaUser();
                             mfCargaUserDisp();
@@ -90,25 +94,20 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
     {
         //Validaciones
         if (!ValidarCampos()) { return; }
+
         //Revisar si existe turno
-        if (nuevo)
-        {
-            //per.ls_rut = this.TxtRut.Text;
-            //if (Convert.ToInt32(per.mfExistePersona()) > 0)
-            //{
-            //    mens.mensaje(Page, "RUT ya existe, por favor verificar");
-            //    return;
-            //}
-            //if (!ValidaRut(TxtRut.Text, TxtDv.Text))
-            //{
-            //    mens.mensaje(Page, "RUT NO VALIDO, por favor verificar");
-            //    return;
-            //};
-        }
         string lsRet = "";
         tur.ls_descrip = this.TxtDescr.Text;
         tur.ls_codigo = this.txtCod.Text;
         tur.ls_turno = this.hdIdTurno.Value;
+        if (this.chkFer.Checked)
+        {
+            tur.ls_fer = "1";
+        }
+        else
+        {
+            tur.ls_fer = "0";
+        }
         lsRet = tur.mfUpdateTurnos();
         if (lsRet != "")
             mens.mensaje(Page, "Error: Problemas al Modificar el Registro.");
@@ -119,21 +118,16 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
     }
     public bool ValidarCampos()
     {
-        //if (this.ddlPrevision.SelectedIndex == 0)
-        //{
-        //    mens.mensaje(Page, "Debe seleccionar Prevision");
-        //    return false;
-        //}
-        //if (this.ddlRegion.SelectedIndex == 0)
-        //{
-        //    mens.mensaje(Page, "Debe seleccionar Region");
-        //    return false;
-        //}
-        //if (this.ddlComuna.SelectedIndex == 0)
-        //{
-        //    mens.mensaje(Page, "Debe seleccionar Comuna");
-        //    return false;
-        //}
+        if (this.TxtDescr.Text.Trim() == "")
+        {
+            mens.mensaje(Page, "Debe Escribir una Descripcion del Turno");
+            return false;
+        }
+        if (this.txtCod.Text.Trim() == "")
+        {
+            mens.mensaje(Page, "Debe Escribir un código para el Turno");
+            return false;
+        }
         return true;
     }
     #region Botones
@@ -148,7 +142,7 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
             Response.Redirect("~/contenido/GestionRRHH/ListaTurnoss.aspx?" + Session["cadena"].ToString());
         }
     }
-    //A integrar lo siguiente ???
+
     protected void btn_habilitar_Click(object sender, EventArgs e)
     {
         try
@@ -198,11 +192,10 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
     private void CambiarEstadoTurno()
     {
         string asEstado = "2";
-        if (this.lbEstado.Text == "VIGENTE") asEstado = "3";
-        //string lsRet = per.UpdateEstado(Session["lsIdentificador"].ToString(), asEstado);
-        //string lsRet = per.UpdateEstado(this.hdIdTurno.Value, asEstado);
-        //if (lsRet != "")
-        //    mens.mensaje(Page, "Error: Problemas al Ingresar el Registro.");
+        if (this.lbEstado.Text == "VIGENTE")
+        {
+            asEstado = "3";
+        }
         else
         {
             if (asEstado == "3")
@@ -361,11 +354,11 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
     private void mfElimUser(string asIdentificador)
     {
         string lsRet = "";
-        
+
         tur.ls_idturno = hdIdTurno.Value;
         tur.ls_user = asIdentificador;
         tur.ls_iduselim = Session["user"].ToString();
-        lsRet= tur.mfQuitarUserTurno();
+        lsRet = tur.mfQuitarUserTurno();
 
         if (lsRet != "")
         {
