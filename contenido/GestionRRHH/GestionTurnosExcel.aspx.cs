@@ -15,6 +15,8 @@ public partial class contenido_GestionRRHH_GestionTurnosExcel : System.Web.UI.Pa
     Usuarios usr = new Usuarios();
     ClassTurnos tur = new ClassTurnos();
     ClassHorarios hor = new ClassHorarios();
+    ClassExcel excel = new ClassExcel();
+
     protected void Page_Load(object sender, EventArgs e)
     {
 
@@ -38,16 +40,32 @@ public partial class contenido_GestionRRHH_GestionTurnosExcel : System.Web.UI.Pa
         string archivo = Server.MapPath("~/TempExcel/");
 
         if (!Directory.Exists(archivo))
+        {
             Directory.CreateDirectory(archivo);
+        }
 
         string ruta = Path.Combine(archivo, Guid.NewGuid().ToString() + extension);
         fuExcel.SaveAs(ruta);
-        this.lblResultado.Text = "Archivo cargado: " + fuExcel.FileName;
-        ClassExcel excel = new ClassExcel();
+        
+
         DataTable dt = excel.LeerExcel(ruta);
-        Session["CargaExcel"] = dt;
-        dgData.DataSource = dt;
-        dgData.DataBind();
+
+        string[] columnas = { "RUT", "DV", "NOMBRES", "CODIGO_TURNO" }; //VALIDAR CONTENIDO COLUMNAS
+        string val = excel.ValidarColumnas(dt, columnas);
+
+        if (val != "")
+        {
+            mens.mensaje(Page, "Hay un Inconveniente con el archivo: " + val);
+            this.lblResultado.Text = "Error al cargar el archivo: " + fuExcel.FileName + " (" + val +")";
+            return;
+        }
+        else
+        {
+            Session["CargaExcel"] = dt;
+            dgData.DataSource = dt;
+            dgData.DataBind();
+            this.lblResultado.Text = "Archivo cargado: " + fuExcel.FileName;
+        }
 
         File.Delete(ruta);
     }

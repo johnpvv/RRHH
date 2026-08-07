@@ -43,18 +43,21 @@ public class ClassExcel
                 {
                     foreach (Cell celda in fila.Elements<Cell>())
                     {
-                        dt.Columns.Add(LeerCelda(celda, wbPart));
+                        int indice = GetIndexColumna(celda.CellReference);
+                        while (dt.Columns.Count <= indice)
+                            dt.Columns.Add();
+                        dt.Columns[indice].ColumnName = LeerCelda(celda, wbPart);
                     }
                     primera = false;
                 }
                 else
                 {
-                    DataRow dr = dt.NewRow();
-                    int i = 0;
+                    DataRow dr = dt.NewRow();                    
                     foreach (Cell celda in fila.Elements<Cell>())
                     {
-                        dr[i] = LeerCelda(celda, wbPart);
-                        i++;
+                        int indice = GetIndexColumna(celda.CellReference);
+                        if (indice < dt.Columns.Count)
+                            dr[indice] = LeerCelda(celda, wbPart);
                     }
                     dt.Rows.Add(dr);
                 }
@@ -80,5 +83,29 @@ public class ClassExcel
             }
         }
         return valor;
+    }
+    private int GetIndexColumna(string refCelda)
+    {
+        string columna = new string(refCelda.Where(Char.IsLetter).ToArray());
+        int indice = 0;
+        foreach (char c in columna)
+        {
+            indice *= 26;
+            indice += c - 'A' + 1;
+        }
+        return indice - 1;
+    }
+    public string ValidarColumnas(DataTable dt, string[] columnas)
+    {
+        string mensaje = "";
+
+        foreach (string columna in columnas)
+        {
+            if (!dt.Columns.Contains(columna))
+            {
+                mensaje += "Falta la columna: " + columna + ". ";
+            }
+        }
+        return mensaje;
     }
 }
