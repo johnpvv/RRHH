@@ -1,16 +1,18 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Web;
-using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Spreadsheet;
 
 /// <summary>
 /// Descripción: Permite crear archivos excel, y subir archivos al sistema.
 /// </summary>
 public class ClassExcel
 {
+    ClassUsuarios usr = new ClassUsuarios();
+    ClassTurnos tur = new ClassTurnos();
     public ClassExcel()
     {
         //Agregar aquí la lógica del constructor
@@ -26,38 +28,59 @@ public class ClassExcel
     public DataTable LeerExcel(string ruta)
     {
         DataTable dt = new DataTable();
-
         using (SpreadsheetDocument documento = SpreadsheetDocument.Open(ruta, false))
         {
-
             WorkbookPart wbPart = documento.WorkbookPart;
             Sheet hoja = wbPart.Workbook.Descendants<Sheet>().First();
             WorksheetPart wsPart = (WorksheetPart)wbPart.GetPartById(hoja.Id);
-
             SheetData datos = wsPart.Worksheet.Elements<SheetData>().First();
-
             bool primera = true;
             foreach (Row fila in datos.Elements<Row>())
             {
+                // PROCESAR LOS ENCABEZADOS
                 if (primera)
                 {
+                    int cantidadColumnas = ObtenerCantidadColumnas(fila);
+                    for (int i = 0; i < cantidadColumnas; i++)
+                    {
+                        dt.Columns.Add("COL_" + i);
+                    }
+
                     foreach (Cell celda in fila.Elements<Cell>())
                     {
                         int indice = GetIndexColumna(celda.CellReference);
-                        while (dt.Columns.Count <= indice)
-                            dt.Columns.Add();
-                        dt.Columns[indice].ColumnName = LeerCelda(celda, wbPart);
+                        if (indice < dt.Columns.Count)
+                        {
+                            string nombreColumna = LeerCelda(celda, wbPart).Trim();
+
+                            if (string.IsNullOrEmpty(nombreColumna))
+                            {
+                                nombreColumna = "COL_" + indice;
+                            }
+                            // Evitar nombres duplicados
+                            string nombreOriginal = nombreColumna;
+                            int contador = 1;
+                            while (dt.Columns.Contains(nombreColumna))
+                            {
+                                nombreColumna = nombreOriginal + "_" + contador;
+                                contador++;
+                            }
+                            dt.Columns[indice].ColumnName = nombreColumna;
+                        }
                     }
                     primera = false;
                 }
                 else
                 {
-                    DataRow dr = dt.NewRow();                    
+                    // PROCESAR LS DATOS
+                    DataRow dr = dt.NewRow();
                     foreach (Cell celda in fila.Elements<Cell>())
                     {
                         int indice = GetIndexColumna(celda.CellReference);
                         if (indice < dt.Columns.Count)
+                        {
                             dr[indice] = LeerCelda(celda, wbPart);
+                        }
                     }
                     dt.Rows.Add(dr);
                 }
@@ -65,6 +88,7 @@ public class ClassExcel
         }
         return dt;
     }
+
     private string LeerCelda(Cell celda, WorkbookPart wbPart)
     {
         if (celda == null)
@@ -76,10 +100,7 @@ public class ClassExcel
         {
             if (celda.DataType == CellValues.SharedString)
             {
-                return wbPart.SharedStringTablePart
-                    .SharedStringTable
-                    .ChildElements[int.Parse(valor)]
-                    .InnerText;
+                return wbPart.SharedStringTablePart.SharedStringTable.ChildElements[int.Parse(valor)].InnerText;
             }
         }
         return valor;
@@ -107,5 +128,110 @@ public class ClassExcel
             }
         }
         return mensaje;
+    }
+    private int ObtenerCantidadColumnas(Row fila)
+    {
+        int mayor = 0;
+        foreach (Cell celda in fila.Elements<Cell>())
+        {
+            int indice = GetIndexColumna(celda.CellReference);
+            if (indice > mayor)
+                mayor = indice;
+        }
+        return mayor + 1;
+    }
+    public List<string> ValidarDatosTurnos(DataTable dt)
+    {
+        List<string> errores = new List<string>();
+
+        if (dt == null || dt.Rows.Count == 0)
+        {
+            errores.Add("El archivo Excel no contiene registros.");
+            return errores;
+        }
+        dt.Columns.Add("RUT_NUM");//agregar para obtener solo el rut parte numeros
+        // Recorrer registros
+        for (int i = 0; i < dt.Rows.Count; i++)
+        {
+            DataRow fila = dt.Rows[i];
+            int filaExcel = i + 2;// +2 porque la fila 1 corresponde al encabezado titulo
+
+            string rut = fila["RUT"] == DBNull.Value ? "" : fila["RUT"].ToString().Trim();
+            string idTurno = fila["CODIGO_TURNO"] == DBNull.Value ? "" : fila["CODIGO_TURNO"].ToString().Trim();
+
+            // VALIDAR RUT VACIO, LUEGO SI EXISTE
+            if (string.IsNullOrWhiteSpace(rut))
+            {
+                errores.Add("Fila " + filaExcel + ": RUT vacío.");
+            }
+            else
+            {
+                string rutVal = usr.ValidarRut(rut);
+                int rutNum;
+                if (!int.TryParse(rutVal, out rutNum))
+                {
+                    errores.Add("Fila " + filaExcel + ": " + rutVal + "");
+                }
+                else
+                {
+                    fila["RUT_NUM"] = rutVal;
+                }
+            }
+
+            //VALIDAR TURNO VACIO, LUEGO SI EXISTE
+            if (string.IsNullOrWhiteSpace(idTurno))
+            {
+                errores.Add("Fila " + filaExcel + ": CODIGO_TURNO vacío.");
+            }
+            else
+            {
+                int id;//cambiar por el select del turno
+                if (!int.TryParse(idTurno, out id))
+                {
+                    errores.Add("Fila " + filaExcel + ": CODIGO_TURNO no existe, o es inválido.");
+                }
+            }
+        }
+        return errores;
+    }
+    public List<string> ValidarDatosBD(DataTable dt)
+    {
+        List<string> erroresBD = new List<string>();
+
+        if (dt == null || dt.Rows.Count == 0)
+        {
+            erroresBD.Add("El archivo Excel no contiene registros.");
+            return erroresBD;
+        }
+        dt.Columns.Add("IDUSUARIO");//agregar para obtener el id del user
+        for (int i = 0; i < dt.Rows.Count; i++)
+        {
+            DataRow fila = dt.Rows[i];
+            int filaExcel = i + 2;// +2 porque la fila 1 corresponde al encabezado titulo
+
+            string rut = fila["RUT_NUM"].ToString().Trim();
+            string codTurno = fila["CODIGO_TURNO"].ToString().Trim();
+
+            // VALIDAR RUT SI EXISTE en BD
+            usr.ls_rut = rut;
+            string rutID = usr.mfDevuelveID();
+            if (rutID == "0")
+            {
+                erroresBD.Add("Fila " + filaExcel + ": el RUT " + rut + " no existe en el sistema.");
+            }
+            else
+            {
+                fila["IDUSUARIO"] = rutID;
+            }
+
+            //VALIDAR TURNO SI EXISTE BD
+            tur.ls_codigo = codTurno;
+            string idTurno = tur.mfDevuelveIDTurno();
+            if (idTurno == "")
+            {
+                erroresBD.Add("Fila " + filaExcel + ": CODIGO_TURNO no existe, o es inválido.");
+            }
+        }
+        return erroresBD;
     }
 }

@@ -46,27 +46,53 @@ public partial class contenido_GestionRRHH_GestionTurnosExcel : System.Web.UI.Pa
 
         string ruta = Path.Combine(archivo, Guid.NewGuid().ToString() + extension);
         fuExcel.SaveAs(ruta);
-        
+
 
         DataTable dt = excel.LeerExcel(ruta);
 
-        string[] columnas = { "RUT", "DV", "NOMBRES", "CODIGO_TURNO" }; //VALIDAR CONTENIDO COLUMNAS
+        string[] columnas = { "RUT", "NOMBRES", "CODIGO_TURNO" }; //VALIDAR CONTENIDO COLUMNAS
         string val = excel.ValidarColumnas(dt, columnas);
 
         if (val != "")
         {
             mens.mensaje(Page, "Hay un Inconveniente con el archivo: " + val);
-            this.lblResultado.Text = "Error al cargar el archivo: " + fuExcel.FileName + " (" + val +")";
+            this.lblResultado.Text = "Error al cargar el archivo: " + fuExcel.FileName + " (" + val + ")";
             return;
         }
-        else
+
+        List<string> erroresExcel = excel.ValidarDatosTurnos(dt);
+        if (erroresExcel.Count > 0)
         {
-            Session["CargaExcel"] = dt;
-            dgData.DataSource = dt;
+            this.lblResultado.Text = "";
+            dgData.DataSource = null;
             dgData.DataBind();
-            this.lblResultado.Text = "Archivo cargado: " + fuExcel.FileName;
+            this.lbMensaje.Text = "Se han encontrado los siguientes errores en el archivo Excel: <br/>";
+            foreach (string error in erroresExcel)
+            {
+                this.lbMensaje.Text += "• " + error + "<br/>";
+            }
+            return;
         }
 
+        List<string> erroresBD = excel.ValidarDatosBD(dt);
+        if (erroresBD.Count > 0)
+        {
+            this.lblResultado.Text = "";
+            dgData.DataSource = null;
+            dgData.DataBind();
+            this.lbMensaje.Text = "Se han encontrado los siguientes errores en los Datos del Archivo: <br/>";
+            foreach (string error in erroresBD)
+            {
+                this.lbMensaje.Text += "• " + error + "<br/>";
+            }
+            return;
+        }
+
+        //Session["CargaExcel"] = dt;
+        dgData.DataSource = dt;
+        dgData.DataBind();
+        this.lblResultado.Text = "Archivo cargado correctamente: " + fuExcel.FileName;
+        this.lbMensaje.Text = "";
         File.Delete(ruta);
     }
     protected void btnVolver_Click(object sender, EventArgs e)

@@ -330,8 +330,8 @@ public class ClassTurnos
             "IDESTADO = 1, " +
             "F_H_ELIM = NULL, " +
             "IDUSELIM = NULL, " +
-            "IDTURNOS = " + ls_idturno + ", "+
-            "OBSERVACION = 'Re-Asignado' " +            
+            "IDTURNOS = " + ls_idturno + ", " +
+            "OBSERVACION = 'Re-Asignado' " +
             "WHERE IDUSUARIO = " + ls_user +
             " END " +
             "ELSE " +
@@ -365,6 +365,22 @@ public class ClassTurnos
         lsRes = bd.ExecuteScalar(con, lsSql);
         con.Close();
 
+        return lsRes;
+    }
+    public string mfDevuelveIDTurno()
+    {
+        string lsSql;
+        string lsRes = "";
+
+        lsSql =
+            "SELECT IDTURNOS " +
+            "FROM " + modConstantes.gsDbRH + "M_TURNOS " +
+            "WHERE CODIGO = '" + ls_codigo + "' " +
+            "AND IDESTADO <> 3 ";
+
+        con = bd.fnGetConn();
+        lsRes = bd.ExecuteScalar(con, lsSql);
+        con.Close();
         return lsRes;
     }
 }

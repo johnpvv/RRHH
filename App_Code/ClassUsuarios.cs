@@ -319,4 +319,40 @@ public class ClassUsuarios
         con.Close();
         return aoDF;
     }
+
+    private string CalcularDV(int rut)
+    {
+        int suma = 0;
+        int multiplicador = 2;
+        while (rut > 0)
+        {
+            suma += (rut % 10) * multiplicador;
+            rut /= 10;
+            multiplicador++;
+            if (multiplicador == 8)
+                multiplicador = 2;
+        }
+
+        int resto = 11 - (suma % 11);
+        if (resto == 11)
+            return "0";
+        if (resto == 10)
+            return "K";
+        return resto.ToString();
+    }
+    public string ValidarRut(string rut)//recibe rut completo, con puntos, y guion incluso... para validar
+    {
+        rut = rut.Replace(".", "").Replace("-", "").Trim().ToUpper();
+        if (rut.Length < 2)
+            return "RUT inválido muy pocos dígitos.";
+        string numero = rut.Substring(0, rut.Length - 1);
+        string dv = rut.Substring(rut.Length - 1, 1);
+        int rutNumero;
+        if (!int.TryParse(numero, out rutNumero))
+            return "RUT inválido no numérico.";
+        string dvCalculado = CalcularDV(rutNumero);
+        if (dv != dvCalculado)
+            return "RUT inválido no corresponde DV.";
+        return numero;
+    }
 }
