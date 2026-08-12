@@ -333,8 +333,8 @@
                                                     <asp:BoundField DataField="idusuario" HeaderText="Id" ReadOnly="True">
                                                         <ItemStyle CssClass="TextoCenter" />
                                                     </asp:BoundField>
-                                                    <asp:BoundField DataField="RUT" HeaderText="RUT">
-                                                        <ItemStyle CssClass="TextoCenter" Font-Bold="true" Width="100px" />
+                                                    <asp:BoundField DataField="RUT_C" HeaderText="RUT">
+                                                        <ItemStyle CssClass="TextoLeft" Font-Bold="true" Width="100px" />
                                                     </asp:BoundField>
                                                     <asp:BoundField DataField="NOMBRE" HeaderText="Nombre">
                                                         <ItemStyle CssClass="TextoLeft" />
@@ -382,7 +382,7 @@
                                                         <ItemStyle CssClass="TextoCenter" />
                                                     </asp:BoundField>
                                                     <asp:BoundField DataField="RUT" HeaderText="RUT">
-                                                        <ItemStyle CssClass="TextoCenter" Font-Bold="true" Width="100px" />
+                                                        <ItemStyle CssClass="TextoLeft" Font-Bold="true" Width="100px" />
                                                     </asp:BoundField>
                                                     <asp:BoundField DataField="NOMBRE" HeaderText="Nombre">
                                                         <ItemStyle CssClass="TextoLeft" />

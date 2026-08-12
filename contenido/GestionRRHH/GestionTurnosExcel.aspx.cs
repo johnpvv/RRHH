@@ -33,7 +33,7 @@ public partial class contenido_GestionRRHH_GestionTurnosExcel : System.Web.UI.Pa
         string extension = Path.GetExtension(fuExcel.FileName).ToLower();
         if (extension != ".xlsx")
         {
-            mens.mensaje(Page, "Sólo se permiten archivos Excel 2007 en adelante.");
+            mens.mensaje(Page, "Sólo se permiten archivos Excel 2007 en adelante (.xlsx)");
             return;
         }
 
@@ -87,8 +87,14 @@ public partial class contenido_GestionRRHH_GestionTurnosExcel : System.Web.UI.Pa
             }
             return;
         }
-
-        //Session["CargaExcel"] = dt;
+        tur.ls_iduselim = Session["user"].ToString();
+        string lsInsert = tur.mfCargaTurnos(dt);
+        if (lsInsert != "")
+        {
+            mens.mensaje(Page, "Hubo un error al insertar los registros: " + lsInsert);
+            this.lblResultado.Text = "Error al cargar el archivo: " + fuExcel.FileName + " (" + lsInsert + ")";
+            return;
+        }
         dgData.DataSource = dt;
         dgData.DataBind();
         this.lblResultado.Text = "Archivo cargado correctamente: " + fuExcel.FileName;
@@ -98,5 +104,23 @@ public partial class contenido_GestionRRHH_GestionTurnosExcel : System.Web.UI.Pa
     protected void btnVolver_Click(object sender, EventArgs e)
     {
         Response.Redirect("~/contenido/frmblksiab.aspx");
+    }
+    protected void btnPlantilla_Click(object sender, EventArgs e)
+    {
+        string ruta = Server.MapPath("~/contenido/Plantillas/Plantilla_Turnos.xlsx");
+
+        if (!System.IO.File.Exists(ruta))
+        {
+            mens.mensaje(Page, "No se encontró la plantilla de turnos.");
+            return;
+        }
+        Response.Clear();
+        Response.ClearHeaders();
+        Response.ClearContent();
+        Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        Response.AddHeader("Content-Disposition", "attachment; filename=Plantilla_Turnos.xlsx");
+        Response.WriteFile(ruta);
+
+        Response.End();
     }
 }

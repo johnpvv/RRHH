@@ -33,8 +33,7 @@
                 </td>
             </tr>
             <tr>
-                <td class="textoNormRigth">Descargar Plantilla:
-                </td>
+                <td class="textoNormRigth">&nbsp;</td>
                 <td></td>
             </tr>
         </table>
@@ -47,7 +46,14 @@
                         Text="Procesar Excel"
                         CssClass="BotonPortalVerde"
                         OnClick="btnCargar_Click"
-                        OnClientClick="return ConfirmarGuardar();"/>
+                        OnClientClick="return ConfirmarGuardar();" />
+                    &nbsp;
+                    <asp:Button
+                        ID="btnPlantilla"
+                        runat="server"
+                        Text="Descargar Plantilla Ejemplo"
+                        CssClass="BotonPortalAmarillo"
+                        OnClick="btnPlantilla_Click" />
                     &nbsp;
                     <asp:Button ID="btnVolver"
                         runat="server"
@@ -84,15 +90,12 @@
         </asp:GridView>
         <br />
         <div id="divCargando" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.3); z-index: 9999;">
-
             <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 300px; height: 180px; background: white; border-radius: 10px; text-align: center; padding-top: 30px; box-shadow: 0 0 15px #666;">
-
                 <img src="../../imagenes/ajax-loader.gif" style="width: 120px; height: 120px;" alt="Cargando..." />
                 <br />
                 <br />
-                <span style="font-size: 16px; font-weight: bold;">Guardando información...
+                <span style="font-size: 16px; font-weight: bold;">Procesando Archivo...
                 </span>
-
             </div>
         </div>
     </form>

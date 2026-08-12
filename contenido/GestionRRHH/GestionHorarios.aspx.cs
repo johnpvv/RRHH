@@ -41,6 +41,7 @@ public partial class contenido_GestionRRHH_GestionHorarios : System.Web.UI.Page
                     nuevo = true;
                     this.btn_habilitar.Enabled = false;
                     this.btn_habilitar.CssClass = "BotonPortalAmarillo";
+                    this.TabPanel2.Enabled = false;
                 }
                 else
                 {
@@ -100,17 +101,16 @@ public partial class contenido_GestionRRHH_GestionHorarios : System.Web.UI.Page
         //Revisar si existe turno
         string lsRet = "";
         string lsID = "";
+        hor.ls_user = Session["user"].ToString();
+        hor.ls_idhora = this.hdIdHora.Value;
+        hor.ls_descrip = this.TxtDescr.Text.Trim();
+
         if (nuevo)
         {
-            hor.ls_user = Session["user"].ToString();
-            hor.ls_descrip = this.TxtDescr.Text;
             lsID = hor.mfCrearHorario();
         }
         else
-        {
-            hor.ls_user = Session["user"].ToString();
-            hor.ls_idhora = this.hdIdHora.Value;
-            hor.ls_descrip = this.TxtDescr.Text;
+        {            
             lsRet = hor.mfUpdateHorario();
         }
 
@@ -121,6 +121,7 @@ public partial class contenido_GestionRRHH_GestionHorarios : System.Web.UI.Page
             this.TxtId.Text = lsID;
             this.lbEstado.Text = "ACTIVO";
             this.btn_habilitar.Text = "Deshabilitar";
+            this.TabPanel2.Enabled = true;
         }
 
         if (lsRet != "" && lsID == "")

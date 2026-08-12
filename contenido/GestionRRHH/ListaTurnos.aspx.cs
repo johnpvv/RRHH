@@ -32,7 +32,8 @@ public partial class contenido_Administracion_ListaTurnos : System.Web.UI.Page
 
     protected void btnCrear_Click(object sender, EventArgs e)
     {
-        CrearTurno();
+        //CrearTurno();
+        Response.Redirect("~/contenido/GestionRRHH/GestionTurnos.aspx?key=0");
     }
     protected void btnExportar_Click(object sender, EventArgs e)
     {

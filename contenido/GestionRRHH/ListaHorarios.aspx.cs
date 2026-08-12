@@ -33,7 +33,6 @@ public partial class contenido_Administracion_ListaHorarios : System.Web.UI.Page
 
     protected void btnCrear_Click(object sender, EventArgs e)
     {
-        //CrearHorario();
         Response.Redirect("~/contenido/GestionRRHH/GestionHorarios.aspx?key=0");
     }
     protected void btnExportar_Click(object sender, EventArgs e)
@@ -46,30 +45,7 @@ public partial class contenido_Administracion_ListaHorarios : System.Web.UI.Page
         dgData.DataSource = hor.mfBuscarHorarios();
         dgData.DataBind();
     }
-    //private void CrearHorario()
-    //{
-    //    string ret;
-    //    hor.ls_descrip = this.txtDescr.Text;
-    //    if (tur.ls_descrip == "")
-    //    {
-    //        mens.mensaje(Page, "Debe Llenar los Campos para Crear Un Nuevo Horario... ");
-    //    }
-    //    else
-    //    {
-    //        ret = "1";//tur.mfCrearHorario();
-    //        if (ret == "")
-    //        {
-    //            mens.mensaje(Page, "Turno Insertado OK... ");
-    //            this.txtCod.Text = "";
-    //            this.txtDescr.Text = "";
-    //            CargarHorarios();
-    //        }
-    //        else
-    //        {
-    //            mens.mensaje(Page, "Ha Ocurrido un error al Insertar... ");
-    //        }
-    //    }
-    //}
+
     protected void dgData_RowCommand(object sender, GridViewCommandEventArgs e)
     {
         if (e.CommandName == "Editar")

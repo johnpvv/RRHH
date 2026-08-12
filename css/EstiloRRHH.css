@@ -5,6 +5,41 @@
     font-size: 13px;
 }
 
+.Normal {
+    background-color: #EFF3FB;
+}
+
+    .Normal:Hover, .Alternate:Hover {
+        background-color: #D1DDF1;
+    }
+
+.Alternate {
+    background-color: White;
+}
+
+.GridGral tr:hover {
+    transform: translateY(-2px);
+    box-shadow: 0px 4px 4px #666666;
+}
+
+.GridGralRow {
+    background-color: White;
+    height: 32px;
+}
+
+.GridGralAltRow {
+    background-color: #F5F8FC;
+    height: 32px;
+}
+
+.GridGralHeader {
+    background-color: #1F6FB2;
+    color: White;
+    font-weight: bold;
+    text-align: center;
+    height: 35px;
+}
+
 .textoNorm {
     border-collapse: collapse;
     width: 100%;
@@ -78,30 +113,6 @@
     text-align: center;
 }
 
-.GridGralHeader {
-    background-color: #1F6FB2;
-    color: White;
-    font-weight: bold;
-    text-align: center;
-    height: 35px;
-}
-
-.GridGralRow {
-    background-color: White;
-    height: 32px;
-}
-
-.GridGralAltRow {
-    background-color: #F5F8FC;
-    height: 32px;
-}
-
-.GridGral td:hover {
-    background-color: #E7F1FF;
-}
-/*.GridGral tr:hover {
-    background-color: #1F6FB2;
-}*/
 
 .BotonPortal {
     background-color: #1F6FB2;

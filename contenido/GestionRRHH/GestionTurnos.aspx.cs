@@ -40,6 +40,10 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
                 {
                     Session.Add("lbNvo", true);
                     nuevo = true;
+                    this.btn_habilitar.Enabled = false;
+                    this.btn_habilitar.CssClass = "BotonPortalAmarillo";
+                    this.TabPanel2.Enabled = false;
+                    this.TabPanel3.Enabled = false;
                 }
                 else
                 {
@@ -95,11 +99,12 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
         //Validaciones
         if (!ValidarCampos()) { return; }
 
-        //Revisar si existe turno
         string lsRet = "";
-        tur.ls_descrip = this.TxtDescr.Text;
-        tur.ls_codigo = this.txtCod.Text;
+        string lsID = "";
+        tur.ls_descrip = this.TxtDescr.Text.Trim();
+        tur.ls_codigo = this.txtCod.Text.Trim().ToUpper();
         tur.ls_turno = this.hdIdTurno.Value;
+
         if (this.chkFer.Checked)
         {
             tur.ls_fer = "1";
@@ -108,12 +113,36 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
         {
             tur.ls_fer = "0";
         }
-        lsRet = tur.mfUpdateTurnos();
-        if (lsRet != "")
-            mens.mensaje(Page, "Error: Problemas al Modificar el Registro.");
+
+        if (nuevo)
+        {
+            lsID= tur.mfCrearTurnos();
+        }
         else
         {
-            mens.mensaje(Page, "Registro ingresado con Exito.. ");
+            lsRet = tur.mfUpdateTurnos();
+        }
+
+        if (lsID != "")
+        {
+            this.hdIdTurno.Value = lsID;
+            Session.Add("lbNvo", false);
+            this.TxtId.Text = lsID;
+            this.lbEstado.Text = "ACTIVO";
+            this.btn_habilitar.Text = "Deshabilitar";
+            this.TabPanel2.Enabled = true;
+            this.TabPanel3.Enabled = true;
+            mfCargaUser();
+            mfCargaUserDisp();
+        }
+
+        if (lsRet != "" && lsID == "")
+        {
+            mens.mensaje(Page, "Error: Problemas al Insertar y/o Modificar el Registro.");
+        }
+        else
+        {
+            mens.mensaje(Page, "Registro Ingresado y/o Actualizado con Exito.. ");
         }
     }
     public bool ValidarCampos()
@@ -126,6 +155,12 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
         if (this.txtCod.Text.Trim() == "")
         {
             mens.mensaje(Page, "Debe Escribir un código para el Turno");
+            return false;
+        }
+        tur.ls_codigo = this.txtCod.Text.Trim();
+        if (tur.mfDevuelveIDTurno() != "" && tur.mfDevuelveIDTurno() != this.hdIdTurno.Value)
+        {
+            mens.mensaje(Page, "El Código escrito, ya existe, pruebe uno diferente.");
             return false;
         }
         return true;

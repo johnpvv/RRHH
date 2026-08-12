@@ -19,12 +19,8 @@ public class ClassExcel
     }
 
     public string ls_error { get; set; }
-    //public DataTable LeerExcel(string archivo);
-    //public bool ValidarCabecera(DataTable dt, string[] columnas);
-    //public byte[] ExportarExcel(DataTable dt);
-    //public byte[] CrearPlantillaTurnos();
-    //public byte[] ExportarErrores(DataTable errores);
 
+    #region General
     public DataTable LeerExcel(string ruta)
     {
         DataTable dt = new DataTable();
@@ -140,6 +136,9 @@ public class ClassExcel
         }
         return mayor + 1;
     }
+    #endregion
+
+    #region Validar Excel Turnos
     public List<string> ValidarDatosTurnos(DataTable dt)
     {
         List<string> errores = new List<string>();
@@ -150,15 +149,12 @@ public class ClassExcel
             return errores;
         }
         dt.Columns.Add("RUT_NUM");//agregar para obtener solo el rut parte numeros
-        // Recorrer registros
         for (int i = 0; i < dt.Rows.Count; i++)
         {
             DataRow fila = dt.Rows[i];
             int filaExcel = i + 2;// +2 porque la fila 1 corresponde al encabezado titulo
-
             string rut = fila["RUT"] == DBNull.Value ? "" : fila["RUT"].ToString().Trim();
             string idTurno = fila["CODIGO_TURNO"] == DBNull.Value ? "" : fila["CODIGO_TURNO"].ToString().Trim();
-
             // VALIDAR RUT VACIO, LUEGO SI EXISTE
             if (string.IsNullOrWhiteSpace(rut))
             {
@@ -177,7 +173,6 @@ public class ClassExcel
                     fila["RUT_NUM"] = rutVal;
                 }
             }
-
             //VALIDAR TURNO VACIO, LUEGO SI EXISTE
             if (string.IsNullOrWhiteSpace(idTurno))
             {
@@ -204,14 +199,13 @@ public class ClassExcel
             return erroresBD;
         }
         dt.Columns.Add("IDUSUARIO");//agregar para obtener el id del user
+        dt.Columns.Add("IDTURNOS");//agregar para obtener el id del turno
         for (int i = 0; i < dt.Rows.Count; i++)
         {
             DataRow fila = dt.Rows[i];
-            int filaExcel = i + 2;// +2 porque la fila 1 corresponde al encabezado titulo
-
+            int filaExcel = i + 2;
             string rut = fila["RUT_NUM"].ToString().Trim();
             string codTurno = fila["CODIGO_TURNO"].ToString().Trim();
-
             // VALIDAR RUT SI EXISTE en BD
             usr.ls_rut = rut;
             string rutID = usr.mfDevuelveID();
@@ -223,7 +217,6 @@ public class ClassExcel
             {
                 fila["IDUSUARIO"] = rutID;
             }
-
             //VALIDAR TURNO SI EXISTE BD
             tur.ls_codigo = codTurno;
             string idTurno = tur.mfDevuelveIDTurno();
@@ -231,7 +224,12 @@ public class ClassExcel
             {
                 erroresBD.Add("Fila " + filaExcel + ": CODIGO_TURNO no existe, o es inválido.");
             }
+            else
+            {
+                fila["IDTURNOS"] = idTurno;
+            }
         }
         return erroresBD;
     }
+    #endregion
 }

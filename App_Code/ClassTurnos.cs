@@ -90,8 +90,9 @@ public class ClassTurnos
                 "'" + ls_descrip + "', " +
                 "'" + ls_codigo + "', " +
                 "1, " +
-                "GETDATE()" +
-                "0)";
+                "GETDATE()," +
+                " " + ls_fer + ");" +
+                "SELECT CAST(SCOPE_IDENTITY() AS INT);"; 
 
         con = bd.fnGetConn();
         lsRes = bd.ExecuteScalar(con, lsSql);
@@ -256,6 +257,7 @@ public class ClassTurnos
             "P.IDUSUARIO, " +
             "P.RUT, " +
             "P.DV, " +
+            "CONVERT(VARCHAR,P.RUT) + '-' + P.DV as RUT_C, " +
             "P.NOMBRE + ' ' + " +
             "ISNULL(P.AP_PATERNO,'') + ' ' + " +
             "ISNULL(P.AP_MATERNO,'') as NOMBRE " +
@@ -367,6 +369,7 @@ public class ClassTurnos
 
         return lsRes;
     }
+
     public string mfDevuelveIDTurno()
     {
         string lsSql;
@@ -381,6 +384,59 @@ public class ClassTurnos
         con = bd.fnGetConn();
         lsRes = bd.ExecuteScalar(con, lsSql);
         con.Close();
+        return lsRes;
+    }
+    public string mfCargaTurnos(DataTable dt)
+    {
+        string lsRes = "";
+        try
+        {
+            con = bd.fnGetConn();
+            foreach (DataRow fila in dt.Rows)
+            {
+                ls_user = fila["IDUSUARIO"].ToString();
+                ls_idturno = fila["IDTURNOS"].ToString();
+                // Eliminar turno activo, e insertar turno nuevo
+                lsRes = mfAddUserTurnoExcel();
+                if (lsRes != "")
+                    return lsRes;
+            }
+            con.Close();
+        }
+        catch (Exception ex)
+        {
+            lsRes = ex.Message;
+        }
+        return lsRes;
+    }
+    public string mfAddUserTurnoExcel()
+    {
+        string lsSql;
+        string lsRes;
+
+        lsSql =
+            "UPDATE " + modConstantes.gsDbRH + "M_TURNO_USUARIOS SET " +
+            "IDESTADO = 3, " +
+            "F_H_ELIM = GETDATE(), " +
+            "IDUSELIM = " + ls_iduselim + ", " +
+            "OBSERVACION = 'Eliminado por carga Excel' " +
+            "WHERE IDUSUARIO = " + ls_user + " " +
+            "AND IDESTADO = 1; " +
+
+            "INSERT INTO " + modConstantes.gsDbRH + "M_TURNO_USUARIOS " +
+            "(IDTURNOS, IDUSUARIO, F_H_CREACION, IDESTADO, OBSERVACION) " +
+            "VALUES (" +
+            ls_idturno + ", " +
+            ls_user + ", " +
+            "GETDATE(), " +
+            "1, " +
+            "'Carga desde Excel'" +
+            ");";
+
+        con = bd.fnGetConn();
+        lsRes = bd.ExecuteScalar(con, lsSql);
+        con.Close();
+
         return lsRes;
     }
 }
