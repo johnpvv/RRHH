@@ -148,13 +148,16 @@ public class ClassExcel
             errores.Add("El archivo Excel no contiene registros.");
             return errores;
         }
-        dt.Columns.Add("RUT_NUM");//agregar para obtener solo el rut parte numeros
+        dt.Columns.Add("RUT_NUM");//agregar para obtener solo el rut parte numeros                                  
+        HashSet<int> rutsProcesados = new HashSet<int>();// Para controlar RUT duplicados dentro del Excel        
+        Dictionary<int, int> filaRut = new Dictionary<int, int>();// Para saber en qué fila apareció originalmente
         for (int i = 0; i < dt.Rows.Count; i++)
         {
             DataRow fila = dt.Rows[i];
             int filaExcel = i + 2;// +2 porque la fila 1 corresponde al encabezado titulo
             string rut = fila["RUT"] == DBNull.Value ? "" : fila["RUT"].ToString().Trim();
             string idTurno = fila["CODIGO_TURNO"] == DBNull.Value ? "" : fila["CODIGO_TURNO"].ToString().Trim();
+
             // VALIDAR RUT VACIO, LUEGO SI EXISTE
             if (string.IsNullOrWhiteSpace(rut))
             {
@@ -171,8 +174,19 @@ public class ClassExcel
                 else
                 {
                     fila["RUT_NUM"] = rutVal;
+                    if (rutsProcesados.Contains(rutNum))
+                    {
+                        int filaOriginal = filaRut[rutNum];
+                        errores.Add("Fila " + filaExcel + ": RUT " + rut + " está duplicado, en la fila: " + filaOriginal + ".");
+                    }
+                    else
+                    {
+                        rutsProcesados.Add(rutNum);
+                        filaRut.Add(rutNum, filaExcel);
+                    }
                 }
             }
+
             //VALIDAR TURNO VACIO, LUEGO SI EXISTE
             if (string.IsNullOrWhiteSpace(idTurno))
             {
@@ -180,10 +194,10 @@ public class ClassExcel
             }
             else
             {
-                int id;//cambiar por el select del turno
+                int id;
                 if (!int.TryParse(idTurno, out id))
                 {
-                    errores.Add("Fila " + filaExcel + ": CODIGO_TURNO no existe, o es inválido.");
+                    errores.Add("Fila " + filaExcel + ": CODIGO_TURNO es inválido.");
                 }
             }
         }
@@ -211,7 +225,7 @@ public class ClassExcel
             string rutID = usr.mfDevuelveID();
             if (rutID == "0")
             {
-                erroresBD.Add("Fila " + filaExcel + ": el RUT " + rut + " no existe en el sistema.");
+                erroresBD.Add("Fila " + filaExcel + ": el RUT: " + fila["RUT"].ToString() + " no existe en el sistema.");
             }
             else
             {
