@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Data;
 
 public partial class contenido_RRHH_VistaTurnosTrab : System.Web.UI.Page
 {
@@ -16,40 +17,29 @@ public partial class contenido_RRHH_VistaTurnosTrab : System.Web.UI.Page
         {
             CargarMeses();
             CargarAnios();
-            //rlj.ls_mes = ddlMes.SelectedValue;
-            //rlj.ls_anio = ddlAnio.SelectedValue;
             CargarTurnosTrab();
         }
     }
     private void CargarMeses()
     {
-        if (ddlMes.Items.Count == 0)
-        {
-            ddlMes.Items.Add(new ListItem("Enero", "1"));
-            ddlMes.Items.Add(new ListItem("Febrero", "2"));
-            ddlMes.Items.Add(new ListItem("Marzo", "3"));
-            ddlMes.Items.Add(new ListItem("Abril", "4"));
-            ddlMes.Items.Add(new ListItem("Mayo", "5"));
-            ddlMes.Items.Add(new ListItem("Junio", "6"));
-            ddlMes.Items.Add(new ListItem("Julio", "7"));
-            ddlMes.Items.Add(new ListItem("Agosto", "8"));
-            ddlMes.Items.Add(new ListItem("Septiembre", "9"));
-            ddlMes.Items.Add(new ListItem("Octubre", "10"));
-            ddlMes.Items.Add(new ListItem("Noviembre", "11"));
-            ddlMes.Items.Add(new ListItem("Diciembre", "12"));
-        }
-
+        DataSet ds = tur.mfGenerarMeses();
+        ddlMes.DataSource = ds.Tables[0];
+        ddlMes.DataTextField = "MES";
+        ddlMes.DataValueField = "IDMES";
+        ddlMes.DataBind();
         ddlMes.SelectedValue = DateTime.Now.Month.ToString();
     }
 
     private void CargarAnios()
     {
         ddlAnio.Items.Clear();
+        DataSet ds = tur.mfGenerarAnios();
+        ddlAnio.DataSource = ds.Tables[0];
+        ddlAnio.DataTextField = "ANIO";
+        ddlAnio.DataValueField = "ID";
+        ddlAnio.DataBind();
+        ddlAnio.SelectedValue = DateTime.Now.Year.ToString();
 
-        for (int i = DateTime.Now.Year; i >= 2020; i--)
-        {
-            ddlAnio.Items.Add(new ListItem(i.ToString(), i.ToString()));
-        }
     }
     private void CargarTurnosTrab()
     {

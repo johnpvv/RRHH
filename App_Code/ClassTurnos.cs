@@ -34,6 +34,45 @@ public class ClassTurnos
     public string ls_nombre { get; set; }
     public string ls_fer { get; set; }
 
+    public DataSet mfGenerarMeses()
+    {
+        DataSet ds = new DataSet();
+        DataTable dt = new DataTable("MES");
+
+        dt.Columns.Add("IDMES", typeof(int));
+        dt.Columns.Add("MES", typeof(string));
+        dt.Rows.Add(1, "Enero");
+        dt.Rows.Add(2, "Febrero");
+        dt.Rows.Add(3, "Marzo");
+        dt.Rows.Add(4, "Abril");
+        dt.Rows.Add(5, "Mayo");
+        dt.Rows.Add(6, "Junio");
+        dt.Rows.Add(7, "Julio");
+        dt.Rows.Add(8, "Agosto");
+        dt.Rows.Add(9, "Septiembre");
+        dt.Rows.Add(10, "Octubre");
+        dt.Rows.Add(11, "Noviembre");
+        dt.Rows.Add(12, "Diciembre");
+        ds.Tables.Add(dt);
+        return ds;
+    }
+    public DataSet mfGenerarAnios()
+    {
+        DataSet ds = new DataSet();
+        DataTable dt = new DataTable("ANIO");
+
+        dt.Columns.Add("ID", typeof(int));
+        dt.Columns.Add("ANIO", typeof(string));
+
+        for (int i = DateTime.Now.Year; i >= 2020; i--)
+        {
+            dt.Rows.Add(i.ToString(), i.ToString());
+        }
+
+        ds.Tables.Add(dt);
+        return ds;
+    }
+
     public DataSet mfBuscarTurnos()
     {
         string lsSql;

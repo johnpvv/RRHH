@@ -185,7 +185,7 @@
                                 <ItemTemplate>
                                     <asp:DropDownList ID="ddlHorario" runat="server"
                                         CssClass="GridGralRow"
-                                        Width="240px"
+                                        Width="260px"
                                         AutoPostBack="true"
                                         OnSelectedIndexChanged="ddlHorario_SelectedIndexChanged">
                                     </asp:DropDownList>
@@ -246,7 +246,99 @@
                     <asp:Label ID="lblResultado" runat="server" ForeColor="Red"></asp:Label>
                 </ContentTemplate>
             </ajaxToolkit:TabPanel>
-            <ajaxToolkit:TabPanel ID="TabPanel3" runat="server" HeaderText="TabPanel3">
+
+            <ajaxToolkit:TabPanel ID="TabPanel3" runat="server" HeaderText="TabMes">
+                <HeaderTemplate>Detalle Turno Mensual</HeaderTemplate>
+                <ContentTemplate>
+                    <table class="table table-bordered" style="width: 100%;">
+                        <tr>
+                            <td class="TextoRigth" style="width: 80px;">Año:
+                            </td>
+                            <td class="TextoLeft" style="width: 80px;">
+                                <asp:DropDownList ID="ddlAnio" runat="server" Width="80px" CssClass="form-control">
+                                </asp:DropDownList>
+                            </td>
+                            <td class="TextoRigth" style="width: 80px;">Mes:
+                            </td>
+                            <td class="TextoLeft" style="width: 150px;">
+                                <asp:DropDownList ID="ddlMes" runat="server" Width="150px" CssClass="form-control">
+                                </asp:DropDownList>
+                            </td>
+                            <td class="TextoLeft">
+                                <asp:Button ID="btnGenerarMes"
+                                    runat="server"
+                                    Text="Generar mes"
+                                    CssClass="BotonPortalVerde"
+                                    OnClick="btnGenerarMes_Click" />
+                            </td>
+                            <td class="TextoRigth"></td>
+                            <td class="TextoLeft"></td>
+                        </tr>
+                        <tr>
+                            <td class="TextoRigth"></td>
+                            <td class="TextoLeft"></td>
+                        </tr>
+                    </table>
+                    <asp:GridView ID="dgMes"
+                        runat="server"
+                        AutoGenerateColumns="False"
+                        CssClass="GridGral"
+                        Width="100%"
+                        GridLines="None"
+                        OnRowDataBound="dgMes_RowDataBound">
+                        <Columns>
+                            <asp:TemplateField HeaderText="Fecha">
+                                <ItemTemplate>
+                                    <asp:HiddenField ID="hdIdTurnoDia" runat="server" Value='<%# Eval("IDTURNODIA") %>' />
+                                    <asp:HiddenField ID="hdIdDia" runat="server" Value='<%# Eval("IDDIA") %>' />
+                                    <asp:HiddenField ID="hdFecha" runat="server" Value='<%# Eval("FECHA", "{0:yyyy-MM-dd}") %>' />
+                                    <%# Eval("FECHA", "{0:dd/MM/yyyy}") %>
+                                </ItemTemplate>
+                                <ItemStyle CssClass="textoGridBold" />
+                            </asp:TemplateField>
+                            <asp:BoundField
+                                DataField="DIA"
+                                HeaderText="Día"
+                                ItemStyle-CssClass="textoGridBold" />
+                            <asp:TemplateField HeaderText="Trabaja">
+                                <ItemTemplate>
+                                    <asp:CheckBox ID="chkTrabajaMes" runat="server" AutoPostBack="true" 
+                                        OnCheckedChanged="chkTrabajaMes_CheckedChanged" />
+                                </ItemTemplate>
+                                <ItemStyle HorizontalAlign="Center" />
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Horario">
+                                <ItemTemplate>
+                                    <asp:DropDownList
+                                        ID="ddlHorarioMes" runat="server" CssClass="GridGralRow" Width="260px" AutoPostBack="true"
+                                        OnSelectedIndexChanged="ddlHorarioMes_SelectedIndexChanged">
+                                    </asp:DropDownList>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Duración Horas" ItemStyle-CssClass="textoGridBold">
+                                <ItemTemplate>
+                                    <asp:TextBox ID="txtHrMes" runat="server" Width="60px" ReadOnly="true" Enabled="false" CssClass="textoGridBold" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Entrada" ItemStyle-CssClass="textoGridBold">
+                                <ItemTemplate>
+                                    <asp:TextBox ID="txtIniMes" runat="server" Width="60px" ReadOnly="true" Enabled="false" CssClass="textoGridBold" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Salida" ItemStyle-CssClass="textoGridBold">
+                                <ItemTemplate>
+                                    <asp:TextBox ID="txtFinMes" runat="server" Width="60px" ReadOnly="true" Enabled="false" CssClass="textoGridBold" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                        </Columns>
+                        <HeaderStyle CssClass="GridGralHeader" />
+                        <RowStyle CssClass="GridGralRow" />
+                        <AlternatingRowStyle CssClass="GridGralAltRow" />
+                    </asp:GridView>
+                </ContentTemplate>
+            </ajaxToolkit:TabPanel>
+
+            <ajaxToolkit:TabPanel ID="TabPanel4" runat="server" HeaderText="TabProf">
                 <HeaderTemplate>Personas</HeaderTemplate>
                 <ContentTemplate>
                     <table border="0" style="width: 811px">
@@ -350,7 +442,7 @@
                                                 </Columns>
                                                 <HeaderStyle CssClass="GridGralHeader" />
                                                 <RowStyle CssClass="GridGralRow" />
-                                                <AlternatingRowStyle CssClass="GridGralAltRow" /> 
+                                                <AlternatingRowStyle CssClass="GridGralAltRow" />
                                                 <PagerStyle CssClass="GridPager" HorizontalAlign="Center" />
                                                 <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" />
                                             </asp:GridView>

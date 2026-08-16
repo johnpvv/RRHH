@@ -18,7 +18,7 @@
                 </td>
 
                 <td style="width: 180px;">
-                    <asp:DropDownList ID="ddlMes" runat="server" Width="150px" CssClass="TextBoxGral">
+                    <asp:DropDownList ID="ddlMes" runat="server" Width="150px" CssClass="form-control">
                     </asp:DropDownList>
                 </td>
 
@@ -26,7 +26,7 @@
                 </td>
 
                 <td style="width: 120px;">
-                    <asp:DropDownList ID="ddlAnio" runat="server" Width="100px" CssClass="TextBoxGral">
+                    <asp:DropDownList ID="ddlAnio" runat="server" Width="100px" CssClass="form-control">
                     </asp:DropDownList>
                 </td>
                 <td>

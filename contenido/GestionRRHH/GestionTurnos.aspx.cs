@@ -80,6 +80,8 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
                             this.LbTitulo.Text = aoDs.Tables[0].Rows[0]["CODIGO"].ToString();
                             mfCargaUser();
                             mfCargaUserDisp();
+                            CargarMeses();
+                            CargarAnios();
                         }
                     }
                 }
@@ -89,6 +91,27 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
                 Response.Redirect("~/contenido/frmerrgen.aspx");
             }
         }
+    }
+    private void CargarMeses()
+    {
+        DataSet ds = tur.mfGenerarMeses();
+        ddlMes.DataSource = ds.Tables[0];
+        ddlMes.DataTextField = "MES";
+        ddlMes.DataValueField = "IDMES";
+        ddlMes.DataBind();
+        ddlMes.SelectedValue = DateTime.Now.Month.ToString();
+    }
+
+    private void CargarAnios()
+    {
+        ddlAnio.Items.Clear();
+        DataSet ds = tur.mfGenerarAnios();
+        ddlAnio.DataSource = ds.Tables[0];
+        ddlAnio.DataTextField = "ANIO";
+        ddlAnio.DataValueField = "ID";
+        ddlAnio.DataBind();
+        ddlAnio.SelectedValue = DateTime.Now.Year.ToString();
+
     }
     protected void btn_Agregar_Click(object sender, EventArgs e)
     {
@@ -116,7 +139,7 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
 
         if (nuevo)
         {
-            lsID= tur.mfCrearTurnos();
+            lsID = tur.mfCrearTurnos();
         }
         else
         {
@@ -223,7 +246,8 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
         this.lblResultado.Text = "Turno Actualizado con Exito..";
     }
     #endregion
-    #region Turnos
+
+    #region Turno por dia
     private void CambiarEstadoTurno()
     {
         string asEstado = "2";
@@ -324,6 +348,7 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
         }
     }
     #endregion
+
     #region User Turnos
     protected void AddUser(object sender, EventArgs e)
     {
@@ -456,6 +481,156 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
         {
             Response.Redirect("~/contenido/frmerrgen.aspx");
         }
+    }
+    #endregion
+
+    #region Turno Mensual
+
+    public DataTable GenerarMes(int anio, int mes)
+    {
+        DataTable dt = new DataTable();
+
+        dt.Columns.Add("IDTURNODIA", typeof(int));
+        dt.Columns.Add("FECHA", typeof(DateTime));
+        dt.Columns.Add("IDDIA", typeof(int));
+        dt.Columns.Add("DIA", typeof(string));
+        dt.Columns.Add("IDHORA", typeof(int));
+
+        DateTime fechaInicio = new DateTime(anio, mes, 1);
+        int diasMes = DateTime.DaysInMonth(anio, mes);
+
+        for (int i = 0; i < diasMes; i++)
+        {
+            DateTime fecha = fechaInicio.AddDays(i);
+            DataRow fila = dt.NewRow();
+            fila["IDTURNODIA"] = 0;
+            fila["FECHA"] = fecha;
+            int idDia;
+
+            if (fecha.DayOfWeek == DayOfWeek.Sunday)
+                idDia = 7;
+            else
+                idDia = (int)fecha.DayOfWeek;
+            fila["IDDIA"] = idDia;
+            fila["DIA"] = fecha.ToString("dddd").ToUpper();
+            fila["IDHORA"] = 0;
+
+            dt.Rows.Add(fila);
+        }
+        return dt;
+    }
+    protected void btnGenerarMes_Click(object sender, EventArgs e)
+    {
+        int anio;
+        int mes;
+
+        if (!int.TryParse(ddlAnio.SelectedValue, out anio))
+        {
+            mens.mensaje(Page, "Debe ingresar un año válido.");
+            return;
+        }
+
+        if (anio < 2020 || anio > 2100)
+        {
+            mens.mensaje(Page, "El año ingresado no es válido.");
+            return;
+        }
+
+        if (!int.TryParse(ddlMes.SelectedValue, out mes))
+        {
+            mens.mensaje(Page, "Debe seleccionar un mes.");
+            return;
+        }
+        DataTable dt = GenerarMes(anio, mes);
+        dgMes.DataSource = dt;
+        dgMes.DataBind();
+    }
+
+    protected void dgMes_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType != DataControlRowType.DataRow)
+            return;
+        DateTime fecha = Convert.ToDateTime(DataBinder.Eval(e.Row.DataItem, "FECHA"));
+
+        // Identificar fin de semana
+        if (fecha.DayOfWeek == DayOfWeek.Saturday || fecha.DayOfWeek == DayOfWeek.Sunday)
+        {
+            e.Row.CssClass = "GridMesFinSemana";
+        }
+
+        DropDownList ddlHorario = (DropDownList)e.Row.FindControl("ddlHorarioMes");
+        CheckBox chkTrabaja = (CheckBox)e.Row.FindControl("chkTrabajaMes");
+        TextBox txtIni = (TextBox)e.Row.FindControl("txtIniMes");
+        TextBox txtFin = (TextBox)e.Row.FindControl("txtFinMes");
+        if (ddlHorario == null || chkTrabaja == null)
+            return;
+
+        // Cargar horarios
+        DataSet dsHorarios = hor.mfBuscarHorarios();
+        ddlHorario.Items.Clear();
+        if (dsHorarios != null &&
+            dsHorarios.Tables.Count > 0 &&
+            dsHorarios.Tables[0].Rows.Count > 0)
+        {
+            ddlHorario.DataSource = dsHorarios.Tables[0];
+            ddlHorario.DataTextField = "DESCRIPCION";
+            ddlHorario.DataValueField = "IDHORA";
+            ddlHorario.DataBind();
+        }
+        ddlHorario.Items.Insert(0, new ListItem("-- Seleccione horario --", "0"));
+        // Por defecto no trabaja
+        chkTrabaja.Checked = false;
+        ddlHorario.Enabled = false;
+        if (txtIni != null)
+            txtIni.Enabled = false;
+        if (txtFin != null)
+            txtFin.Enabled = false;
+    }
+
+    protected void ddlHorarioMes_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        DropDownList ddl = (DropDownList)sender;
+        GridViewRow row = (GridViewRow)ddl.NamingContainer;
+        TextBox txtIni = (TextBox)row.FindControl("txtIniMes");
+        TextBox txtFin = (TextBox)row.FindControl("txtFinMes");
+        TextBox txtHr = (TextBox)row.FindControl("txtHrMes");
+        if (ddl.SelectedValue == "")
+        {
+            txtIni.Text = "";
+            txtFin.Text = "";
+            txtHr.Text = "";
+            return;
+        }
+        hor.ls_hora = ddl.SelectedValue;
+        DataSet ds = hor.mfBuscarHoraID();
+        if (ds.Tables[0].Rows.Count > 0)
+        {
+            txtIni.Text = Convert.ToDateTime(ds.Tables[0].Rows[0]["HORA_INI"]).ToString("HH:mm");
+            txtFin.Text = Convert.ToDateTime(ds.Tables[0].Rows[0]["HORA_FIN"]).ToString("HH:mm");
+            txtHr.Text = ds.Tables[0].Rows[0]["HORA"].ToString() + "h, " + ds.Tables[0].Rows[0]["MINUTO"].ToString() + "m";
+        }
+    }
+    protected void chkTrabajaMes_CheckedChanged(object sender, EventArgs e)
+    {
+        CheckBox chk = (CheckBox)sender;
+        GridViewRow fila = (GridViewRow)chk.NamingContainer;
+        DropDownList ddlHorario = (DropDownList)fila.FindControl("ddlHorarioMes");
+        TextBox txtIni = (TextBox)fila.FindControl("txtIniMes");
+        TextBox txtFin = (TextBox)fila.FindControl("txtFinMes");
+
+        if (chk.Checked)
+        {
+            ddlHorario.Enabled = true;
+        }
+        else
+        {
+            ddlHorario.Enabled = false;
+            ddlHorario.SelectedValue = "0";
+            txtIni.Text = "";
+            txtFin.Text = "";
+        }
+        txtIni.Enabled = false;
+        txtFin.Enabled = false;
     }
     #endregion
 }

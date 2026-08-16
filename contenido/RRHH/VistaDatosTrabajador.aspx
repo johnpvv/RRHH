@@ -5,6 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="../../css/EstiloRRHH.css" rel="stylesheet" />
     <title>Datos Personales</title>
     <style type="text/css">
         .PortalFicha {
@@ -34,7 +35,6 @@
         .TablaPerfil {
             width: 100%;
         }
-
             .TablaPerfil td {
                 padding: 8px;
             }
@@ -69,40 +69,12 @@
             margin-top: 20px;
         }
 
-        .BotonGuardar {
-            background-color: #28A745;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-
-            .BotonGuardar:hover {
-                background-color: #218838;
-            }
-
-        .BotonVolver {
-            background-color: #6C757D;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-
-            .BotonVolver:hover {
-                background-color: #545B62;
-            }
     </style>
 </head>
 <body>
     <form id="form1" runat="server">
         <div class="PortalFicha">
             <div class="CardPerfil">
-
                 <div class="CardTitulo">
                     👤 Información Personal
                 </div>
@@ -179,19 +151,14 @@
                 <div class="CardTitulo">
                     🏠 Dirección
                 </div>
-
                 <table class="TablaPerfil">
-
                     <tr>
                         <td class="CampoTitulo">Dirección:</td>
                         <td>
-                            <asp:TextBox ID="TxtDire"
-                                runat="server"
-                                CssClass="TextoPortal">
+                            <asp:TextBox ID="TxtDire" runat="server" CssClass="TextoPortal">
                             </asp:TextBox>
                         </td>
                     </tr>
-
                     <tr>
                         <td class="CampoTitulo">Región:</td>
                         <td>
@@ -207,118 +174,88 @@
                     <tr>
                         <td class="CampoTitulo">Comuna:</td>
                         <td>
-                            <asp:DropDownList ID="ddlComuna"
-                                runat="server"
-                                CssClass="ComboPortal">
+                            <asp:DropDownList ID="ddlComuna" runat="server" CssClass="ComboPortal">
                             </asp:DropDownList>
                         </td>
                     </tr>
-
                 </table>
-
             </div>
-
             <div class="CardPerfil">
-
                 <div class="CardTitulo">
                     📞 Información de Contacto
                 </div>
-
                 <table class="TablaPerfil">
-
                     <tr>
                         <td class="CampoTitulo">Correo Electrónico:</td>
                         <td>
-                            <asp:TextBox ID="TMail"
-                                runat="server"
-                                CssClass="TextoPortal">
+                            <asp:TextBox ID="TMail" runat="server" CssClass="TextoPortal">
                             </asp:TextBox>
                         </td>
                     </tr>
-
                     <tr>
                         <td class="CampoTitulo">Celular Principal:</td>
                         <td>
-                            <asp:TextBox ID="TFono1"
-                                runat="server"
-                                CssClass="TextoPortal"
-                                MaxLength="9">
+                            <asp:TextBox ID="TFono1" runat="server" CssClass="TextoPortal" MaxLength="9">
                             </asp:TextBox>
                         </td>
                     </tr>
-
                     <tr>
                         <td class="CampoTitulo">Celular Secundario:</td>
                         <td>
-                            <asp:TextBox ID="TFono2"
-                                runat="server"
-                                CssClass="TextoPortal"
-                                MaxLength="9">
+                            <asp:TextBox ID="TFono2" runat="server" CssClass="TextoPortal" MaxLength="9">
                             </asp:TextBox>
                         </td>
                     </tr>
-
                 </table>
-
             </div>
             <div class="CardPerfil">
-
                 <div class="CardTitulo">
                     🏢 Información Laboral
                 </div>
-
                 <table class="TablaPerfil">
-
                     <tr>
                         <td class="CampoTitulo">Unidad:</td>
                         <td>
                             <asp:Label ID="lblUnidad" runat="server"></asp:Label>
                         </td>
                     </tr>
-
                     <tr>
                         <td class="CampoTitulo">Cargo:</td>
                         <td>
                             <asp:Label ID="lblCargo" runat="server"></asp:Label>
                         </td>
                     </tr>
-
                     <tr>
                         <td class="CampoTitulo">Tipo Contrato:</td>
                         <td>
                             <asp:Label ID="lblTipoContrato" runat="server"></asp:Label>
                         </td>
                     </tr>
-
                     <tr>
                         <td class="CampoTitulo">Fecha Ingreso:</td>
                         <td>
                             <asp:Label ID="lblFechaIngreso" runat="server"></asp:Label>
                         </td>
                     </tr>
-
                     <tr>
                         <td class="CampoTitulo">Jefatura:</td>
                         <td>
                             <asp:Label ID="lblJefatura" runat="server"></asp:Label>
                         </td>
                     </tr>
-
                 </table>
-
             </div>
             <div class="BarraBotones">
-
                 <asp:Button ID="btnGuardar"
                     runat="server"
                     Text="Guardar Cambios"
-                    CssClass="BotonGuardar"
+                    CssClass="BotonPortalVerde"
                     OnClick="btnGuardar_Click" />
                 &nbsp;&nbsp;
                 <asp:Button ID="btnVolver"
                     runat="server"
                     Text="Volver"
-                    CssClass="BotonVolver"
+                    CssClass="BotonPortalGris"
                     OnClick="btnVolver_Click" />
 
             </div>
