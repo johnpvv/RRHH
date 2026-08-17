@@ -123,7 +123,7 @@ public class ClassHorarios
             "HORA_INI, " +
             "HORA_FIN " +
             "FROM " + modConstantes.gsDbRH + "TG_HORAS " +
-            "WHERE IDHORA = " + ls_hora;
+            "WHERE IDHORA = " + ls_idhora;
 
         con = bd.fnGetConn();
         ds = bd.Fill(con, lsSql);

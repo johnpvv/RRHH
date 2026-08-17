@@ -338,7 +338,7 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
             txtHr.Text = "";
             return;
         }
-        hor.ls_hora = ddl.SelectedValue;
+        hor.ls_idhora = ddl.SelectedValue;
         DataSet ds = hor.mfBuscarHoraID();
         if (ds.Tables[0].Rows.Count > 0)
         {
@@ -589,19 +589,28 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
 
     protected void ddlHorarioMes_SelectedIndexChanged(object sender, EventArgs e)
     {
-        DropDownList ddl = (DropDownList)sender;
-        GridViewRow row = (GridViewRow)ddl.NamingContainer;
+        DropDownList ddlHorario = (DropDownList)sender;
+        GridViewRow row = (GridViewRow)ddlHorario.NamingContainer;
         TextBox txtIni = (TextBox)row.FindControl("txtIniMes");
         TextBox txtFin = (TextBox)row.FindControl("txtFinMes");
         TextBox txtHr = (TextBox)row.FindControl("txtHrMes");
-        if (ddl.SelectedValue == "")
+        CargarHorarioFila(ddlHorario, txtIni, txtFin, txtHr);
+        CalcularTotalMes();//rellena el label con el total de horas a trabajar en el mes
+    }
+
+    private void CargarHorarioFila(DropDownList ddlHorario,TextBox txtIni,TextBox txtFin, TextBox txtHr)
+    {
+        if (ddlHorario == null)
+            return;
+
+        if (ddlHorario.SelectedValue == "0" || ddlHorario.SelectedValue == "")
         {
             txtIni.Text = "";
             txtFin.Text = "";
             txtHr.Text = "";
             return;
         }
-        hor.ls_hora = ddl.SelectedValue;
+        hor.ls_idhora = ddlHorario.SelectedValue;
         DataSet ds = hor.mfBuscarHoraID();
         if (ds.Tables[0].Rows.Count > 0)
         {
@@ -617,6 +626,7 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
         DropDownList ddlHorario = (DropDownList)fila.FindControl("ddlHorarioMes");
         TextBox txtIni = (TextBox)fila.FindControl("txtIniMes");
         TextBox txtFin = (TextBox)fila.FindControl("txtFinMes");
+        TextBox txtHr = (TextBox)fila.FindControl("txtHrMes");
 
         if (chk.Checked)
         {
@@ -628,9 +638,135 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
             ddlHorario.SelectedValue = "0";
             txtIni.Text = "";
             txtFin.Text = "";
+            txtHr.Text = "";
+            CalcularTotalMes();//rellena el label con el total de horas a trabajar en el mes, si se elimina algun dia
         }
         txtIni.Enabled = false;
         txtFin.Enabled = false;
+    }
+    private void AplicarPatron(int diasTrabajo, int diasLibre)//revisar, si se hace dinamico segun una tabla tipo????? en duro por ahora
+    {
+        bool trabajando = true;
+        int contador = 0;
+        string idHoraBase = "";
+
+        // Obtener horario del primer día si esta seleccionado
+        if (dgMes.Rows.Count > 0)
+        {
+            DropDownList ddlPrimero = (DropDownList)dgMes.Rows[0].FindControl("ddlHorarioMes");
+            if (ddlPrimero != null)
+            {
+                idHoraBase = ddlPrimero.SelectedValue;
+            }
+        }
+
+        foreach (GridViewRow fila in dgMes.Rows)
+        {
+            if (fila.RowType != DataControlRowType.DataRow)
+                continue;
+
+            CheckBox chk = (CheckBox)fila.FindControl("chkTrabajaMes");
+            DropDownList ddl = (DropDownList)fila.FindControl("ddlHorarioMes");
+            TextBox txtIni = (TextBox)fila.FindControl("txtIniMes");
+            TextBox txtFin = (TextBox)fila.FindControl("txtFinMes");
+            TextBox txtHr = (TextBox)fila.FindControl("txtHrMes");
+            if (chk == null || ddl == null)
+                continue;
+
+            if (trabajando)
+            {
+                chk.Checked = true;
+                ddl.Enabled = true;
+                ddl.SelectedValue = idHoraBase;
+                CargarHorarioFila(ddl, txtIni, txtFin, txtHr);
+                contador++;
+                if (contador >= diasTrabajo)
+                {
+                    contador = 0;
+                    trabajando = false;
+                }
+            }
+            else
+            {
+                chk.Checked = false;
+                ddl.Enabled = false;
+                ddl.SelectedValue = "0";
+                if (txtIni != null)
+                    txtIni.Text = "";
+                if (txtFin != null)
+                    txtFin.Text = "";
+                if (txtHr != null)
+                    txtHr.Text = "";
+                contador++;
+
+                if (contador >= diasLibre)
+                {
+                    contador = 0;
+                    trabajando = true;
+                }
+            }
+        }
+        CalcularTotalMes();//rellena el label con el total de horas a trabajar en el mes, al aplicar un patron de turnos
+    }
+    protected void btnAplicarPatron_Click(object sender, EventArgs e)
+    {
+        if (ddlPatron.SelectedValue == "0")
+        {
+            mens.mensaje(Page, "Debe seleccionar un patrón.");
+            return;
+        }
+
+        string[] patron = ddlPatron.SelectedValue.Split('-');
+
+        int diasTrabajo;
+        int diasLibre;
+
+        if (!int.TryParse(patron[0], out diasTrabajo) || !int.TryParse(patron[1], out diasLibre))
+        {
+            mens.mensaje(Page, "El patrón seleccionado no es válido.");
+            return;
+        }
+        AplicarPatron(diasTrabajo, diasLibre);//metodo aplica patron para rellenar el grid
+    }
+    private void CalcularTotalMes()
+    {
+        int totalMinutos = 0;
+        foreach (GridViewRow fila in dgMes.Rows)
+        {
+            if (fila.RowType != DataControlRowType.DataRow)
+            {
+                continue;
+            }
+            CheckBox chk = (CheckBox)fila.FindControl("chkTrabajaMes");
+            DropDownList ddl = (DropDownList)fila.FindControl("ddlHorarioMes");
+
+            if (chk == null || ddl == null)
+                continue;
+
+            if (chk.Checked &&  ddl.SelectedValue != "0")
+            {
+                totalMinutos += ObtenerMinutosHorario(ddl.SelectedValue);
+            }
+        }
+        int totalHoras = totalMinutos / 60;
+        int minutos = totalMinutos % 60;
+        lblTotalMes.Text = "Total mes: " + totalHoras + " horas, " + minutos + " minutos";
+    }
+    private int ObtenerMinutosHorario(string idHora)
+    {
+        if (string.IsNullOrEmpty(idHora) || idHora == "0")
+            return 0;
+
+        hor.ls_idhora = idHora;
+        DataSet ds = hor.mfBuscarHoraID();
+
+        if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+        {
+            int horas = Convert.ToInt32(ds.Tables[0].Rows[0]["HORA"]);
+            int minutos = Convert.ToInt32(ds.Tables[0].Rows[0]["MINUTO"]);
+            return (horas * 60) + minutos;//devuelve el tiempo en minutos
+        }
+        return 0;
     }
     #endregion
 }
