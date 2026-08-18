@@ -95,6 +95,12 @@
                                         </td>
                                     </tr>
                                     <tr>
+                                        <td class="TextoRigth">Turno Mensual:</td>
+                                        <td class="TextoLeft">
+                                            <asp:CheckBox ID="chkTipo" runat="server" Font-Bold="True"></asp:CheckBox>
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <td class="TextoRigth">Fecha Creacion:</td>
                                         <td>
                                             <asp:TextBox ID="txtFCrea" runat="server" Width="120px" Enabled="False"></asp:TextBox>
@@ -220,7 +226,7 @@
                                     Text="Guardar Turno"
                                     CssClass="BotonPortalAzul"
                                     OnClick="btnGuardarDetalle_Click" />
-                                <asp:Button ID="btnVolver"
+                                <asp:Button ID="btnVolver_2"
                                     runat="server"
                                     Text="Volver"
                                     CssClass="BotonPortalGris"
@@ -344,8 +350,8 @@
                                     runat="server"
                                     Text="Guardar Turno Mensual"
                                     CssClass="BotonPortalAzul"
-                                    OnClick="btnGuardarDetalle_Click" />
-                                <asp:Button ID="btnVolver2"
+                                    OnClick="btnGuardarDetalleMes_Click" />
+                                <asp:Button ID="btnVolver_3"
                                     runat="server"
                                     Text="Volver"
                                     CssClass="BotonPortalGris"
@@ -370,7 +376,7 @@
                                     CssClass="BotonPortalAzul" />
                             </td>
                             <td width="147">
-                                <asp:Button ID="btnVolver_2"
+                                <asp:Button ID="btnVolver_4"
                                     runat="server"
                                     Text="Volver"
                                     CssClass="BotonPortalGris"

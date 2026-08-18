@@ -31,8 +31,7 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
             {
                 // Captura Datos
                 Session.Add("lsIdTurno", Request.QueryString["key"].ToString());
-                this.hdIdTurno.Value = Request.QueryString["key"].ToString();
-                cargaTurnoSemana();
+                this.hdIdTurno.Value = Request.QueryString["key"].ToString();                
                 //lsGrabar = modfunc.fnValidaUsrApp("BTN_CHK_PAC", gUsr, asCodSistema);
                 //if (lsGrabar != "M" && lsGrabar != "L") { this.chkLimpiar.Enabled = false; }
 
@@ -44,6 +43,7 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
                     this.btn_habilitar.CssClass = "BotonPortalAmarillo";
                     this.TabPanel2.Enabled = false;
                     this.TabPanel3.Enabled = false;
+                    this.TabPanel4.Enabled = false;
                 }
                 else
                 {
@@ -77,6 +77,20 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
                             {
                                 this.chkFer.Checked = true;
                             }
+                            if (aoDs.Tables[0].Rows[0]["TIPO_TURNO"].ToString() == "1")
+                            {
+                                this.chkTipo.Checked = true;
+                                this.TabPanel2.Enabled = false;
+                                this.TabPanel2.Visible = false;
+                                cargaTurnoMes();
+
+                            }
+                            else
+                            {
+                                this.TabPanel3.Enabled = false;
+                                this.TabPanel3.Visible = false;
+                                cargaTurnoSemana();
+                            }
                             this.LbTitulo.Text = aoDs.Tables[0].Rows[0]["CODIGO"].ToString();
                             mfCargaUser();
                             mfCargaUserDisp();
@@ -92,6 +106,7 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
             }
         }
     }
+    #region General
     private void CargarMeses()
     {
         DataSet ds = tur.mfGenerarMeses();
@@ -126,7 +141,7 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
         string lsID = "";
         tur.ls_descrip = this.TxtDescr.Text.Trim();
         tur.ls_codigo = this.txtCod.Text.Trim().ToUpper();
-        tur.ls_turno = this.hdIdTurno.Value;
+        tur.ls_idturno = this.hdIdTurno.Value;
 
         if (this.chkFer.Checked)
         {
@@ -135,6 +150,18 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
         else
         {
             tur.ls_fer = "0";
+        }
+        if (this.chkTipo.Checked)
+        {
+            tur.ls_tipo = "1";
+            this.TabPanel3.Enabled = true;
+            CargarMeses();
+            CargarAnios();
+        }
+        else
+        {
+            tur.ls_tipo = "0";
+            this.TabPanel2.Enabled = true;
         }
 
         if (nuevo)
@@ -152,9 +179,8 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
             Session.Add("lbNvo", false);
             this.TxtId.Text = lsID;
             this.lbEstado.Text = "ACTIVO";
-            this.btn_habilitar.Text = "Deshabilitar";
-            this.TabPanel2.Enabled = true;
-            this.TabPanel3.Enabled = true;
+            this.btn_habilitar.Text = "Deshabilitar";            
+            this.TabPanel4.Enabled = true;
             mfCargaUser();
             mfCargaUserDisp();
         }
@@ -188,6 +214,8 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
         }
         return true;
     }
+    #endregion
+
     #region Botones
     protected void btnVolver_Click(object sender, EventArgs e)
     {
@@ -545,7 +573,12 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
         dgMes.DataSource = dt;
         dgMes.DataBind();
     }
-
+    private void cargaTurnoMes()
+    {
+        tur.ls_turno = this.hdIdTurno.Value;
+        dgMes.DataSource = tur.mfBuscarTurnoDia();
+        dgMes.DataBind();
+    }
     protected void dgMes_RowDataBound(object sender, GridViewRowEventArgs e)
     {
         if (e.Row.RowType != DataControlRowType.DataRow)
@@ -598,7 +631,7 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
         CalcularTotalMes();//rellena el label con el total de horas a trabajar en el mes
     }
 
-    private void CargarHorarioFila(DropDownList ddlHorario,TextBox txtIni,TextBox txtFin, TextBox txtHr)
+    private void CargarHorarioFila(DropDownList ddlHorario, TextBox txtIni, TextBox txtFin, TextBox txtHr)
     {
         if (ddlHorario == null)
             return;
@@ -743,7 +776,7 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
             if (chk == null || ddl == null)
                 continue;
 
-            if (chk.Checked &&  ddl.SelectedValue != "0")
+            if (chk.Checked && ddl.SelectedValue != "0")
             {
                 totalMinutos += ObtenerMinutosHorario(ddl.SelectedValue);
             }
@@ -767,6 +800,77 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
             return (horas * 60) + minutos;//devuelve el tiempo en minutos
         }
         return 0;
+    }
+
+    private string GuardarDetalleMes()
+    {
+        int idTurno;
+        if (!int.TryParse(this.hdIdTurno.Value, out idTurno))
+            return "El ID del turno no es válido.";
+
+        DataSet dsDetalle = new DataSet();
+        DataTable dt = new DataTable("DETALLE");
+
+        dt.Columns.Add("IDDIA", typeof(int));
+        dt.Columns.Add("IDHORA", typeof(int));
+        dt.Columns.Add("FECHA", typeof(DateTime));
+
+        foreach (GridViewRow fila in dgMes.Rows)
+        {
+            if (fila.RowType != DataControlRowType.DataRow)
+            {
+                continue;
+            }
+            CheckBox chk = (CheckBox)fila.FindControl("chkTrabajaMes");
+            DropDownList ddl = (DropDownList)fila.FindControl("ddlHorarioMes");
+            HiddenField hdIdDia = (HiddenField)fila.FindControl("hdIdDia");
+            HiddenField hdFecha = (HiddenField)fila.FindControl("hdFecha");
+
+            if (chk == null || ddl == null || hdIdDia == null || hdFecha == null)
+                continue;
+
+            if (!chk.Checked)// Si no trabaja, no se agrega
+                continue;
+            // Si trabaja, debe tener horario
+            if (ddl.SelectedValue == "0" || string.IsNullOrEmpty(ddl.SelectedValue))
+            {
+                return "Existe un día trabajado sin horario seleccionado.";
+            }
+
+            int idDia;
+            int idHora;
+            DateTime fecha;
+
+            if (!int.TryParse(hdIdDia.Value, out idDia))
+                return "Existe un día con ID inválido.";
+            if (!int.TryParse(ddl.SelectedValue, out idHora))
+                return "Existe un horario inválido.";
+            if (!DateTime.TryParse(hdFecha.Value, out fecha))
+                return "Existe una fecha inválida.";
+
+            DataRow dr = dt.NewRow();
+            dr["IDDIA"] = idDia;
+            dr["IDHORA"] = idHora;
+            dr["FECHA"] = fecha;
+            dt.Rows.Add(dr);
+        }
+        if (dt.Rows.Count == 0)
+            return "Debe seleccionar al menos un día trabajado.";
+
+        dsDetalle.Tables.Add(dt);
+        tur.ls_idturno = this.hdIdTurno.Value;
+        return tur.mfGuardarDetalleMes(dsDetalle);
+    }
+    protected void btnGuardarDetalleMes_Click(object sender, EventArgs e)
+    {
+        string lsRet;
+        lsRet = GuardarDetalleMes();
+        if (lsRet != "")
+        {
+            mens.mensaje(Page, "Error: " + lsRet);
+            return;
+        }
+        mens.mensaje(Page, "Turno mensual guardado correctamente.");
     }
     #endregion
 }

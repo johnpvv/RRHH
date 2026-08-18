@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 
@@ -33,6 +34,7 @@ public class ClassTurnos
     public string ls_rut { get; set; }
     public string ls_nombre { get; set; }
     public string ls_fer { get; set; }
+    public string ls_tipo { get; set; }
 
     public DataSet mfGenerarMeses()
     {
@@ -105,7 +107,8 @@ public class ClassTurnos
             "   ELSE 'S/E' " +
             "END ESTADO, " +
             "T.F_H_CREACION, " +
-            "T.CODIGO " +
+            "T.CODIGO, " +
+            "ISNULL(T.TIPO_TURNO,0) AS TIPO_TURNO " +
             "FROM " + modConstantes.gsDbRH + "M_TURNOS T " +
             "WHERE 1=1 " +
             lsWhe +
@@ -124,14 +127,15 @@ public class ClassTurnos
         string lsRes = "";
 
         lsSql = "INSERT INTO " + modConstantes.gsDbRH + "M_TURNOS " +
-                "(DESCRIPCION, CODIGO, IDESTADO, F_H_CREACION, FERIADOS) " +
+                "(DESCRIPCION, CODIGO, IDESTADO, F_H_CREACION, FERIADOS, TIPO_TURNO) " +
                 "VALUES (" +
                 "'" + ls_descrip + "', " +
                 "'" + ls_codigo + "', " +
                 "1, " +
                 "GETDATE()," +
-                " " + ls_fer + ");" +
-                "SELECT CAST(SCOPE_IDENTITY() AS INT);"; 
+                " " + ls_fer + ", " +
+                " " + ls_tipo +");" +
+                "SELECT CAST(SCOPE_IDENTITY() AS INT);";
 
         con = bd.fnGetConn();
         lsRes = bd.ExecuteScalar(con, lsSql);
@@ -146,8 +150,9 @@ public class ClassTurnos
         lsSql = "UPDATE " + modConstantes.gsDbRH + "M_TURNOS SET " +
                 "DESCRIPCION = '" + ls_descrip + "', " +
                 "CODIGO = '" + ls_codigo + "', " +
-                "FERIADOS = " + ls_fer + " " +
-                "WHERE IDTURNOS = " + ls_turno;
+                "FERIADOS = " + ls_fer + ", " +
+                "TIPO_TURNO = " + ls_tipo + " " +
+                "WHERE IDTURNOS = " + ls_idturno;
 
         con = bd.fnGetConn();
         lsRes = bd.ExecuteScalar(con, lsSql);
@@ -365,7 +370,7 @@ public class ClassTurnos
         lsSql =
             "IF EXISTS ( " +
             "SELECT 1 FROM " + modConstantes.gsDbRH + "M_TURNO_USUARIOS " +
-            "WHERE IDUSUARIO = " + ls_user + ") " +
+            "WHERE IDUSUARIO = " + ls_user + " AND IDTURNOS = " + ls_idturno +" ) " +
             "BEGIN " +
             "UPDATE " + modConstantes.gsDbRH + "M_TURNO_USUARIOS SET " +
             "IDESTADO = 1, " +
@@ -478,4 +483,65 @@ public class ClassTurnos
 
         return lsRes;
     }
+
+    #region turno mes
+    public string mfGuardarDetalleMes(DataSet dsDetalle)
+    {
+        string lsSql = "";
+        string lsRes = "";
+
+        if (dsDetalle == null || dsDetalle.Tables.Count == 0 || dsDetalle.Tables[0].Rows.Count == 0)
+        {
+            return "No existen detalles para guardar.";
+        }
+        lsSql =
+            "DELETE FROM " + modConstantes.gsDbRH + "M_TURNO_DIA " +
+            "WHERE IDTURNOS = " + ls_idturno + " " +
+            "AND FECHA IS NOT NULL; ";
+
+        foreach (DataRow dr in dsDetalle.Tables[0].Rows)
+        {
+            int idDia = Convert.ToInt32(dr["IDDIA"]);
+            int idHora = Convert.ToInt32(dr["IDHORA"]);
+            DateTime fecha = Convert.ToDateTime(dr["FECHA"]);
+
+            lsSql +=
+                "INSERT INTO " + modConstantes.gsDbRH + "M_TURNO_DIA " +
+                "(IDTURNOS, IDDIA, IDHORA, F_H_CREACION, FECHA) VALUES (" +
+                ls_idturno + ", " +
+                idDia + ", " +
+                idHora + ", " +
+                "GETDATE(), " +
+                "'" + fecha.ToString("yyyyMMdd") + "'); ";
+        }
+        con = bd.fnGetConn();
+        SqlTransaction tran = con.BeginTransaction();
+        try
+        {
+            SqlCommand cmd = new SqlCommand(lsSql, con, tran);
+            cmd.ExecuteNonQuery();
+            tran.Commit();
+            lsRes = "";
+        }
+        catch (Exception ex)
+        {
+            try
+            {
+                tran.Rollback();
+            }
+            catch
+            {
+            }
+            lsRes = ex.Message;
+        }
+        finally
+        {
+            con.Close();
+        }
+        return lsRes;
+    }
+
+
+
+    #endregion
 }
