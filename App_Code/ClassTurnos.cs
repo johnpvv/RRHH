@@ -205,6 +205,22 @@ public class ClassTurnos
         con.Close();
         return ds;
     }
+    public bool mfTieneUsrAsig()
+    {
+        string lsSql;
+        string lsRes;
+
+        lsSql =
+            "SELECT COUNT(*) " +
+            "FROM " + modConstantes.gsDbRH + "M_TURNO_USUARIOS " +
+            "WHERE IDTURNOS = " + ls_turno + " " +
+            "AND IDESTADO = 1";
+
+        con = bd.fnGetConn();
+        lsRes = bd.ExecuteScalar(con, lsSql);
+        con.Close();
+        return lsRes != "0";
+    }
     public DataSet mfBuscarTurnoDia()
     {
         string lsSql;
@@ -507,11 +523,12 @@ public class ClassTurnos
 
             lsSql +=
                 "INSERT INTO " + modConstantes.gsDbRH + "M_TURNO_DIA " +
-                "(IDTURNOS, IDDIA, IDHORA, F_H_CREACION, FECHA) VALUES (" +
+                "(IDTURNOS, IDDIA, IDHORA, F_H_CREACION, IDESTADO, FECHA) VALUES (" +
                 ls_idturno + ", " +
                 idDia + ", " +
                 idHora + ", " +
                 "GETDATE(), " +
+                "1, " +
                 "'" + fecha.ToString("yyyyMMdd") + "'); ";
         }
         con = bd.fnGetConn();
@@ -540,8 +557,53 @@ public class ClassTurnos
         }
         return lsRes;
     }
+    public DataSet mfDevuelveFechaTurnoMes()
+    {
+        string lsSql;
+        DataSet ds;
 
+        lsSql =
+            "SELECT TOP 1 FECHA " +
+            "FROM " + modConstantes.gsDbRH + "M_TURNO_DIA " +
+            "WHERE IDTURNOS = " + ls_idturno + " " +
+            "AND FECHA IS NOT NULL " +
+            "AND IDESTADO <> 3 " +
+            "ORDER BY FECHA";
 
+        con = bd.fnGetConn();
+        ds = bd.Fill(con, lsSql);
+        con.Close();
+        return ds;
+    }
+    public DataSet mfBuscarDetalleTurnoMes()
+    {
+        string lsSql;
+        DataSet ds;
 
+        lsSql =
+            "SELECT " +
+            "TD.IDTURNODIA, " +
+            "TD.IDDIA, " +
+            "TD.FECHA, " +
+            "D.DESCRIPCION AS DIA," +
+            "TD.IDHORA, " +
+            "H.HORA_INI, " +
+            "H.HORA_FIN, " +
+            "H.HORA, " +
+            "H.MINUTO " +
+            "FROM " + modConstantes.gsDbRH + "M_TURNO_DIA TD " +
+            "LEFT JOIN " + modConstantes.gsDbRH + "TG_HORAS H ON H.IDHORA = TD.IDHORA " +
+            "LEFT JOIN " +  modConstantes.gsDbRH + "TG_DIAS D ON D.IDDIA = TD.IDDIA  " +
+            "WHERE TD.IDTURNOS = " + ls_turno + " " +
+            "AND TD.FECHA IS NOT NULL " +
+            "AND TD.IDESTADO <> 3 " +
+            "ORDER BY TD.FECHA";
+
+        con = bd.fnGetConn();
+        ds = bd.Fill(con, lsSql);
+        con.Close();
+
+        return ds;
+    }
     #endregion
 }

@@ -126,13 +126,13 @@
                             <td align="center">
                                 <asp:Button ID="btn_Agregar"
                                     Text="Grabar"
-                                    class="BotonPortalAzul"
+                                    CssClass="BotonPortalAzul"
                                     runat="server"
                                     OnClick="btn_Agregar_Click"
                                     OnClientClick="return ConfirmarGuardar();" />&nbsp
                                 <asp:Button ID="btn_habilitar"
                                     runat="server"
-                                    class="BotonPortalAmarillo"
+                                    CssClass="BotonPortalAmarillo"
                                     Text="Habilitar"
                                     OnClick="btn_habilitar_Click"
                                     OnClientClick="javascript:Confirm('Desea realizar la actualización de los Datos..')" />&nbsp
@@ -332,7 +332,7 @@
                                 <RowStyle CssClass="GridGralRow" />
                                 <AlternatingRowStyle CssClass="GridGralAltRow" />
                             </asp:GridView>
-
+                            <hr />
                             <table style="width: 100%; margin-bottom: 10px;">
                                 <tr>
                                     <td class="textoNormRigth">
@@ -342,6 +342,7 @@
                             </table>
                         </ContentTemplate>
                     </asp:UpdatePanel>
+                    <asp:Label ID="lblResultadoM" runat="server" ForeColor="Red"></asp:Label>
                     <br />
                     <table style="width: 100%; margin-bottom: 10px;">
                         <tr>
