@@ -15,7 +15,7 @@ public class ClassUsuarios
 
     }
 
-    public int ls_iduser { get; set; }
+    public string ls_iduser { get; set; }
     public string ls_obs { get; set; }
     public string ls_desc { get; set; }
     public string mfFechaAnt { get; set; }
@@ -354,5 +354,89 @@ public class ClassUsuarios
         if (dv != dvCalculado)
             return "RUT inválido no corresponde DV.";
         return numero;
+    }
+
+    public DataSet mfBuscarUsuariosRRHH()//para equivalencia relojes
+    {
+        string lsSql;
+        string lsWhere = "";
+        DataSet ds;
+
+        lsWhere = " WHERE IDESTADO = 1 ";
+
+        if (!string.IsNullOrWhiteSpace(ls_rut))
+        {
+            lsWhere +=" AND RUT = " + ls_rut.Trim().Replace("'", "'' ");
+        }
+
+        if (!string.IsNullOrWhiteSpace(ls_nomb))
+        {
+            lsWhere +=
+                " AND (NOMBRE LIKE '%" +
+                ls_nomb.Trim().Replace("'", "''") +
+                "%' " +
+                " OR AP_PATERNO LIKE '%" +
+                ls_nomb.Trim().Replace("'", "''") +
+                "%' " +
+                " OR AP_MATERNO LIKE '%" +
+                ls_nomb.Trim().Replace("'", "''") +
+                "%' " +
+                " OR (NOMBRE + ' ' + ISNULL(AP_PATERNO,'') + ' ' + ISNULL(AP_MATERNO,'')) LIKE '%" +
+                ls_nomb.Trim().Replace("'", "''") +
+                "%') ";
+        }
+        lsSql =
+            "SELECT " +
+            "IDUSUARIO, " +
+            "RUT, " +
+            "DV, " +
+            "CONVERT(VARCHAR,RUT) + '-' + DV as RUT_C, " +
+            "NOMBRE + ' ' + " +
+            "ISNULL(AP_PATERNO,'') + ' ' + " +
+            "ISNULL(AP_MATERNO,'') as NOMBRE " +
+            "FROM " + modConstantes.gsDbRH + "M_USUARIOS " +
+            lsWhere +
+            "ORDER BY AP_PATERNO, AP_MATERNO, NOMBRE";
+        con = bd.fnGetConn();
+        ds = bd.Fill(con, lsSql);
+        con.Close();
+        return ds;
+    }
+    public DataSet ConsultarIDUser()
+    {
+        DataSet aoCod;
+        string lsSql;
+        //' Recupera registros.
+        lsSql =
+            "SELECT " +
+            "P.IDUSUARIO, " +
+            "P.RUT, " +
+            "P.DV, " +
+            "ISNULL(P.NOMBRE_SOCIAL,'') NOMBRE_SOCIAL, " +
+            "P.NOMBRE + ' ' + " +
+            "ISNULL(P.AP_PATERNO,'') + ' ' + " +
+            "ISNULL(P.AP_MATERNO,'') as NOMBRE, " +
+            "P.DIRECCION, " +
+            "P.FECHA_NACIMIENTO, " +
+            "P.SEXO, " +
+            "P.EST_CIVIL, " +
+            "P.IDREGION, " +
+            "P.IDCOMUNA, " +
+            "P.IDPREVISION, " +
+            "P.FONO1, " +
+            "P.FONO2, " +
+            "P.OBS_FONO1, " +
+            "P.OBS_FONO2, " +
+            "P.EMAIL, " +
+            "P.IDESTADO, " +
+            "P.F_H_CREA, " +
+            "P.OBSERVACION " +
+            "FROM " + modConstantes.gsDbRH + "M_USUARIOS P " +
+            "WHERE	(P.IDUSUARIO = " + ls_iduser + " ) ";
+
+        con = bd.fnGetConnRH();
+        aoCod = bd.Fill(con, lsSql);
+        con.Close();
+        return aoCod;
     }
 }

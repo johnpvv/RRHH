@@ -449,3 +449,166 @@
 .GridMesFestivo {
     background-color: #FFE8E8 !important;
 }
+
+/*Modulo Equivalencia Reloj*/
+.panel-reloj-rrhh {
+    width: 98%;
+    margin: 15px auto;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.titulo-seccion {
+    background: #1F6FB2;
+    color: white;
+    padding: 12px 16px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 6px 6px 0 0;
+}
+
+.fila-superior,
+.fila-grids,
+.fila-seleccionados {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.bloque,
+.bloque-grid,
+.bloque-seleccion {
+    flex: 1;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: #fff;
+    overflow: hidden;
+}
+
+.bloque-titulo {
+    background: #f3f5f7;
+    border-bottom: 1px solid #ddd;
+    padding: 8px 12px;
+    font-weight: bold;
+    color: #34495e;
+}
+
+.form-linea {
+    display: flex;
+    align-items: end;
+    gap: 10px;
+    padding: 12px;
+    flex-wrap: wrap;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+    .campo label {
+        font-size: 12px;
+        color: #555;
+    }
+
+.form-control {
+    height: 32px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 5px 8px;
+    box-sizing: border-box;
+}
+
+    .form-control:focus {
+        border-color: #3498db;
+        outline: none;
+        box-shadow: 0 0 3px rgba(52, 152, 219, .35);
+    }
+
+.filtros-grid {
+    display: flex;
+    align-items: end;
+    gap: 12px;
+    padding: 10px;
+}
+
+.contador-grid {
+    margin-left: auto;
+    font-size: 12px;
+    color: #666;
+}
+
+.contenedor-grid {
+    height: 300px;
+    overflow: auto;
+    margin: 0 10px 10px 10px;
+    border: 1px solid #ccc;
+}
+
+.grid-reloj {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+    .grid-reloj th {
+        background: #34495e;
+        color: white;
+        padding: 8px;
+        text-align: left;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+
+    .grid-reloj td {
+        padding: 5px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .grid-reloj tr:hover td {
+        background: #f5f8fa;
+    }
+
+.fila-seleccionados {
+    margin-top: 12px;
+}
+
+.detalle-seleccion {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 12px;
+}
+
+.campo-largo {
+    flex: 1;
+    min-width: 200px;
+}
+
+.estado-equivalencia {
+    margin-top: 12px;
+    padding: 12px;
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.estado-texto {
+    font-weight: bold;
+    color: #34495e;
+}
+
+.mensaje-form {
+    display: block;
+    margin-top: 5px;
+    color: #c0392b;
+}
+
+.botones-form {
+    display: flex;
+    justify-content:center;
+    gap: 10px;
+    margin-top: 12px;
+    padding: 10px 0;
+}

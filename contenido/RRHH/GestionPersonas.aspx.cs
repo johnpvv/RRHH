@@ -281,7 +281,7 @@ public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
         per.ls_obs2 = this.TObsFono2.Text;
         per.ls_obs = modFunciones.mfLimpiaString(this.observacion.Text);
         per.ls_mail = this.TMail.Text;
-        per.ls_iduser = Convert.ToInt32(Session["user"].ToString());
+        per.ls_iduser = Session["user"].ToString();
         string lsRet = "";
         lsRet = per.CrearUsuario(nuevo);
 

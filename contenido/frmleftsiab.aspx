@@ -205,6 +205,8 @@
                             <asp:TreeNode NavigateUrl="~/contenido/GestionRRHH/ListaTurnos.aspx" Target="main" ImageUrl="~/imagenes/menu/ajustesroles.png" Text="Gestión Turnos" ToolTip="Turnos" Value="MANT_ROLES"></asp:TreeNode>
                             <asp:TreeNode NavigateUrl="~/contenido/GestionRRHH/GestionTurnosExcel.aspx" Target="main" ImageUrl="~/imagenes/menu/firmas.png" Text="Cargar Turnos <br> desde Excel" ToolTip="Turnos" Value="MANT_ROLES"></asp:TreeNode>
                             <asp:TreeNode NavigateUrl="~/contenido/GestionRRHH/ListaHorarios.aspx" Target="main" ImageUrl="~/imagenes/menu/ajustesunidadoperativa.png" Text="Gestión Horarios" ToolTip="Horarios" Value="MANT_ROLES"></asp:TreeNode>
+                            <asp:TreeNode NavigateUrl="~/contenido/GestionRRHH/GestionEquivalenciaReloj.aspx" Target="main" ImageUrl="~/imagenes/menu/archivos.png" Text="Equivalencia Relojes" ToolTip="Equivalencia" Value="MANT_ROLES"></asp:TreeNode>
+                            
                         </asp:TreeNode>
                         <asp:TreeNode Expanded="False" SelectAction="Expand" ImageUrl="~/imagenes/menu/ajustesb.png" Text="Administracion" Value="Administracion" ToolTip="Administracion">
                             <%--                            <asp:TreeNode NavigateUrl="~/contenido/SysAdmin/ListaUsuarios.aspx?id=1" Target="main" ImageUrl="~/imagenes/menu/ajustesusuario.png" Text="Usuarios" ToolTip="Usuarios" Value="MANT_USUARIO"></asp:TreeNode>--%>
