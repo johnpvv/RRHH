@@ -43,10 +43,41 @@ public partial class contenido_RRHH_VistaTurnosTrab : System.Web.UI.Page
     }
     private void CargarTurnosTrab()
     {
-
         usr.ls_rut = Session["rut"].ToString();
-        tur.ls_user = usr.mfDevuelveID();//en caso de homologar con otro id desde los relojes u otros
-        dgData.DataSource = tur.mfBuscarTurnosTrab();
+        tur.ls_user = usr.mfDevuelveID();
+
+        DataSet dsTurno = tur.mfBuscarTurnoActivoTrab();
+
+        if (dsTurno == null || dsTurno.Tables.Count == 0 || dsTurno.Tables[0].Rows.Count == 0)
+        {
+            dgData.DataSource = null;
+            dgData.DataBind();
+            return;
+        }
+
+        DataRow dr = dsTurno.Tables[0].Rows[0];
+
+        string idTurno = dr["IDTURNOS"].ToString();
+        string tipoTurno = dr["TIPO"].ToString();
+
+        DataSet ds;
+
+        tur.ls_mes = ddlMes.SelectedValue;
+        tur.ls_anio = ddlAnio.SelectedValue;
+        tur.ls_idturno = idTurno;
+
+        if (tipoTurno == "1")
+        {            
+            ds = tur.mfBuscarTurnosTrabMes();
+        }
+        else
+        {
+            ds = tur.mfBuscarTurnosTrab();
+            this.ddlAnio.Enabled = false;
+            this.ddlMes.Enabled = false;
+        }
+
+        dgData.DataSource = ds;
         dgData.DataBind();
     }
 

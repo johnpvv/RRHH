@@ -13,75 +13,79 @@
         <p class="textoTitLeft">Gestión Turnos</p>
         <table style="width: 100%; margin-bottom: 10px;">
             <tr>
-
-                <td style="width: 70px;" class="textoNorm">Mes:
-                </td>
-
-                <td style="width: 180px;">
-                    <asp:DropDownList ID="ddlMes" runat="server" Width="150px" CssClass="form-control">
-                    </asp:DropDownList>
-                </td>
-
                 <td style="width: 70px;" class="textoNorm">Año:
                 </td>
-
-                <td style="width: 120px;">
+                <td style="width: 180px;">
                     <asp:DropDownList ID="ddlAnio" runat="server" Width="100px" CssClass="form-control">
+                    </asp:DropDownList>
+                </td>
+                <td style="width: 70px;" class="textoNorm">Mes:
+                </td>
+                <td style="width: 120px;">
+                    <asp:DropDownList ID="ddlMes" runat="server" Width="150px" CssClass="form-control">
                     </asp:DropDownList>
                 </td>
                 <td>
                     <asp:Button ID="btnBuscar"
                         runat="server"
                         Text="Buscar"
-                        CssClass="BotonPortal"
+                        CssClass="BotonPortalAzul"
                         OnClick="btnBuscar_Click" />
                 </td>
             </tr>
         </table>
-        <asp:GridView ID="dgData"
-            runat="server"
-            AutoGenerateColumns="False"
-            Width="100%"
-            CssClass="GridGral"
-            GridLines="None"
-            CellPadding="6"
-            EmptyDataText="Sin turnos asignados"
-            EmptyDataRowStyle-CssClass="textoEmpty">
-            <Columns>
-                <asp:BoundField
-                    DataField="DIA"
-                    HeaderText="Día"
-                    ItemStyle-CssClass="textoGrid" />
-                <asp:BoundField
-                    DataField="TURNO"
-                    HeaderText="Turno"
-                    ItemStyle-CssClass="textoGrid" />
-                <asp:BoundField
-                    DataField="HORA_INI"
-                    HeaderText="Entrada"
-                    DataFormatString="{0:HH:mm}"
-                    ItemStyle-CssClass="textoGrid" />
-                <asp:BoundField
-                    DataField="HORA_FIN"
-                    HeaderText="Salida"
-                    DataFormatString="{0:HH:mm}"
-                    ItemStyle-CssClass="textoGrid" />
-                <asp:TemplateField
-                    HeaderText="Duración"
-                    ItemStyle-CssClass="textoGridBold">
-                    <ItemTemplate>
-                        <%# Eval("HORA") %> hora(s) <%# Convert.ToInt32(Eval("MINUTO")) > 0 ? " " + Eval("MINUTO") + " min." : "" %>
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:BoundField
-                    DataField="ESTADO"
-                    HeaderText="Estado"
-                    ItemStyle-CssClass="textoGrid" />
-            </Columns>
-            <HeaderStyle CssClass="GridGralHeader" />
-            <RowStyle CssClass="GridGralRow" />
-            <AlternatingRowStyle CssClass="GridGralAltRow" />
-        </asp:GridView>
+        <div id="divImpresion">
+            <asp:GridView ID="dgData"
+                runat="server"
+                AutoGenerateColumns="False"
+                Width="100%"
+                CssClass="GridGral"
+                GridLines="None"
+                CellPadding="6"
+                EmptyDataText="Sin turnos asignados"
+                EmptyDataRowStyle-CssClass="textoEmpty">
+                <Columns>
+                    <asp:BoundField
+                        DataField="DIA"
+                        HeaderText="Día"
+                        ItemStyle-CssClass="textoGrid" />
+                    <asp:BoundField
+                        DataField="FECHA"
+                        HeaderText="Fecha"
+                        ItemStyle-CssClass="textoGridBold" />
+                    <asp:BoundField
+                        DataField="TURNO"
+                        HeaderText="Turno"
+                        ItemStyle-CssClass="textoGrid">
+                        <ItemStyle Width="250px" />
+                    </asp:BoundField>
+                    <asp:BoundField
+                        DataField="HORA_INI"
+                        HeaderText="Entrada"
+                        DataFormatString="{0:HH:mm}"
+                        ItemStyle-CssClass="textoGrid" />
+                    <asp:BoundField
+                        DataField="HORA_FIN"
+                        HeaderText="Salida"
+                        DataFormatString="{0:HH:mm}"
+                        ItemStyle-CssClass="textoGrid" />
+                    <asp:TemplateField
+                        HeaderText="Duración"
+                        ItemStyle-CssClass="textoGridBold">
+                        <ItemTemplate>
+                            <%# Eval("HORA") %> hora(s) <%# Convert.ToInt32(Eval("MINUTO")) > 0 ? " " + Eval("MINUTO") + " min." : "" %>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:BoundField
+                        DataField="ESTADO"
+                        HeaderText="Estado"
+                        ItemStyle-CssClass="textoGrid" />
+                </Columns>
+                <HeaderStyle CssClass="GridGralHeader" />
+                <RowStyle CssClass="GridGralRow" />
+                <AlternatingRowStyle CssClass="GridGralAltRow" />
+            </asp:GridView>
+        </div>
         <br />
         <table style="width: 100%; margin-bottom: 10px;">
             <tr>
@@ -91,6 +95,12 @@
                         Text="Exportar Excel"
                         CssClass="BotonPortalVerde"
                         OnClick="btnExportar_Click" />
+                    &nbsp;
+                    <asp:Button ID="btnImprimir"
+                        runat="server"
+                        Text="Imprimir Turnos"
+                        CssClass="BotonPortalAmarillo"
+                        OnClientClick="imprimirGrid(); return false;" />
                     &nbsp;
                     <asp:Button ID="btnVolver"
                         runat="server"
@@ -103,3 +113,51 @@
     </form>
 </body>
 </html>
+<script type="text/javascript">
+    function imprimirGrid() {
+
+        var contenido = document.getElementById("divImpresion").innerHTML;
+
+        var nombre = '<%= Session["nombre"] %>';
+        var rut = '<%= Session["rut"] %>';
+
+        var ventana = window.open('', '_blank', 'width=900,height=700');
+
+        ventana.document.write('<html>');
+        ventana.document.write('<head>');
+        ventana.document.write('<title>Turnos Trabajador</title>');
+
+        ventana.document.write('<style>');
+        ventana.document.write('@page { size: A4; margin: 15mm; }');
+        ventana.document.write('body { font-family: Arial; font-size: 12px; }');
+        ventana.document.write('.titulo { text-align: center; font-size: 20px; font-weight: bold; margin-bottom: 20px; }');
+        ventana.document.write('.datos { margin-bottom: 15px; line-height: 22px; }');
+        ventana.document.write('table { width: 100%; border-collapse: collapse; }');
+        ventana.document.write('th, td { border: 1px solid #333; padding: 6px; }');
+        ventana.document.write('th { font-weight: bold; text-align: center; }');
+        ventana.document.write('td { text-align: center; }');
+        ventana.document.write('</style>');
+
+        ventana.document.write('</head>');
+        ventana.document.write('<body>');
+
+        ventana.document.write('<div class="titulo">TURNOS DEL TRABAJADOR</div>');
+
+        ventana.document.write('<div class="datos">');
+        ventana.document.write('<b>Funcionario:</b> ' + nombre);
+        ventana.document.write('<br>');
+        ventana.document.write('<b>RUT:</b> ' + rut);
+        ventana.document.write('</div>');
+
+        ventana.document.write(contenido);
+
+        ventana.document.write('</body>');
+        ventana.document.write('</html>');
+
+        ventana.document.close();
+        ventana.focus();
+
+        ventana.print();
+        ventana.close();
+    }
+</script>
