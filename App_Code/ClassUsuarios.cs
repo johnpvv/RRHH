@@ -439,4 +439,23 @@ public class ClassUsuarios
         con.Close();
         return aoCod;
     }
+    public DataSet mfBuscarCentrosAdmin()
+    {
+        string lsSql;
+        DataSet ds;
+
+        lsSql = "SELECT UU.CODUNIOP, UOP.DESCRIPCION, UU.ID_INST, UU.VALIDA " +
+                "FROM " + modConstantes.gsDbRH + "M_USER_UNIDAD UU " +
+                "INNER JOIN " + modConstantes.gsDbRH + "M_UNIDAD_OPERATIVA UOP ON UOP.CODUNIOP = UU.CODUNIOP " +
+                "INNER JOIN " + modConstantes.gsDbRH + "M_USUARIOS P ON P.IDUSUARIO = UU.IDUSUARIO " +
+                "WHERE UU.IDUSUARIO = " + ls_iduser + " " +
+                "AND UU.IDESTADO = 1 " +
+                "ORDER BY DESCRIPCION";
+
+        con = bd.fnGetConn();
+        ds = bd.Fill(con, lsSql);
+        con.Close();
+
+        return ds;
+    }
 }

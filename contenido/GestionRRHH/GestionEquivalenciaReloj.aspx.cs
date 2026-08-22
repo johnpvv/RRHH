@@ -14,6 +14,13 @@ public partial class contenido_GestionRRHH_GestionEquivalenciaReloj : System.Web
     protected void Page_Load(object sender, EventArgs e)
     {
         this.btnRegistrar.Enabled = false;
+        //CargarCentros();
+        //InicializarReloj();
+        if (!IsPostBack)
+        {
+            CargarCentros();
+            InicializarReloj();
+        }
     }
     #region Botones
     protected void btnRegistrar_Click(object sender, EventArgs e)
@@ -81,7 +88,7 @@ public partial class contenido_GestionRRHH_GestionEquivalenciaReloj : System.Web
     {
 
     }
-    private void mfEstEquivalencia()
+    private void mfEstEquivalencia()//LLENA EL LABEL CON LOS RESULTADOS DE LA SELECCION DE EQUIVLENCIA DE PERSONAS
     {
         string codigoReloj = txtCodigoSeleccionado.Text.Trim();
         string nombreReloj = txtNombreTrabSeleccionado.Text.Trim();
@@ -161,10 +168,72 @@ public partial class contenido_GestionRRHH_GestionEquivalenciaReloj : System.Web
     #endregion
 
     #region RRHH Escritorio Walter
+    private void InicializarReloj()
+    {
+        ddlReloj.Items.Clear();
+        ddlReloj.Items.Add(new ListItem("-- Seleccione reloj --", "0"));
+
+        LimpiarDatosReloj();
+    }
+    private void CargarCentros()
+    {
+        usr.ls_iduser = Session["user"].ToString();
+        DataSet ds = usr.mfBuscarCentrosAdmin();
+        if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+            return;
+
+        ddlCentro.DataSource = ds;
+        ddlCentro.DataTextField = "DESCRIPCION";
+        ddlCentro.DataValueField = "CODUNIOP";
+        ddlCentro.DataBind();
+        ddlCentro.Items.Insert(0, new ListItem("-- Seleccione centro / unidad --", "0"));
+    }
+    protected void ddlCentro_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        ddlReloj.Items.Clear();
+
+        if (ddlCentro.SelectedValue == "0")
+            return;
+        rlj.ls_unidad = ddlCentro.SelectedValue;
+        DataSet ds = rlj.mfBuscarRelojesCentro();
+
+        ddlReloj.DataSource = ds;
+        ddlReloj.DataTextField = "DESCRIPCION";
+        ddlReloj.DataValueField = "IDRELOJ";
+        ddlReloj.DataBind();
+        ddlReloj.Items.Insert(0, new ListItem("-- Seleccione Reloj--", "0"));
+    }
+
+    protected void ddlReloj_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        LimpiarDatosReloj();
+
+        if (ddlReloj.SelectedValue == "0")
+            return;
+
+        rlj.ls_idreloj = ddlReloj.SelectedValue;
+        DataSet ds = rlj.mfBuscarDatosReloj();
+        if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+            return;
+        DataRow dr = ds.Tables[0].Rows[0];
+        txtIP.Text = dr["IP"].ToString();
+        txtPuerto.Text = dr["PUERTO"].ToString();
+        txtIdReloj.Text = dr["IDRELOJ"].ToString();
+        CargarTrabajadoresReloj();
+    }
+    private void LimpiarDatosReloj()
+    {
+        txtIP.Text = "";
+        txtPuerto.Text = "";
+        txtIdReloj.Text = "";
+        dgReloj.DataSource = null;
+        dgReloj.DataBind();
+    }
     private void CargarTrabajadoresReloj()
     {
         rlj.ls_codigo = this.txtFiltroCodigoReloj.Text.Trim();
         rlj.ls_nombre = this.txtFiltroNombreReloj.Text.Trim();
+        rlj.ls_idreloj = ddlReloj.SelectedValue;
         DataSet ds = rlj.mfBuscarTrabajadoresReloj();
 
         if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)

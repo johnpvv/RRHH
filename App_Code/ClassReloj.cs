@@ -32,6 +32,7 @@ public class ClassReloj
     public string ls_iduserreloj { get; set; }
     public string ls_idreloj { get; set; }
     public string ls_iduserweb { get; set; }
+    public string ls_unidad { get; set; }
 
     public DataSet mfBuscarMarcaciones()
     {
@@ -146,6 +147,11 @@ public class ClassReloj
             string nombreBuscar = ls_nombre.Trim().Replace("'", "''");
             lsWhere += " AND NOMBRE LIKE '%" + nombreBuscar + "%' ";
         }
+        //buscar por reloj
+        if (!string.IsNullOrWhiteSpace(ls_idreloj))
+        {
+            lsWhere += " AND IDRELOJ = " + ls_idreloj.Trim().Replace("'", "''") + " ";
+        }
         lsSql =
             "SELECT " +
             "IDUSRPEND, " +
@@ -162,6 +168,7 @@ public class ClassReloj
         con.Close();
         return ds;
     }
+    #region Equivalencias
     public DataSet mfBuscaTrabRelojID()
     {
         string lsSql;
@@ -296,4 +303,37 @@ public class ClassReloj
             return "No fue posible registrar la equivalencia: " + ex.Message;
         }
     }
+    public DataSet mfBuscarRelojesCentro()
+    {
+        string lsSql;
+        DataSet ds;
+
+        lsSql = "SELECT IDRELOJ, DESCRIPCION, IP, PUERTO, SERIE " +
+                "FROM " + modConstantes.gsDbRH + "M_RELOJES " +
+                "WHERE CODUNIOP = " + ls_unidad + " " +
+                "AND IDESTADO = 1 " +
+                "ORDER BY DESCRIPCION";
+
+        con = bd.fnGetConn();
+        ds = bd.Fill(con, lsSql);
+        con.Close();
+        return ds;
+    }
+    public DataSet mfBuscarDatosReloj()
+    {
+        string lsSql;
+        DataSet ds;
+
+        lsSql = "SELECT IDRELOJ, DESCRIPCION, IP, PUERTO, SERIE " +
+                "FROM " + modConstantes.gsDbRH + "M_RELOJES " +
+                "WHERE IDRELOJ = " + ls_idreloj + " " +
+                "AND IDESTADO = 1";
+
+        con = bd.fnGetConn();
+        ds = bd.Fill(con, lsSql);
+        con.Close();
+
+        return ds;
+    }
+    #endregion
 }
