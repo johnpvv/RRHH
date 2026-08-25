@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 
 /// <summary>
 /// Descripción breve de ClassReloj
@@ -33,6 +33,7 @@ public class ClassReloj
     public string ls_idreloj { get; set; }
     public string ls_iduserweb { get; set; }
     public string ls_unidad { get; set; }
+    public string ls_rut { get; set; }
 
     public DataSet mfBuscarMarcaciones()
     {
@@ -219,7 +220,7 @@ public class ClassReloj
             lsSql = "SELECT IDUSRELOJ, IDUSUARIO " +
                     "FROM " + modConstantes.gsDbRH + "M_USR_RELOJ WITH (UPDLOCK, HOLDLOCK) " +
                     "WHERE IDRELOJ = @IDRELOJ " +
-                    "AND (IDUSRELOJ = @IDUSRELOJ OR IDUSUARIO = @IDUSUARIO)";
+                    "AND (IDUSRELOJ = @IDUSRELOJ OR IDUSUARIO = @IDUSUARIO) AND IDESTADO <> 3";//revisar si se elimina o solo cambio estado
             int relojExistente = 0;
             int usuarioExistente = 0;
             using (SqlCommand cmd = new SqlCommand(lsSql, con, tx))
@@ -334,6 +335,64 @@ public class ClassReloj
         con.Close();
 
         return ds;
+    }
+    public DataSet mfBuscarEquivalencias()
+    {
+        string lsSql;
+        DataSet ds;
+        string lsWhe = "";
+        if (ls_codigo != "")
+            lsWhe += " AND CONVERT(VARCHAR, UR.IDUSRELOJ) LIKE '%" + ls_codigo + "%' ";
+
+        if (ls_nombre != "")
+            lsWhe += " AND (UP.NOMBRE LIKE '%" + ls_nombre + "%' " +
+                     "OR (U.NOMBRE + ' ' + ISNULL(U.AP_PATERNO,'') + ' ' + ISNULL(U.AP_MATERNO,'')) LIKE '%" + ls_nombre + "%') ";
+
+        if (ls_rut != "")
+            lsWhe += " AND (CONVERT(VARCHAR, U.RUT) + '-' + U.DV) LIKE '%" + ls_rut + "%' ";
+
+        lsSql = "SELECT " +
+                "UR.IDUSRRELOJ, " +
+                "UR.IDRELOJ, " +
+                "UR.IDUSRELOJ, " +
+                "UR.IDUSUARIO, " +
+                "R.DESCRIPCION AS NOMBRE_RELOJ, " +
+                "UP.NOMBRE AS NOMBRE_TRAB_RELOJ, " +
+                "U.RUT, " +
+                "CONVERT(VARCHAR, U.RUT) + '-' + U.DV as RUT_C, " +
+                "U.NOMBRE AS NOMBRE_RRHH, " +
+                "UR.FCREACION AS FECHA " +
+                "FROM " + modConstantes.gsDbRH + "M_USR_RELOJ UR " +
+                "INNER JOIN " + modConstantes.gsDbRH + "M_RELOJES R ON R.IDRELOJ = UR.IDRELOJ " +
+                "INNER JOIN " + modConstantes.gsDbRH + "M_USUARIOS U ON U.IDUSUARIO = UR.IDUSUARIO " +
+                "INNER JOIN " + modConstantes.gsDbRH + "M_USER_RELOJ_PENDIENTE UP ON UP.IDUSERRELOJ = UR.IDUSRELOJ " +
+                "WHERE UR.IDESTADO = 1 " +
+                "AND UR.IDRELOJ = " + ls_idreloj + " " +
+                lsWhe +
+                "ORDER BY R.DESCRIPCION, U.NOMBRE";
+
+        con = bd.fnGetConn();
+        ds = bd.Fill(con, lsSql);
+        con.Close();
+
+        return ds;
+    }
+    public string mfDesactivarEquivalencia()
+    {
+        string lsSql;
+
+        lsSql = "UPDATE " + modConstantes.gsDbRH + "M_USR_RELOJ SET " +//revisar si se elimina o solo cambio estado
+                "IDESTADO = 3, " +
+                "F_H_ELIM = GETDATE(), " +
+                "IDUSELIM = " + ls_iduserweb + " " +
+                "WHERE IDUSRRELOJ = " + ls_iduserreloj + " " +
+                "AND IDESTADO = 1";
+
+        con = bd.fnGetConn();
+        string lsRes = bd.ExecuteScalar(con, lsSql);
+        con.Close();
+
+        return lsRes;
     }
     #endregion
 }
