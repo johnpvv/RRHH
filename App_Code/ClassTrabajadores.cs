@@ -4,13 +4,13 @@ using System.Data;
 /// <summary>
 /// Clase de los metodos para RRHH, sistema de personas
 /// </summary>
-public class ClassUsuarios
+public class ClassTrabajadores
 {
     modFunciones modfun = new modFunciones();
     BaseDatos bd = new BaseDatos();
     System.Data.SqlClient.SqlConnection con = null;
 
-    public ClassUsuarios()
+    public ClassTrabajadores()
     {
 
     }

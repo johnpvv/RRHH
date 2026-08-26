@@ -8,7 +8,7 @@ using System.Web.UI.WebControls;
 
 public partial class contenido_GestionRRHH_GestionEquivalenciaReloj : System.Web.UI.Page
 {
-    ClassUsuarios usr = new ClassUsuarios();
+    ClassTrabajadores usr = new ClassTrabajadores();
     ClassReloj rlj = new ClassReloj();
     Mensaje mens = new Mensaje();
     protected void Page_Load(object sender, EventArgs e)
@@ -178,6 +178,7 @@ public partial class contenido_GestionRRHH_GestionEquivalenciaReloj : System.Web
         lblMensaje.Text = "";
     }
     #endregion
+
     #region RRHH WEB
     private void CargarUsuariosRRHH()
     {

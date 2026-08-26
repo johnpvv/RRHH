@@ -8,7 +8,7 @@ using System.Web.UI.WebControls;
 public partial class contenido_Administracion_GestionRelojes : System.Web.UI.Page
 {
     ClassReloj rlj = new ClassReloj();
-    ClassUsuarios usr = new ClassUsuarios();
+    ClassTrabajadores usr = new ClassTrabajadores();
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)

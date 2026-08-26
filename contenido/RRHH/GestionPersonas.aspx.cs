@@ -12,7 +12,7 @@ using System.Web.UI.WebControls;
 public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
 {
     Mensaje mens = new Mensaje();
-    ClassUsuarios per = new ClassUsuarios();
+    ClassTrabajadores per = new ClassTrabajadores();
     ClassUnidOperativa cu = new ClassUnidOperativa();
     Usuarios usr = new Usuarios();
     static bool nuevo;

@@ -10,7 +10,7 @@ public partial class contenido_RRHH_VistaTurnosTrab : System.Web.UI.Page
 {
     ClassReloj rlj = new ClassReloj();
     ClassTurnos tur = new ClassTurnos();
-    ClassUsuarios usr = new ClassUsuarios();
+    ClassTrabajadores usr = new ClassTrabajadores();
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)

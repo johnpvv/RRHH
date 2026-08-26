@@ -9,7 +9,7 @@ public partial class contenido_Administracion_ListaTurnos : System.Web.UI.Page
 {
     ClassReloj rlj = new ClassReloj();
     ClassTurnos tur = new ClassTurnos();
-    ClassUsuarios usr = new ClassUsuarios();
+    ClassTrabajadores usr = new ClassTrabajadores();
     Mensaje mens = new Mensaje();
     protected void Page_Load(object sender, EventArgs e)
     {

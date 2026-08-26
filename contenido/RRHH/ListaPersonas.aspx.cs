@@ -9,7 +9,7 @@ using System.Data;
 public partial class contenido_RRHH_ListaPersonas : System.Web.UI.Page
 {
     ClassModSys objModSys = new ClassModSys();
-    ClassUsuarios per = new ClassUsuarios();
+    ClassTrabajadores per = new ClassTrabajadores();
     Mensaje mens = new Mensaje();
     private string id;
     private String stcadena = String.Empty;

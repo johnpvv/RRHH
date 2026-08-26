@@ -38,31 +38,35 @@
                 </td>
             </tr>
         </table>
-        <asp:GridView ID="dgData"
-            runat="server"
-            AutoGenerateColumns="False"
-            Width="100%"
-            CssClass="GridGral"
-            GridLines="None"
-            CellPadding="6"
-            EmptyDataText="Sin Resultados"
-            EmptyDataRowStyle-CssClass="textoEmpty">
-            <Columns>
-                <asp:BoundField DataField="F_H_MARCA"
-                    HeaderText="Fecha"
-                    DataFormatString="{0:dd/MM/yyyy}" ItemStyle-CssClass="textoGrid" />
-                <asp:BoundField DataField="F_H_MARCA"
-                    HeaderText="Hora"
-                    DataFormatString="{0:HH:mm:ss}" ItemStyle-CssClass="textoGrid" />
-                <asp:BoundField DataField="TIPO_MARCA"
-                    HeaderText="Marcación" ItemStyle-CssClass="textoGrid" />
-                <asp:BoundField DataField="CENTRO"
-                    HeaderText="CENTRO" ItemStyle-CssClass="textoGrid" />
-            </Columns>
-            <HeaderStyle CssClass="GridGralHeader" />
-            <RowStyle CssClass="GridGralRow" />
-            <AlternatingRowStyle CssClass="GridGralAltRow" />
-        </asp:GridView>
+        <div id="divImpresion">
+            <asp:GridView ID="dgData"
+                runat="server"
+                AutoGenerateColumns="False"
+                Width="100%"
+                CssClass="GridGral"
+                GridLines="None"
+                CellPadding="6"
+                EmptyDataText="Sin Resultados"
+                EmptyDataRowStyle-CssClass="textoEmpty">
+                <Columns>
+                    <asp:BoundField DataField="DIA"
+                        HeaderText="Día" ItemStyle-CssClass="textoGrid" />
+                    <asp:BoundField DataField="F_H_MARCA"
+                        HeaderText="Fecha"
+                        DataFormatString="{0:dd/MM/yyyy}" ItemStyle-CssClass="textoGrid" />
+                    <asp:BoundField DataField="F_H_MARCA"
+                        HeaderText="Hora"
+                        DataFormatString="{0:HH:mm:ss}" ItemStyle-CssClass="textoGridBold" />
+                    <asp:BoundField DataField="TIPO_MARCA"
+                        HeaderText="Marcación" ItemStyle-CssClass="textoGrid" />
+                    <asp:BoundField DataField="CENTRO"
+                        HeaderText="CENTRO" ItemStyle-CssClass="textoGrid" />
+                </Columns>
+                <HeaderStyle CssClass="GridGralHeader" />
+                <RowStyle CssClass="GridGralRow" />
+                <AlternatingRowStyle CssClass="GridGralAltRow" />
+            </asp:GridView>
+        </div>
         <br />
         <table style="width: 100%; margin-bottom: 10px;">
             <tr>
@@ -72,6 +76,12 @@
                         Text="Exportar Excel"
                         CssClass="BotonPortalVerde"
                         OnClick="btnExportar_Click" />
+                    &nbsp;
+                    <asp:Button ID="btnImprimir"
+                        runat="server"
+                        Text="Imprimir Marcas"
+                        CssClass="BotonPortalAmarillo"
+                        OnClientClick="imprimirGrid(); return false;" />
                     &nbsp;
                     <asp:Button ID="btnVolver"
                         runat="server"
@@ -84,3 +94,54 @@
     </form>
 </body>
 </html>
+<script type="text/javascript">
+    function imprimirGrid() {
+
+        var contenido = document.getElementById("divImpresion").innerHTML;
+
+        var nombre = '<%= Session["nombre"] %>';
+        var rut = '<%= Session["rut"] %>';
+        var periodo = '<%= (ddlMes.SelectedItem + " " + ddlAnio.SelectedValue) %>';
+
+        var ventana = window.open('', '_blank', 'width=900,height=700');
+
+        ventana.document.write('<html>');
+        ventana.document.write('<head>');
+        ventana.document.write('<title>Marcaciones Trabajador</title>');
+
+        ventana.document.write('<style>');
+        ventana.document.write('@page { size: A4; margin: 15mm; }');
+        ventana.document.write('body { font-family: Arial; font-size: 12px; }');
+        ventana.document.write('.titulo { text-align: center; font-size: 20px; font-weight: bold; margin-bottom: 20px; }');
+        ventana.document.write('.datos { margin-bottom: 15px; line-height: 22px; }');
+        ventana.document.write('table { width: 100%; border-collapse: collapse; }');
+        ventana.document.write('th, td { border: 1px solid #333; padding: 6px; }');
+        ventana.document.write('th { font-weight: bold; text-align: center; }');
+        ventana.document.write('td { text-align: center; }');
+        ventana.document.write('</style>');
+
+        ventana.document.write('</head>');
+        ventana.document.write('<body>');
+
+        ventana.document.write('<div class="titulo">MARCACIONES DEL TRABAJADOR</div>');
+
+        ventana.document.write('<div class="datos">');
+        ventana.document.write('<b>Funcionario:</b> ' + nombre);
+        ventana.document.write('<br>');
+        ventana.document.write('<b>RUT:</b> ' + rut);
+        ventana.document.write('<br>');
+        ventana.document.write('<b>Periodo:</b> ' + periodo);
+        ventana.document.write('</div>');
+
+        ventana.document.write(contenido);
+
+        ventana.document.write('</body>');
+        ventana.document.write('</html>');
+
+        ventana.document.close();
+        ventana.focus();
+
+        ventana.print();
+        ventana.close();
+    }
+</script>

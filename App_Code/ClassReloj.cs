@@ -35,7 +35,7 @@ public class ClassReloj
     public string ls_unidad { get; set; }
     public string ls_rut { get; set; }
 
-    public DataSet mfBuscarMarcaciones()
+    public DataSet mfBuscarMarcaciones()//metodo inicial, no considerar
     {
         string lsSql;
         string lsWhe = "";
@@ -74,6 +74,57 @@ public class ClassReloj
             "WHERE 1=1 " +
             lsWhe +
             " ORDER BY M.F_H_MARCA DESC";
+
+        con = bd.fnGetConn();
+        ds = bd.Fill(con, lsSql);
+        con.Close();
+
+        return ds;
+    }
+
+    public DataSet mfBuscarMarcasReloj()
+    {
+        string lsSql;
+        string lsWhe = "";
+        DataSet ds;
+
+        lsWhe = " AND UR.IDUSUARIO = " + ls_iduser;
+
+        if (ls_mes != "" && ls_anio != "")
+            lsWhe += " AND MR.[MONTH] = " + ls_mes + " AND MR.[YEAR] = " + ls_anio;
+
+        lsSql = "SELECT " +
+                "MR.IDMARCARELOJ, " +
+                "MR.IDRELOJ, " +
+                "MR.ENROLLNUMBER, " +
+                "MR.VERIFYMODE, " +
+                "MR.INOUTMODE, " +
+                "CASE " +
+                "WHEN MR.INOUTMODE = 0 THEN 'ENTRADA' " +
+                "WHEN MR.INOUTMODE = 1 THEN 'SALIDA' " +
+                "ELSE 'Otro' END AS TIPO_MARCA, " +
+                "CASE DATEPART(WEEKDAY, DATETIMEFROMPARTS(MR.[YEAR],MR.[MONTH],MR.[DAY],MR.[HOUR],MR.[MINUTE],MR.[SECOND],0)) " +
+                "WHEN 1 THEN 'Domingo' " +
+                "WHEN 2 THEN 'Lunes' " +
+                "WHEN 3 THEN 'Martes' " +
+                "WHEN 4 THEN 'Miércoles' " +
+                "WHEN 5 THEN 'Jueves' " +
+                "WHEN 6 THEN 'Viernes' " +
+                "WHEN 7 THEN 'Sábado' " +
+                "END DIA, " +
+                "DATETIMEFROMPARTS(MR.[YEAR],MR.[MONTH],MR.[DAY],MR.[HOUR],MR.[MINUTE],MR.[SECOND],0) AS F_H_MARCA, " +
+                "MR.WORKCODE, " +
+                "MR.F_H_CREACION, " +
+                "MR.TIPO, " +
+                "MR.IDUSR, " +
+                "UOP.DESCRIPCION AS CENTRO, " +
+                "MR.IDESTADO " +
+                "FROM " + modConstantes.gsDbRH + "M_MARCA_RELOJ MR " +
+                "INNER JOIN " + modConstantes.gsDbRH + "M_USR_RELOJ UR ON UR.IDUSRELOJ = MR.ENROLLNUMBER " +
+                "INNER JOIN " + modConstantes.gsDbRH + "M_RELOJES RE ON RE.IDRELOJ = MR.IDRELOJ " +
+                "INNER JOIN " + modConstantes.gsDbRH + "M_UNIDAD_OPERATIVA UOP ON UOP.CODUNIOP = RE.CODUNIOP " +
+                "WHERE 1=1 " + lsWhe +
+                " ORDER BY MR.[DAY],MR.[HOUR],MR.[MINUTE],MR.[SECOND]";
 
         con = bd.fnGetConn();
         ds = bd.Fill(con, lsSql);
@@ -388,6 +439,20 @@ public class ClassReloj
                 "WHERE IDUSRRELOJ = " + ls_iduserreloj + " " +
                 "AND IDESTADO = 1";
 
+        con = bd.fnGetConn();
+        string lsRes = bd.ExecuteScalar(con, lsSql);
+        con.Close();
+
+        return lsRes;
+    }
+    public string mfDevuelveIDUserReloj()
+    {
+        string lsSql;
+
+        lsSql = "SELECT IDUSUARIO " +
+                "FROM " + modConstantes.gsDbRH + "M_USR_RELOJ" +
+                "WHERE IDUSRELOJ = '" + ls_codigo + "'" +
+                " AND IDESTADO <> 3 ";
         con = bd.fnGetConn();
         string lsRes = bd.ExecuteScalar(con, lsSql);
         con.Close();

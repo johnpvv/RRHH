@@ -11,7 +11,7 @@ using System.Web;
 /// </summary>
 public class ClassExcel
 {
-    ClassUsuarios usr = new ClassUsuarios();
+    ClassTrabajadores usr = new ClassTrabajadores();
     ClassTurnos tur = new ClassTurnos();
     public ClassExcel()
     {

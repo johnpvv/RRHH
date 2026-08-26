@@ -9,7 +9,7 @@ using System.Data;
 public partial class contenido_RRHH_VistaMarcacionesTrab : System.Web.UI.Page
 {
     ClassReloj rlj = new ClassReloj();
-    ClassUsuarios usr = new ClassUsuarios();
+    ClassTrabajadores usr = new ClassTrabajadores();
     ClassTurnos tur = new ClassTurnos();
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -48,7 +48,8 @@ public partial class contenido_RRHH_VistaMarcacionesTrab : System.Web.UI.Page
 
         usr.ls_rut = Session["rut"].ToString();
         rlj.ls_iduser = usr.mfDevuelveID();//en caso de homologar con otro id desde los relojes u otros
-        dgData.DataSource = rlj.mfBuscarMarcaciones();
+        //dgData.DataSource = rlj.mfBuscarMarcaciones();
+        dgData.DataSource = rlj.mfBuscarMarcasReloj();
         dgData.DataBind();
     }
 
