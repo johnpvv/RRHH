@@ -17,90 +17,113 @@
                 <ContentTemplate>
                     <div class="bloque">
                         <div class="titulo-seccion">
-                            Gestion Sincronizacion           
+                            Gestión Sincronización
                         </div>
                         <div class="filtros-grid">
                             <div class="campo">
                                 <label>Centro / Unidad:</label>
-                                <asp:DropDownList ID="ddlCentroAdmin"
-                                    runat="server"
-                                    CssClass="form-control"
-                                    AutoPostBack="true"
-                                    OnSelectedIndexChanged="ddlCentroAdmin_SelectedIndexChanged">
+                                <asp:DropDownList ID="ddlCentroSincroniza" runat="server" CssClass="form-control" AutoPostBack="true" Width="350px"
+                                    OnSelectedIndexChanged="ddlCentroSincroniza_SelectedIndexChanged">
                                 </asp:DropDownList>
                             </div>
                             <div class="campo">
                                 <label>Reloj:</label>
-                                <asp:DropDownList ID="ddlRelojAdmin"
-                                    runat="server"
-                                    CssClass="form-control"
-                                    AutoPostBack="true"
-                                    OnSelectedIndexChanged="ddlRelojAdmin_SelectedIndexChanged">
+                                <asp:DropDownList ID="ddlRelojSincroniza" runat="server" CssClass="form-control" Width="250px">
                                 </asp:DropDownList>
                             </div>
 
                             <div class="campo">
-                                <label>Código reloj:</label>
-                                <asp:TextBox ID="txtFiltroCodigo" runat="server" CssClass="form-control" Width="100px">
+                                <label>Fecha inicio:</label>
+                                <asp:TextBox ID="txtFechaInicio" runat="server" CssClass="form-control" TextMode="Date">
                                 </asp:TextBox>
                             </div>
                             <div class="campo">
-                                <label>Nombre:</label>
-                                <asp:TextBox ID="txtFiltroNombre" runat="server" CssClass="form-control" Width="200px">
+                                <label>Fecha fin:</label>
+                                <asp:TextBox ID="txtFechaFin" runat="server" CssClass="form-control" TextMode="Date">
                                 </asp:TextBox>
                             </div>
                             <div class="campo">
-                                <label>RUT:</label>
-                                <asp:TextBox ID="txtFiltroRut" runat="server" CssClass="form-control" Width="120px">
-                                </asp:TextBox>
-                            </div>
-                            <div class="campo">
-                                <asp:Button ID="btnBuscarEquivalencias"
+                                <label>&nbsp;</label>
+                                <asp:Button ID="btnSincronizar"
                                     runat="server"
-                                    Text="Buscar"
+                                    Text="Sincronizar"
                                     CssClass="BotonPortalAzul"
-                                    OnClick="btnBuscarEquivalencias_Click" />
+                                    OnClick="btnSincronizar_Click"
+                                    OnClientClick="return confirm('¿Desea realizar la sincronización de las marcas del período seleccionado?');" />
                             </div>
                         </div>
-                        <br />
-                        <asp:GridView ID="dgEquivalencias"
-                            runat="server"
-                            AutoGenerateColumns="False"
-                            CssClass="grid-reloj"
-                            GridLines="None"
-                            OnRowCommand="dgEquivalencias_RowCommand"
-                            EmptyDataText="No existen equivalencias con los filtros aplicados."
-                            EmptyDataRowStyle-CssClass="bloque-titulo">
-                            <Columns>
-                                <asp:BoundField DataField="IDUSRELOJ" HeaderText="Código Reloj" />
-                                <asp:BoundField DataField="NOMBRE_TRAB_RELOJ" HeaderText="Nombre Trabajador Reloj" />
-                                <asp:BoundField DataField="NOMBRE_RELOJ" HeaderText="Nombre Reloj" />
-                                <asp:TemplateField HeaderText="(Hacia)">
-                                    <ItemTemplate>
-                                        <asp:ImageButton ID="btnHacia"
-                                            runat="server"
-                                            ImageUrl="~/imagenes/avanzar.png"
-                                            ToolTip="Hacia" />
-                                    </ItemTemplate>
-                                    <ItemStyle Width="40px" HorizontalAlign="center" />
-                                </asp:TemplateField>
-                                <asp:BoundField DataField="RUT_C" HeaderText="RUT" />
-                                <asp:BoundField DataField="NOMBRE_RRHH" HeaderText="Trabajador RRHH" />
-                                <asp:BoundField DataField="FECHA" HeaderText="Fecha Registro" />
-                                <asp:TemplateField HeaderText="Acción">
-                                    <ItemTemplate>
-                                        <asp:ImageButton ID="btnEliminarEquivalencia"
-                                            runat="server"
-                                            ImageUrl="~/imagenes/close.png"
-                                            CommandName="Eliminar"
-                                            CommandArgument='<%# Eval("IDUSRRELOJ") %>'
-                                            ToolTip="Desactivar equivalencia"
-                                            OnClientClick="return confirm('¿Está seguro de desactivar esta equivalencia?');" />
-                                    </ItemTemplate>
-                                    <ItemStyle Width="40px" HorizontalAlign="center" />
-                                </asp:TemplateField>
-                            </Columns>
-                        </asp:GridView>
+                        <div class="campo">
+                            <div class="bloque-titulo">
+                                <asp:Label ID="lblSincr" runat="server"></asp:Label>
+                            </div>
+                        </div>
+                    </div>
+                </ContentTemplate>
+            </ajaxToolkit:TabPanel>
+            <ajaxToolkit:TabPanel ID="TabPanel2" runat="server" HeaderText="TabPanel2">
+                <HeaderTemplate>Administrar Sincronizaciones</HeaderTemplate>
+                <ContentTemplate>
+                    <div class="bloque">
+                        <div class="titulo-seccion">
+                            Administrar Sincronizaciones          
+                        </div>
+                        <div class="campo">
+                            <asp:GridView ID="dgSincronizacion" runat="server"
+                                AutoGenerateColumns="False"
+                                CssClass="grid-reloj"
+                                DataKeyNames="IDSINCRONIZA"
+                                GridLines="None"
+                                EmptyDataText="No existen Sincronizaciones con los filtros aplicados."
+                                EmptyDataRowStyle-CssClass="bloque-titulo"
+                                OnRowCommand="dgSincronizacion_RowCommand">
+                                <Columns>
+                                    <asp:BoundField DataField="IDSINCRONIZA" HeaderText="ID" />
+                                    <asp:BoundField DataField="RELOJ" HeaderText="Reloj" />
+                                    <asp:BoundField DataField="F_H_INICIO" HeaderText="Inicio" DataFormatString="{0:dd/MM/yyyy HH:mm}" />
+                                    <asp:BoundField DataField="F_H_FIN" HeaderText="Fin" DataFormatString="{0:dd/MM/yyyy HH:mm}" />
+                                    <asp:BoundField DataField="CANT_LEIDA" HeaderText="Leídas" />
+                                    <asp:BoundField DataField="CANT_INSERT" HeaderText="Nuevas" />
+                                    <asp:BoundField DataField="ESTADO" HeaderText="Estado" />
+                                    <asp:TemplateField HeaderText="Acción">
+                                        <ItemTemplate>
+                                            <asp:ImageButton ID="btnVerDetalle"
+                                                runat="server"
+                                                ImageUrl="~/imagenes/check.png"
+                                                CommandName="VER"
+                                                CommandArgument='<%# Container.DataItemIndex %>'
+                                                ToolTip="Ver Detalle" />
+                                        </ItemTemplate>
+                                        <ItemStyle Width="40px" HorizontalAlign="center" />
+                                    </asp:TemplateField>
+                                </Columns>
+                            </asp:GridView>
+                        </div>
+                        <asp:Panel ID="pnlDetalleSincronizacion" runat="server" Visible="false">
+                            <div class="campo">
+                                <div class="bloque-titulo">
+                                    Marcas de la sincronización                                
+                            <asp:Label ID="lblIdSincronizacion" runat="server">
+                            </asp:Label>
+                                </div>
+                                <asp:GridView ID="dgMarcasSincronizacion" runat="server"
+                                    AutoGenerateColumns="False"
+                                    GridLines="None"
+                                    EmptyDataText="No existen Sincronizaciones con los filtros aplicados."
+                                    EmptyDataRowStyle-CssClass="bloque-titulo"
+                                    CssClass="grid-reloj">
+                                    <Columns>
+                                        <asp:BoundField DataField="CODIGO_EMP_RELOJ" HeaderText="Código Reloj" />
+                                        <asp:BoundField DataField="RELOJ" HeaderText="Reloj" />
+                                        <asp:BoundField DataField="F_H_MARCA" HeaderText="Fecha" DataFormatString="{0:dd/MM/yyyy}" ItemStyle-Font-Bold="true"/>
+                                        <asp:BoundField DataField="F_H_MARCA" HeaderText= "Hora" DataFormatString="{0:HH:mm:ss}" />
+                                        <asp:BoundField DataField="TIPO_MARCA" HeaderText="Tipo" ItemStyle-Font-Bold="true" />
+                                        <asp:BoundField DataField="F_H_CARGA" HeaderText="Fecha Carga" DataFormatString="{0:dd/MM/yyyy HH:mm:ss}" />
+                                        <asp:BoundField DataField="TIPO_CARGA" HeaderText="Tipo Carga" />
+                                        <asp:BoundField DataField="OBSERVACIONES" HeaderText="Observaciones" />
+                                    </Columns>
+                                </asp:GridView>
+                            </div>
+                        </asp:Panel>
                     </div>
                 </ContentTemplate>
             </ajaxToolkit:TabPanel>

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Data;
 
 public partial class contenido_RRHH_VistaMarcacionesTrab : System.Web.UI.Page
 {
@@ -47,10 +47,27 @@ public partial class contenido_RRHH_VistaMarcacionesTrab : System.Web.UI.Page
     {
 
         usr.ls_rut = Session["rut"].ToString();
-        rlj.ls_iduser = usr.mfDevuelveID();//en caso de homologar con otro id desde los relojes u otros
+        rlj.ls_iduser = usr.mfDevuelveID();
+        //en caso de homologar con otro id desde los relojes u otros
         //dgData.DataSource = rlj.mfBuscarMarcaciones();
-        dgData.DataSource = rlj.mfBuscarMarcasReloj();
-        dgData.DataBind();
+        //dgData.DataSource = rlj.mfBuscarMarcasReloj();
+        //dgData.DataBind();
+        if (ddlVistaMarcas.SelectedValue == "1")
+        {
+            dgData.Visible = true;
+            dgDataAgrupada.Visible = false;
+
+            dgData.DataSource = rlj.mfBuscarMarcasReloj();
+            dgData.DataBind();
+        }
+        else
+        {
+            dgData.Visible = false;
+            dgDataAgrupada.Visible = true;
+
+            dgDataAgrupada.DataSource = rlj.mfBuscarMarcasRelojAgrupadas();
+            dgDataAgrupada.DataBind();
+        }
     }
 
     protected void btnVolver_Click(object sender, EventArgs e)
@@ -68,5 +85,11 @@ public partial class contenido_RRHH_VistaMarcacionesTrab : System.Web.UI.Page
     protected void btnExportar_Click(object sender, EventArgs e)
     {
 
+    }
+    protected void ddlVistaMarcas_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        rlj.ls_mes = ddlMes.SelectedValue;
+        rlj.ls_anio = ddlAnio.SelectedValue;
+        CargarMarcaciones();
     }
 }

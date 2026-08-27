@@ -13,20 +13,26 @@
         <p class="textoTitLeft">Gestión Marcaciones</p>
         <table style="width: 100%; margin-bottom: 10px;">
             <tr>
-
                 <td style="width: 70px;" class="textoNorm">Mes:
                 </td>
-
                 <td style="width: 180px;">
                     <asp:DropDownList ID="ddlMes" runat="server" Width="150px" CssClass="form-control">
                     </asp:DropDownList>
                 </td>
-
                 <td style="width: 70px;" class="textoNorm">Año:
                 </td>
 
                 <td style="width: 120px;">
                     <asp:DropDownList ID="ddlAnio" runat="server" Width="100px" CssClass="form-control">
+                    </asp:DropDownList>
+                </td>
+                <td style="width: 70px;" class="textoNorm">Tipo Vista:
+                </td>
+                <td style="width: 220px;">
+                    <asp:DropDownList ID="ddlVistaMarcas" runat="server" CssClass="form-control"
+                        AutoPostBack="true" OnSelectedIndexChanged="ddlVistaMarcas_SelectedIndexChanged">
+                        <asp:ListItem Value="1">Ver marcas en Lista</asp:ListItem>
+                        <asp:ListItem Value="2">Agrupar entradas y salidas</asp:ListItem>
                     </asp:DropDownList>
                 </td>
                 <td>
@@ -59,6 +65,36 @@
                         DataFormatString="{0:HH:mm:ss}" ItemStyle-CssClass="textoGridBold" />
                     <asp:BoundField DataField="TIPO_MARCA"
                         HeaderText="Marcación" ItemStyle-CssClass="textoGrid" />
+                    <asp:BoundField DataField="CENTRO"
+                        HeaderText="CENTRO" ItemStyle-CssClass="textoGrid" />
+                </Columns>
+                <HeaderStyle CssClass="GridGralHeader" />
+                <RowStyle CssClass="GridGralRow" />
+                <AlternatingRowStyle CssClass="GridGralAltRow" />
+            </asp:GridView>
+            <asp:GridView ID="dgDataAgrupada"
+                runat="server"
+                AutoGenerateColumns="False"
+                Width="100%"
+                CssClass="GridGral"
+                GridLines="None"
+                CellPadding="6"
+                EmptyDataText="Sin Resultados"
+                EmptyDataRowStyle-CssClass="textoEmpty">
+                <Columns>
+                    <asp:BoundField DataField="DIA"
+                        HeaderText="Día" ItemStyle-CssClass="textoGrid" />
+                    <asp:BoundField DataField="FECHA"
+                        HeaderText="Fecha Marcación"
+                        DataFormatString="{0:dd/MM/yyyy}" ItemStyle-CssClass="textoGrid" />
+                    <asp:BoundField DataField="NRO_MARCA"
+                        HeaderText="N° Marca" ItemStyle-CssClass="textoGrid" />
+                    <asp:BoundField DataField="ENTRADA"
+                        HeaderText="Hora Entrada"
+                        DataFormatString="{0:HH:mm:ss}" ItemStyle-CssClass="textoGridBold" />
+                    <asp:BoundField DataField="SALIDA"
+                        HeaderText="Hora Salida"
+                        DataFormatString="{0:HH:mm:ss}" ItemStyle-CssClass="textoGridBold" />
                     <asp:BoundField DataField="CENTRO"
                         HeaderText="CENTRO" ItemStyle-CssClass="textoGrid" />
                 </Columns>

@@ -34,6 +34,9 @@ public class ClassReloj
     public string ls_iduserweb { get; set; }
     public string ls_unidad { get; set; }
     public string ls_rut { get; set; }
+    public string ls_idsincroniza { get; set; }
+    public string ls_f_ini { get; set; }
+    public string ls_f_fin { get; set; }
 
     public DataSet mfBuscarMarcaciones()//metodo inicial, no considerar
     {
@@ -124,7 +127,7 @@ public class ClassReloj
                 "INNER JOIN " + modConstantes.gsDbRH + "M_RELOJES RE ON RE.IDRELOJ = MR.IDRELOJ " +
                 "INNER JOIN " + modConstantes.gsDbRH + "M_UNIDAD_OPERATIVA UOP ON UOP.CODUNIOP = RE.CODUNIOP " +
                 "WHERE 1=1 " + lsWhe +
-                " ORDER BY MR.[DAY],MR.[HOUR],MR.[MINUTE],MR.[SECOND]";
+                " ORDER BY MR.[DAY] DESC, MR.[HOUR] DESC,MR.[MINUTE] DESC, MR.[SECOND] DESC ";
 
         con = bd.fnGetConn();
         ds = bd.Fill(con, lsSql);
@@ -133,6 +136,62 @@ public class ClassReloj
         return ds;
     }
 
+    public DataSet mfBuscarMarcasRelojAgrupadas()
+    {
+        string lsSql;
+        string lsWhe = "";
+        DataSet ds;
+
+        lsWhe = " AND UR.IDUSUARIO = " + ls_iduser;
+
+        if (ls_mes != "" && ls_anio != "")
+            lsWhe += " AND MR.[MONTH] = " + ls_mes + " AND MR.[YEAR] = " + ls_anio;
+
+        lsSql = "WITH MARCAS AS ( " +
+                "SELECT MR.IDMARCARELOJ, MR.IDRELOJ, MR.ENROLLNUMBER, " +
+                "MR.INOUTMODE, " +
+                "DATETIMEFROMPARTS(MR.[YEAR],MR.[MONTH],MR.[DAY],MR.[HOUR],MR.[MINUTE],MR.[SECOND],0) AS F_H_MARCA, " +
+                "MR.[YEAR], MR.[MONTH], MR.[DAY], UOP.DESCRIPCION AS CENTRO " +
+                "FROM " + modConstantes.gsDbRH + "M_MARCA_RELOJ MR " +
+                "INNER JOIN " + modConstantes.gsDbRH + "M_USR_RELOJ UR ON UR.IDUSRELOJ = MR.ENROLLNUMBER " +
+                "INNER JOIN " + modConstantes.gsDbRH + "M_RELOJES RE ON RE.IDRELOJ = MR.IDRELOJ " +
+                "INNER JOIN " + modConstantes.gsDbRH + "M_UNIDAD_OPERATIVA UOP ON UOP.CODUNIOP = RE.CODUNIOP " +
+                "WHERE 1=1 " + lsWhe +
+                "), " +
+                "ENTRADAS AS ( " +
+                "SELECT *, ROW_NUMBER() OVER(PARTITION BY [YEAR],[MONTH],[DAY] ORDER BY F_H_MARCA) AS NRO_MARCA " +
+                "FROM MARCAS WHERE INOUTMODE = 0 " +
+                "), " +
+                "SALIDAS AS ( " +
+                "SELECT *, ROW_NUMBER() OVER(PARTITION BY [YEAR],[MONTH],[DAY] ORDER BY F_H_MARCA) AS NRO_MARCA " +
+                "FROM MARCAS WHERE INOUTMODE = 1 " +
+                ") " +
+                "SELECT " +
+                "ISNULL(E.IDRELOJ,S.IDRELOJ) AS IDRELOJ, " +
+                "ISNULL(E.ENROLLNUMBER,S.ENROLLNUMBER) AS ENROLLNUMBER, " +
+                "CASE DATEPART(WEEKDAY,DATEFROMPARTS(ISNULL(E.[YEAR],S.[YEAR]),ISNULL(E.[MONTH],S.[MONTH]),ISNULL(E.[DAY],S.[DAY]))) " +
+                "WHEN 1 THEN 'Domingo' WHEN 2 THEN 'Lunes' WHEN 3 THEN 'Martes' " +
+                "WHEN 4 THEN 'Miércoles' WHEN 5 THEN 'Jueves' WHEN 6 THEN 'Viernes' " +
+                "WHEN 7 THEN 'Sábado' END AS DIA, " +
+                "RIGHT('0' + CAST(ISNULL(E.[DAY],S.[DAY]) AS VARCHAR(2)),2) + '/' + " +
+                "RIGHT('0' + CAST(ISNULL(E.[MONTH],S.[MONTH]) AS VARCHAR(2)),2) + '/' + " +
+                "CAST(ISNULL(E.[YEAR],S.[YEAR]) AS VARCHAR(4)) AS FECHA, " +
+                "ISNULL(E.NRO_MARCA,S.NRO_MARCA) AS NRO_MARCA, " +
+                "E.F_H_MARCA AS ENTRADA, " +
+                "S.F_H_MARCA AS SALIDA, " +
+                "ISNULL(E.CENTRO,S.CENTRO) AS CENTRO " +
+                "FROM ENTRADAS E " +
+                "FULL OUTER JOIN SALIDAS S ON S.[YEAR] = E.[YEAR] AND S.[MONTH] = E.[MONTH] " +
+                "AND S.[DAY] = E.[DAY] AND S.NRO_MARCA = E.NRO_MARCA " +
+                "ORDER BY ISNULL(E.[YEAR],S.[YEAR]) DESC, ISNULL(E.[MONTH],S.[MONTH]) DESC, " +
+                "ISNULL(E.[DAY],S.[DAY]) DESC, ISNULL(E.NRO_MARCA,S.NRO_MARCA) DESC";
+
+        con = bd.fnGetConn();
+        ds = bd.Fill(con, lsSql);
+        con.Close();
+
+        return ds;
+    }
     public DataSet mfBuscarRelojes()
     {
         string lsSql;
@@ -458,6 +517,84 @@ public class ClassReloj
         con.Close();
 
         return lsRes;
+    }
+    #endregion
+    #region Sincronizacion
+    public DataSet mfBuscarSincronizaciones()
+    {
+        string lsSql;
+        DataSet ds;
+
+        lsSql = "SELECT " +
+                "S.IDSINCRONIZA, " +
+                "S.IDRELOJ, " +
+                "R.DESCRIPCION AS RELOJ, " +
+                "S.F_H_INICIO, " +
+                "S.F_H_FIN, " +
+                "S.CANT_LEIDA, " +
+                "S.CANT_INSERT, " +
+                "S.MNS_ERROR, " +
+                "CASE " +
+                "WHEN S.IDESTADO = 1 THEN 'OK' " +
+                "WHEN S.IDESTADO = 3 THEN 'ERROR' " +
+                "ELSE 'SIN ESTADO' END AS ESTADO, " +
+                "S.IDUSUARIO " +
+                "FROM " + modConstantes.gsDbRH + "M_SINCRONIZACION S " +
+                "LEFT JOIN " + modConstantes.gsDbRH + "M_RELOJES R ON R.IDRELOJ = S.IDRELOJ " +
+                "ORDER BY S.IDSINCRONIZA DESC";
+
+        con = bd.fnGetConn();
+        ds = bd.Fill(con, lsSql);
+        con.Close();
+
+        return ds;
+    }
+    public DataSet mfBuscarMarcasSincronizacion()
+    {
+        string lsSql;
+        DataSet ds;
+
+        lsSql = "SELECT " +
+                "M.IDMARCACION, " +
+                "M.IDSINCRONIZA, " +
+                "M.IDRELOJ, " +
+                "R.DESCRIPCION AS RELOJ, " +
+                "M.CODIGO_EMP_RELOJ, " +
+                "M.F_H_MARCA, " +
+                "CASE " +
+                "WHEN M.TIPO_MARCA = 0 THEN 'ENTRADA' " +
+                "WHEN M.TIPO_MARCA = 1 THEN 'SALIDA' " +
+                "ELSE 'OTRO' END AS TIPO_MARCA, " +
+                "M.F_H_CARGA, " +
+                "M.TIPO_CARGA, " +
+                "M.OBSERVACIONES " +
+                "FROM " + modConstantes.gsDbRH + "M_MARCACIONES M " +
+                "LEFT JOIN " + modConstantes.gsDbRH + "M_RELOJES R ON R.IDRELOJ = M.IDRELOJ " +
+                "WHERE M.IDSINCRONIZA = " + ls_idsincroniza +
+                " ORDER BY CODIGO_EMP_RELOJ, M.F_H_MARCA";
+
+        con = bd.fnGetConn();
+        ds = bd.Fill(con, lsSql);
+        con.Close();
+
+        return ds;
+    }
+    public DataSet mfSincronizarMarcas()
+    {
+        string lsSql;
+        DataSet ds;
+
+        lsSql = "EXEC " + modConstantes.gsDbRH + "PU_SINCRONIZA_MARCAS_RELOJ " +
+                "@IDRELOJ = " + ls_idreloj + ", " +
+                "@F_H_INICIO = '" + ls_f_ini + "', " +
+                "@F_H_FIN = '" + ls_f_fin + "', " +
+                "@IDUSUARIO = " + ls_iduserweb;
+
+        con = bd.fnGetConn();
+        ds = bd.Fill(con, lsSql);
+        con.Close();
+
+        return ds;
     }
     #endregion
 }

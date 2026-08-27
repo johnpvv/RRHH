@@ -17,88 +17,131 @@ public partial class contenido_GestionRRHH_GestionSincronizacion : System.Web.UI
         {
             CargarCentrosAdmin();
             InicializarRelojAdmin();
+            CargarSincronizaciones();
         }
     }
-    #region Administrar Equivalencias
-    private void CargarEquivalencias()
-    {
-        if (ddlRelojAdmin.SelectedValue == "0")
-            return;
-        rlj.ls_idreloj = ddlRelojAdmin.SelectedValue;
-        DataSet ds = rlj.mfBuscarEquivalencias();
+    #region Crear SIncronizacion
 
-        dgEquivalencias.DataSource = ds;
-        dgEquivalencias.DataBind();
-    }
-    protected void dgEquivalencias_RowCommand(object sender, GridViewCommandEventArgs e)
-    {
-        if (e.CommandName != "Eliminar")
-            return;
-
-        rlj.ls_iduserreloj = e.CommandArgument.ToString();
-        rlj.ls_iduserweb = Session["user"].ToString();
-        string resultado = rlj.mfDesactivarEquivalencia();
-        CargarEquivalencias();
-    }
     private void CargarCentrosAdmin()
     {
         usr.ls_iduser = Session["user"].ToString();
         DataSet ds = usr.mfBuscarCentrosAdmin();
 
-        ddlCentroAdmin.Items.Clear();
-        ddlCentroAdmin.Items.Add(new ListItem("-- Seleccione centro / unidad --", "0"));
+        ddlCentroSincroniza.Items.Clear();
+        ddlCentroSincroniza.Items.Add(new ListItem("-- Seleccione centro / unidad --", "0"));
 
         if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
             return;
 
-        ddlCentroAdmin.DataSource = ds;
-        ddlCentroAdmin.DataTextField = "DESCRIPCION";
-        ddlCentroAdmin.DataValueField = "CODUNIOP";
-        ddlCentroAdmin.DataBind();
+        ddlCentroSincroniza.DataSource = ds;
+        ddlCentroSincroniza.DataTextField = "DESCRIPCION";
+        ddlCentroSincroniza.DataValueField = "CODUNIOP";
+        ddlCentroSincroniza.DataBind();
 
-        ddlCentroAdmin.Items.Insert(0, new ListItem("-- Seleccione centro / unidad --", "0"));
+        ddlCentroSincroniza.Items.Insert(0, new ListItem("-- Seleccione centro / unidad --", "0"));
     }
     private void InicializarRelojAdmin()
     {
-        ddlRelojAdmin.Items.Clear();
-        ddlRelojAdmin.Items.Add(new ListItem("-- Seleccione reloj --", "0"));
+        ddlRelojSincroniza.Items.Clear();
+        ddlRelojSincroniza.Items.Add(new ListItem("-- Seleccione reloj --", "0"));
     }
-    protected void ddlCentroAdmin_SelectedIndexChanged(object sender, EventArgs e)
+    protected void ddlCentroSincroniza_SelectedIndexChanged(object sender, EventArgs e)
     {
-        ddlRelojAdmin.Items.Clear();
-        ddlRelojAdmin.Items.Add(new ListItem("-- Seleccione reloj --", "0"));
+        CargarRelojesSincroniza();
+    }
+    private void CargarRelojesSincroniza()
+    {
+        rlj.ls_unidad = ddlCentroSincroniza.SelectedValue;
 
-        dgEquivalencias.DataSource = null;
-        dgEquivalencias.DataBind();
+        ddlRelojSincroniza.DataSource = rlj.mfBuscarRelojesCentro();
+        ddlRelojSincroniza.DataTextField = "DESCRIPCION";
+        ddlRelojSincroniza.DataValueField = "IDRELOJ";
+        ddlRelojSincroniza.DataBind();
 
-        if (ddlCentroAdmin.SelectedValue == "0")
+        ddlRelojSincroniza.Items.Insert(0, new ListItem("-- Seleccione --", "0"));
+    }
+    protected void btnSincronizar_Click(object sender, EventArgs e)
+    {
+        DateTime dtInicio;
+        DateTime dtFin;
+
+        if (ddlCentroSincroniza.SelectedValue == "0")
+        {
+            mens.mensaje(Page, "Seleccione un centro o unidad.");
             return;
-        rlj.ls_unidad = ddlCentroAdmin.SelectedValue;
-        DataSet ds = rlj.mfBuscarRelojesCentro();
+        }
 
-        ddlRelojAdmin.DataSource = ds;
-        ddlRelojAdmin.DataTextField = "DESCRIPCION";
-        ddlRelojAdmin.DataValueField = "IDRELOJ";
-        ddlRelojAdmin.DataBind();
-
-        ddlRelojAdmin.Items.Insert(0, new ListItem("-- Seleccione reloj --", "0"));
-    }
-    protected void ddlRelojAdmin_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        dgEquivalencias.DataSource = null;
-        dgEquivalencias.DataBind();
-
-        if (ddlRelojAdmin.SelectedValue == "0")
+        if (ddlRelojSincroniza.SelectedValue == "0")
+        {
+            mens.mensaje(Page, "Seleccione un reloj.");
             return;
-        CargarEquivalencias();
+        }
+
+        if (!DateTime.TryParse(txtFechaInicio.Text, out dtInicio))
+        {
+            mens.mensaje(Page, "Ingrese una fecha de inicio válida.");
+            return;
+        }
+
+        if (!DateTime.TryParse(txtFechaFin.Text, out dtFin))
+        {
+            mens.mensaje(Page, "Ingrese una fecha de término válida.");
+            return;
+        }
+
+        if (dtInicio > dtFin)
+        {
+            mens.mensaje(Page, "La fecha de inicio no puede ser mayor a la fecha de término.");
+            return;
+        }
+
+        rlj.ls_idreloj = ddlRelojSincroniza.SelectedValue;
+        rlj.ls_f_ini = dtInicio.ToString("yyyyMMdd");
+        rlj.ls_f_fin = dtFin.ToString("yyyyMMdd");
+        rlj.ls_iduserweb = Session["user"].ToString();
+
+        try
+        {
+            DataSet ds = rlj.mfSincronizarMarcas();
+            if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                DataRow dr = ds.Tables[0].Rows[0];
+                if (dr["IDESTADO"].ToString() == "1")
+                {
+                    mens.mensaje(Page, "Sincronización realizada correctamente. ");
+                    this.lblSincr.Text = "Leídas: " + dr["CANT_LEIDA"].ToString() + " | Insertadas: " + dr["CANT_INSERT"].ToString();
+                    CargarSincronizaciones();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            mens.mensaje(Page, "No fue posible realizar la sincronización: " + ex.Message);
+        }
     }
-    protected void btnBuscarEquivalencias_Click(object sender, EventArgs e)
+    #endregion
+
+    #region cargar sincronizaciones
+    private void CargarSincronizaciones()
     {
-        rlj.ls_idreloj = ddlRelojAdmin.SelectedValue;
-        rlj.ls_codigo = txtFiltroCodigo.Text.Trim();
-        rlj.ls_nombre = txtFiltroNombre.Text.Trim();
-        rlj.ls_rut = txtFiltroRut.Text.Trim();
-        CargarEquivalencias();
+        DataSet ds;
+        ds = rlj.mfBuscarSincronizaciones();
+        dgSincronizacion.DataSource = ds;
+        dgSincronizacion.DataBind();
+    }
+    protected void dgSincronizacion_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        if (e.CommandName == "VER")
+        {
+            int fila = Convert.ToInt32(e.CommandArgument);
+            int idSincroniza = Convert.ToInt32(dgSincronizacion.DataKeys[fila].Value);
+            rlj.ls_idsincroniza = idSincroniza.ToString();
+            DataSet ds = rlj.mfBuscarMarcasSincronizacion();
+            dgMarcasSincronizacion.DataSource = ds;
+            dgMarcasSincronizacion.DataBind();
+            lblIdSincronizacion.Text = " #" + idSincroniza;
+            pnlDetalleSincronizacion.Visible = true;
+        }
     }
     #endregion
 }
