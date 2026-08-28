@@ -96,20 +96,20 @@ public partial class contenido_GestionRRHH_GestionSincronizacion : System.Web.UI
         }
 
         rlj.ls_idreloj = ddlRelojSincroniza.SelectedValue;
-        rlj.ls_f_ini = dtInicio.ToString("yyyyMMdd");
-        rlj.ls_f_fin = dtFin.ToString("yyyyMMdd");
+        rlj.ls_f_ini = dtInicio.ToString("dd/MM/yyyy");
+        rlj.ls_f_fin = dtFin.ToString("dd/MM/yyyy");
         rlj.ls_iduserweb = Session["user"].ToString();
 
         try
         {
             DataSet ds = rlj.mfSincronizarMarcas();
-            if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            if (ds.Tables != null && ds.Tables[0].Rows.Count > 0)
             {
                 DataRow dr = ds.Tables[0].Rows[0];
                 if (dr["IDESTADO"].ToString() == "1")
                 {
                     mens.mensaje(Page, "Sincronización realizada correctamente. ");
-                    this.lblSincr.Text = "Leídas: " + dr["CANT_LEIDA"].ToString() + " | Insertadas: " + dr["CANT_INSERT"].ToString();
+                    this.lblSincr.Text = "<img src='../../../imagenes/check.png'/> Leídas: " + dr["CANT_LEIDA"].ToString() + " | Insertadas: " + dr["CANT_INSERT"].ToString();
                     CargarSincronizaciones();
                 }
             }
@@ -117,6 +117,7 @@ public partial class contenido_GestionRRHH_GestionSincronizacion : System.Web.UI
         catch (Exception ex)
         {
             mens.mensaje(Page, "No fue posible realizar la sincronización: " + ex.Message);
+            this.lblSincr.Text = "<img src='../../../imagenes/close.png'/> Ha ocurrido un error en la sincronización: " + ex.Message;
         }
     }
     #endregion

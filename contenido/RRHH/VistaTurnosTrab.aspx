@@ -6,6 +6,14 @@
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link href="../../css/EstiloRRHH.css" rel="stylesheet" />
+    <script type="text/javascript">
+        function mostrarSpinner() {
+            var spinner = document.getElementById('spinnerCarga');
+            if (spinner) {
+                spinner.style.display = 'flex';
+            }
+        }
+    </script>
     <title>Turnos</title>
 </head>
 <body>
@@ -30,7 +38,8 @@
                         runat="server"
                         Text="Buscar"
                         CssClass="BotonPortalAzul"
-                        OnClick="btnBuscar_Click" />
+                        OnClick="btnBuscar_Click"
+                        OnClientClick="mostrarSpinner();"/>
                 </td>
             </tr>
         </table>
@@ -110,6 +119,12 @@
                 </td>
             </tr>
         </table>
+        <div id="spinnerCarga" class="spinner-overlay" style="display: none;">
+            <div class="spinner"></div>
+            <div class="spinner-text">
+                Cargando Datos, Favor Espere...
+            </div>
+        </div>
     </form>
 </body>
 </html>

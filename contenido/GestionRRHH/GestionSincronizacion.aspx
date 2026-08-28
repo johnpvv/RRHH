@@ -7,6 +7,14 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Gestion Sincronizacion</title>
     <link href="../../css/EstiloRRHH.css" rel="stylesheet" />
+    <script type="text/javascript">
+        function mostrarSpinner() {
+            var spinner = document.getElementById('spinnerCarga');
+            if (spinner) {
+                spinner.style.display = 'flex';
+            }
+        }
+    </script>
 </head>
 <body>
     <form id="form1" runat="server">
@@ -22,7 +30,8 @@
                         <div class="filtros-grid">
                             <div class="campo">
                                 <label>Centro / Unidad:</label>
-                                <asp:DropDownList ID="ddlCentroSincroniza" runat="server" CssClass="form-control" AutoPostBack="true" Width="350px"
+                                <asp:DropDownList ID="ddlCentroSincroniza" runat="server" CssClass="form-control" 
+                                    AutoPostBack="true" Width="350px" onchange="mostrarSpinner();"
                                     OnSelectedIndexChanged="ddlCentroSincroniza_SelectedIndexChanged">
                                 </asp:DropDownList>
                             </div>
@@ -49,7 +58,7 @@
                                     Text="Sincronizar"
                                     CssClass="BotonPortalAzul"
                                     OnClick="btnSincronizar_Click"
-                                    OnClientClick="return confirm('¿Desea realizar la sincronización de las marcas del período seleccionado?');" />
+                                    OnClientClick="if (!confirm('¿Desea realizar la sincronización de las marcas del período seleccionado?')) return false; mostrarSpinner();" />
                             </div>
                         </div>
                         <div class="campo">
@@ -91,7 +100,8 @@
                                                 ImageUrl="~/imagenes/check.png"
                                                 CommandName="VER"
                                                 CommandArgument='<%# Container.DataItemIndex %>'
-                                                ToolTip="Ver Detalle" />
+                                                ToolTip="Ver Detalle"
+                                                OnClientClick="mostrarSpinner();" />
                                         </ItemTemplate>
                                         <ItemStyle Width="40px" HorizontalAlign="center" />
                                     </asp:TemplateField>
@@ -112,13 +122,13 @@
                                     EmptyDataRowStyle-CssClass="bloque-titulo"
                                     CssClass="grid-reloj">
                                     <Columns>
-                                        <asp:BoundField DataField="CODIGO_EMP_RELOJ" HeaderText="Código Reloj" />
-                                        <asp:BoundField DataField="RELOJ" HeaderText="Reloj" />
-                                        <asp:BoundField DataField="F_H_MARCA" HeaderText="Fecha" DataFormatString="{0:dd/MM/yyyy}" ItemStyle-Font-Bold="true"/>
-                                        <asp:BoundField DataField="F_H_MARCA" HeaderText= "Hora" DataFormatString="{0:HH:mm:ss}" />
+                                        <asp:BoundField DataField="CODIGO_EMP_RELOJ" HeaderText="Cód. Trab. Reloj" />
+                                        <asp:BoundField DataField="NOMBRE" HeaderText="Nombre RR.HH." />
+                                        <asp:BoundField DataField="RELOJ" HeaderText="Nombre Reloj" />
+                                        <asp:BoundField DataField="F_H_MARCA" HeaderText="Fecha" DataFormatString="{0:dd/MM/yyyy}" ItemStyle-Font-Bold="true" />
+                                        <asp:BoundField DataField="F_H_MARCA" HeaderText="Hora" DataFormatString="{0:HH:mm:ss}" />
                                         <asp:BoundField DataField="TIPO_MARCA" HeaderText="Tipo" ItemStyle-Font-Bold="true" />
                                         <asp:BoundField DataField="F_H_CARGA" HeaderText="Fecha Carga" DataFormatString="{0:dd/MM/yyyy HH:mm:ss}" />
-                                        <asp:BoundField DataField="TIPO_CARGA" HeaderText="Tipo Carga" />
                                         <asp:BoundField DataField="OBSERVACIONES" HeaderText="Observaciones" />
                                     </Columns>
                                 </asp:GridView>
@@ -128,6 +138,12 @@
                 </ContentTemplate>
             </ajaxToolkit:TabPanel>
         </ajaxToolkit:TabContainer>
+        <div id="spinnerCarga" class="spinner-overlay" style="display: none;">
+            <div class="spinner"></div>
+            <div class="spinner-text">
+                Cargando Datos, Favor Espere...
+            </div>
+        </div>
     </form>
 </body>
 </html>

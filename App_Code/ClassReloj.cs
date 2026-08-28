@@ -473,10 +473,10 @@ public class ClassReloj
                 "U.NOMBRE AS NOMBRE_RRHH, " +
                 "UR.FCREACION AS FECHA " +
                 "FROM " + modConstantes.gsDbRH + "M_USR_RELOJ UR " +
-                "INNER JOIN " + modConstantes.gsDbRH + "M_RELOJES R ON R.IDRELOJ = UR.IDRELOJ " +
-                "INNER JOIN " + modConstantes.gsDbRH + "M_USUARIOS U ON U.IDUSUARIO = UR.IDUSUARIO " +
-                "INNER JOIN " + modConstantes.gsDbRH + "M_USER_RELOJ_PENDIENTE UP ON UP.IDUSERRELOJ = UR.IDUSRELOJ " +
-                "WHERE UR.IDESTADO = 1 " +
+                "LEFT JOIN " + modConstantes.gsDbRH + "M_RELOJES R ON R.IDRELOJ = UR.IDRELOJ " +
+                "LEFT JOIN " + modConstantes.gsDbRH + "M_USUARIOS U ON U.IDUSUARIO = UR.IDUSUARIO " +
+                "LEFT JOIN " + modConstantes.gsDbRH + "M_USER_RELOJ_PENDIENTE UP ON UP.IDUSERRELOJ = UR.IDUSRELOJ " +
+                "WHERE UR.IDESTADO <> 3 " +
                 "AND UR.IDRELOJ = " + ls_idreloj + " " +
                 lsWhe +
                 "ORDER BY R.DESCRIPCION, U.NOMBRE";
@@ -558,6 +558,7 @@ public class ClassReloj
                 "M.IDMARCACION, " +
                 "M.IDSINCRONIZA, " +
                 "M.IDRELOJ, " +
+                "(U.NOMBRE + ' ' + ISNULL(U.AP_PATERNO,'') + ' ' + ISNULL(U.AP_MATERNO,'')) AS NOMBRE, " +
                 "R.DESCRIPCION AS RELOJ, " +
                 "M.CODIGO_EMP_RELOJ, " +
                 "M.F_H_MARCA, " +
@@ -570,8 +571,10 @@ public class ClassReloj
                 "M.OBSERVACIONES " +
                 "FROM " + modConstantes.gsDbRH + "M_MARCACIONES M " +
                 "LEFT JOIN " + modConstantes.gsDbRH + "M_RELOJES R ON R.IDRELOJ = M.IDRELOJ " +
-                "WHERE M.IDSINCRONIZA = " + ls_idsincroniza +
-                " ORDER BY CODIGO_EMP_RELOJ, M.F_H_MARCA";
+                "LEFT JOIN " + modConstantes.gsDbRH + "M_USR_RELOJ UR ON UR.IDUSRELOJ = M.CODIGO_EMP_RELOJ AND UR.IDESTADO <> 3 " +
+                "LEFT JOIN " + modConstantes.gsDbRH + "M_USUARIOS U ON U.IDUSUARIO = UR.IDUSUARIO " +
+                "WHERE M.IDSINCRONIZA = " + ls_idsincroniza + " "+
+                "ORDER BY CODIGO_EMP_RELOJ, M.F_H_MARCA";
 
         con = bd.fnGetConn();
         ds = bd.Fill(con, lsSql);
@@ -581,20 +584,31 @@ public class ClassReloj
     }
     public DataSet mfSincronizarMarcas()
     {
-        string lsSql;
-        DataSet ds;
+        DataSet ds = new DataSet();
 
-        lsSql = "EXEC " + modConstantes.gsDbRH + "PU_SINCRONIZA_MARCAS_RELOJ " +
-                "@IDRELOJ = " + ls_idreloj + ", " +
-                "@F_H_INICIO = '" + ls_f_ini + "', " +
-                "@F_H_FIN = '" + ls_f_fin + "', " +
-                "@IDUSUARIO = " + ls_iduserweb;
+        try
+        {
+            con = bd.fnGetConn();
+            SqlCommand cmd = new SqlCommand(modConstantes.gsDbRH + "PU_SINCRONIZA_MARCAS_RELOJ", con);
 
-        con = bd.fnGetConn();
-        ds = bd.Fill(con, lsSql);
-        con.Close();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@IDRELOJ", Convert.ToInt32(ls_idreloj));
+            cmd.Parameters.AddWithValue("@F_H_INICIO", Convert.ToDateTime(ls_f_ini));
+            cmd.Parameters.AddWithValue("@F_H_FIN", Convert.ToDateTime(ls_f_fin));
+            cmd.Parameters.AddWithValue("@IDUSUARIO", Convert.ToInt32(ls_iduserweb));
 
-        return ds;
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            da.Fill(ds);
+            con.Close();
+            return ds;
+        }
+        catch (Exception ex)
+        {
+            if (con != null)
+                con.Close();
+
+            throw new Exception(ex.Message);
+        }
     }
     #endregion
 }

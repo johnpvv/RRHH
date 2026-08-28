@@ -6,6 +6,14 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Equivalencia Relojes</title>
     <link href="../../css/EstiloRRHH.css" rel="stylesheet" />
+    <script type="text/javascript">
+        function mostrarSpinner() {
+            var spinner = document.getElementById('spinnerCarga');
+            if (spinner) {
+                spinner.style.display = 'flex';
+            }
+        }
+    </script>
 </head>
 <body>
     <form id="form1" runat="server">
@@ -30,6 +38,7 @@
                                             runat="server"
                                             CssClass="form-control"
                                             AutoPostBack="true"
+                                            onchange="mostrarSpinner();"
                                             OnSelectedIndexChanged="ddlCentro_SelectedIndexChanged">
                                         </asp:DropDownList>
                                     </div>
@@ -39,6 +48,7 @@
                                             runat="server"
                                             CssClass="form-control"
                                             AutoPostBack="true"
+                                            onchange="mostrarSpinner();"
                                             OnSelectedIndexChanged="ddlReloj_SelectedIndexChanged">
                                         </asp:DropDownList>
                                     </div>
@@ -75,7 +85,8 @@
                                         runat="server"
                                         Text="Buscar en reloj"
                                         CssClass="BotonPortalAzul"
-                                        OnClick="btnCargarReloj_Click" />
+                                        OnClick="btnCargarReloj_Click"
+                                        OnClientClick="mostrarSpinner();" />
                                 </div>
                             </div>
                             <div class="bloque">
@@ -97,7 +108,8 @@
                                         runat="server"
                                         Text="Buscar RRHH"
                                         CssClass="BotonPortalVerde"
-                                        OnClick="btnBuscarRRHH_Click" />
+                                        OnClick="btnBuscarRRHH_Click"
+                                        OnClientClick="mostrarSpinner();" />
                                 </div>
                             </div>
                         </div>
@@ -139,7 +151,8 @@
                                                         CommandArgument='<%# Eval("IDUSRPEND") %>'
                                                         ToolTip="Seleccionar trabajador"
                                                         Width="24px"
-                                                        Height="24px" />
+                                                        Height="24px"
+                                                        OnClientClick="mostrarSpinner();" />
                                                 </ItemTemplate>
                                                 <ItemStyle Width="40px" HorizontalAlign="Left" />
                                             </asp:TemplateField>
@@ -186,7 +199,8 @@
                                                         CommandArgument='<%# Eval("IDUSUARIO") %>'
                                                         ToolTip="Seleccionar usuario"
                                                         Width="24px"
-                                                        Height="24px" />
+                                                        Height="24px"
+                                                        OnClientClick="mostrarSpinner();" />
                                                 </ItemTemplate>
                                                 <ItemStyle Width="40px" HorizontalAlign="Left" />
                                             </asp:TemplateField>
@@ -255,12 +269,14 @@
                                 runat="server"
                                 Text="Registrar equivalencia"
                                 CssClass="BotonPortalAmarillo"
-                                OnClick="btnRegistrar_Click" />
+                                OnClick="btnRegistrar_Click"
+                                OnClientClick="if (!confirm('¿Desea registrar la Equivalencia seleccionada?')) return false; mostrarSpinner();" />
                             <asp:Button ID="btnLimpiar"
                                 runat="server"
                                 Text="Limpiar"
                                 CssClass="BotonPortalVerde"
-                                OnClick="btnLimpiar_Click" />
+                                OnClick="btnLimpiar_Click"
+                                OnClientClick="mostrarSpinner();"/>
                             <asp:Button ID="btnVolver"
                                 runat="server"
                                 Text="Volver"
@@ -284,6 +300,8 @@
                                     runat="server"
                                     CssClass="form-control"
                                     AutoPostBack="true"
+                                    Width="300px"
+                                    onchange="mostrarSpinner();"
                                     OnSelectedIndexChanged="ddlCentroAdmin_SelectedIndexChanged">
                                 </asp:DropDownList>
                             </div>
@@ -293,12 +311,14 @@
                                     runat="server"
                                     CssClass="form-control"
                                     AutoPostBack="true"
+                                    Width="200px"
+                                    onchange="mostrarSpinner();"
                                     OnSelectedIndexChanged="ddlRelojAdmin_SelectedIndexChanged">
                                 </asp:DropDownList>
                             </div>
 
                             <div class="campo">
-                                <label>Código reloj:</label>
+                                <label>Cód. Trab. Reloj:</label>
                                 <asp:TextBox ID="txtFiltroCodigo" runat="server" CssClass="form-control" Width="100px">
                                 </asp:TextBox>
                             </div>
@@ -317,7 +337,8 @@
                                     runat="server"
                                     Text="Buscar"
                                     CssClass="BotonPortalAzul"
-                                    OnClick="btnBuscarEquivalencias_Click" />
+                                    OnClick="btnBuscarEquivalencias_Click"
+                                    OnClientClick="mostrarSpinner();" />
                             </div>
                         </div>
                         <br />
@@ -328,9 +349,9 @@
                             GridLines="None"
                             OnRowCommand="dgEquivalencias_RowCommand"
                             EmptyDataText="No existen equivalencias con los filtros aplicados."
-                             EmptyDataRowStyle-CssClass="bloque-titulo">
+                            EmptyDataRowStyle-CssClass="bloque-titulo">
                             <Columns>
-                                <asp:BoundField DataField="IDUSRELOJ" HeaderText="Código Reloj" />
+                                <asp:BoundField DataField="IDUSRELOJ" HeaderText="Cód. Trab. Reloj" />
                                 <asp:BoundField DataField="NOMBRE_TRAB_RELOJ" HeaderText="Nombre Trabajador Reloj" />
                                 <asp:BoundField DataField="NOMBRE_RELOJ" HeaderText="Nombre Reloj" />
                                 <asp:TemplateField HeaderText="(Hacia)">
@@ -363,6 +384,12 @@
                 </ContentTemplate>
             </ajaxToolkit:TabPanel>
         </ajaxToolkit:TabContainer>
+        <div id="spinnerCarga" class="spinner-overlay" style="display: none;">
+            <div class="spinner"></div>
+            <div class="spinner-text">
+                Cargando Datos, Favor Espere...
+            </div>
+        </div>
     </form>
 </body>
 </html>

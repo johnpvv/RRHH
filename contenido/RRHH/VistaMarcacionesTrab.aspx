@@ -6,6 +6,14 @@
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link href="../../css/EstiloRRHH.css" rel="stylesheet" />
+    <script type="text/javascript">
+        function mostrarSpinner() {
+            var spinner = document.getElementById('spinnerCarga');
+            if (spinner) {
+                spinner.style.display = 'flex';
+            }
+        }
+    </script>
     <title>Marcaciones</title>
 </head>
 <body>
@@ -29,7 +37,7 @@
                 <td style="width: 70px;" class="textoNorm">Tipo Vista:
                 </td>
                 <td style="width: 220px;">
-                    <asp:DropDownList ID="ddlVistaMarcas" runat="server" CssClass="form-control"
+                    <asp:DropDownList ID="ddlVistaMarcas" runat="server" CssClass="form-control" onchange="mostrarSpinner();"
                         AutoPostBack="true" OnSelectedIndexChanged="ddlVistaMarcas_SelectedIndexChanged">
                         <asp:ListItem Value="1">Ver marcas en Lista</asp:ListItem>
                         <asp:ListItem Value="2">Agrupar entradas y salidas</asp:ListItem>
@@ -40,7 +48,8 @@
                         runat="server"
                         Text="Buscar"
                         CssClass="BotonPortal"
-                        OnClick="btnBuscar_Click" />
+                        OnClick="btnBuscar_Click"
+                        OnClientClick="mostrarSpinner();"/>
                 </td>
             </tr>
         </table>
@@ -127,6 +136,12 @@
                 </td>
             </tr>
         </table>
+        <div id="spinnerCarga" class="spinner-overlay" style="display: none;">
+            <div class="spinner"></div>
+            <div class="spinner-text">
+                Cargando Datos, Favor Espere...
+            </div>
+        </div>
     </form>
 </body>
 </html>
