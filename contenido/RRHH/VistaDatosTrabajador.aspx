@@ -7,149 +7,78 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link href="../../css/EstiloRRHH.css" rel="stylesheet" />
     <title>Datos Personales</title>
-    <style type="text/css">
-        .PortalFicha {
-            width: 95%;
-            margin: 15px auto;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        .CardPerfil {
-            background: #FFFFFF;
-            border: 1px solid #DDE3EA;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            padding: 15px;
-            box-shadow: 0px 1px 4px rgba(0,0,0,0.15);
-        }
-
-        .CardTitulo {
-            font-size: 18px;
-            font-weight: bold;
-            color: #1F6FB2;
-            border-bottom: 1px solid #E5E5E5;
-            padding-bottom: 8px;
-            margin-bottom: 15px;
-        }
-
-        .TablaPerfil {
-            width: 100%;
-        }
-            .TablaPerfil td {
-                padding: 8px;
+    <script type="text/javascript">
+        function mostrarSpinner() {
+            var spinner = document.getElementById('spinnerCarga');
+            if (spinner) {
+                spinner.style.display = 'flex';
             }
-
-        .CampoTitulo {
-            font-weight: bold;
-            color: #555555;
-            width: 180px;
         }
-
-        .CampoLectura {
-            color: #333333;
-            background-color: #F8F9FA;
-            border: 1px solid #DDDDDD;
-            padding: 5px;
-        }
-
-        .TextoPortal {
-            width: 350px;
-            padding: 6px;
-            border: 1px solid #CCCCCC;
-            border-radius: 4px;
-        }
-
-        .ComboPortal {
-            width: 250px;
-            padding: 5px;
-        }
-
-        .BarraBotones {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-    </style>
+    </script>
 </head>
 <body>
     <form id="form1" runat="server">
         <div class="PortalFicha">
             <div class="CardPerfil">
-                <div class="CardTitulo">
-                    👤 Información Personal
+                <div class="titulo-seccion">
+                    👤 Información Personal:
                 </div>
-
                 <table class="TablaPerfil">
-
                     <tr>
-                        <td class="CampoTitulo">Estado:</td>
+                        <td class="CampoTitulo">R.U.N.:</td>
                         <td>
-                            <asp:Label ID="lbEstado" runat="server" Font-Bold="true"></asp:Label>
+                            <asp:Label ID="lblRutCompleto" runat="server" Font-Bold="true"></asp:Label>
                         </td>
                     </tr>
-
-                    <tr>
-                        <td class="CampoTitulo">RUT:</td>
-                        <td>
-                            <asp:Label ID="lblRutCompleto" runat="server"></asp:Label>
-                        </td>
-                    </tr>
-
                     <tr>
                         <td class="CampoTitulo">Nombre Completo:</td>
                         <td>
                             <asp:Label ID="lblNombreCompleto" runat="server"></asp:Label>
                         </td>
                     </tr>
-
                     <tr>
                         <td class="CampoTitulo">Nombre Social:</td>
                         <td>
                             <asp:Label ID="lblNombreSocial" runat="server"></asp:Label>
                         </td>
                     </tr>
-
                     <tr>
                         <td class="CampoTitulo">Fecha Nacimiento:</td>
                         <td>
                             <asp:Label ID="lblFechaNacimiento" runat="server"></asp:Label>
                         </td>
                     </tr>
-
                     <tr>
                         <td class="CampoTitulo">Sexo:</td>
                         <td>
                             <asp:Label ID="lblSexo" runat="server"></asp:Label>
                         </td>
                     </tr>
-
                     <tr>
                         <td class="CampoTitulo">Estado Civil:</td>
                         <td>
-                            <asp:DropDownList ID="ddlEstadoCivil"
-                                runat="server"
-                                CssClass="ComboPortal">
+                            <asp:DropDownList ID="ddlEstadoCivil" runat="server" CssClass="ComboPortal">
                             </asp:DropDownList>
                         </td>
                     </tr>
-
                     <tr>
                         <td class="CampoTitulo">Previsión:</td>
                         <td>
-                            <asp:DropDownList ID="ddlPrevision"
-                                runat="server"
-                                CssClass="ComboPortal">
+                            <asp:DropDownList ID="ddlPrevision" runat="server" CssClass="ComboPortal">
                             </asp:DropDownList>
                         </td>
                     </tr>
-
+                    <tr>
+                        <td class="CampoTitulo">Estado Trabajador:</td>
+                        <td>
+                            <asp:Label ID="lbEstado" runat="server" Font-Bold="true"></asp:Label>
+                        </td>
+                    </tr>
                 </table>
-
             </div>
             <div class="CardPerfil">
-
-                <div class="CardTitulo">
-                    🏠 Dirección
+                <div class="titulo-seccion">
+                    🏠 Dirección:
                 </div>
                 <table class="TablaPerfil">
                     <tr>
@@ -166,11 +95,11 @@
                                 runat="server"
                                 CssClass="ComboPortal"
                                 AutoPostBack="True"
-                                OnSelectedIndexChanged="ddlRegion_SelectedIndexChanged">
+                                OnSelectedIndexChanged="ddlRegion_SelectedIndexChanged"
+                                onchange="mostrarSpinner();">
                             </asp:DropDownList>
                         </td>
                     </tr>
-
                     <tr>
                         <td class="CampoTitulo">Comuna:</td>
                         <td>
@@ -181,8 +110,8 @@
                 </table>
             </div>
             <div class="CardPerfil">
-                <div class="CardTitulo">
-                    📞 Información de Contacto
+                <div class="titulo-seccion">
+                    📞 Información de Contacto:
                 </div>
                 <table class="TablaPerfil">
                     <tr>
@@ -193,14 +122,14 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="CampoTitulo">Celular Principal:</td>
+                        <td class="CampoTitulo">Teléfono Principal:</td>
                         <td>
                             <asp:TextBox ID="TFono1" runat="server" CssClass="TextoPortal" MaxLength="9">
                             </asp:TextBox>
                         </td>
                     </tr>
                     <tr>
-                        <td class="CampoTitulo">Celular Secundario:</td>
+                        <td class="CampoTitulo">Teléfono Secundario:</td>
                         <td>
                             <asp:TextBox ID="TFono2" runat="server" CssClass="TextoPortal" MaxLength="9">
                             </asp:TextBox>
@@ -209,8 +138,8 @@
                 </table>
             </div>
             <div class="CardPerfil">
-                <div class="CardTitulo">
-                    🏢 Información Laboral
+                <div class="titulo-seccion">
+                    🏢 Información Laboral:
                 </div>
                 <table class="TablaPerfil">
                     <tr>
@@ -250,17 +179,22 @@
                     runat="server"
                     Text="Guardar Cambios"
                     CssClass="BotonPortalVerde"
-                    OnClick="btnGuardar_Click" />
-                &nbsp;&nbsp;
+                    OnClick="btnGuardar_Click"
+                    OnClientClick="if (!confirm('¿Desea guardar los cambios?')) return false; mostrarSpinner();" />
+                &nbsp;
                 <asp:Button ID="btnVolver"
                     runat="server"
                     Text="Volver"
                     CssClass="BotonPortalGris"
                     OnClick="btnVolver_Click" />
-
             </div>
         </div>
-
+        <div id="spinnerCarga" class="spinner-overlay" style="display: none;">
+            <div class="spinner"></div>
+            <div class="spinner-text">
+                Cargando Datos, Favor Espere...
+            </div>
+        </div>
     </form>
 </body>
 </html>

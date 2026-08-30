@@ -28,24 +28,14 @@ public partial class contenido_RRHH_VistaDatosTrabajador : System.Web.UI.Page
                     aoDs.Tables[0].Rows.Count > 0)
                 {
                     DataRow dr = aoDs.Tables[0].Rows[0];
-
                     // Información Personal
                     lblRutCompleto.Text = dr["RUT"] + "-" + dr["DV"];
-
-                    lblNombreCompleto.Text =
-                        dr["NOMBRE"] + " " +
-                        dr["AP_PATERNO"] + " " +
-                        dr["AP_MATERNO"];
-
+                    lblNombreCompleto.Text = dr["NOMBRE"] + " " + dr["AP_PATERNO"] + " " + dr["AP_MATERNO"];
                     lblNombreSocial.Text = dr["NOMBRE_SOCIAL"].ToString();
-
                     if (!string.IsNullOrEmpty(dr["FECHA_NACIMIENTO"].ToString()))
                     {
-                        lblFechaNacimiento.Text =
-                            Convert.ToDateTime(dr["FECHA_NACIMIENTO"])
-                            .ToString("dd/MM/yyyy");
+                        lblFechaNacimiento.Text = Convert.ToDateTime(dr["FECHA_NACIMIENTO"]).ToString("dd/MM/yyyy");
                     }
-
                     switch (dr["SEXO"].ToString())
                     {
                         case "M":
@@ -83,20 +73,13 @@ public partial class contenido_RRHH_VistaDatosTrabajador : System.Web.UI.Page
 
                     // Información Laboral
                     lblUnidad.Text = dr["CENTRO"].ToString();
-
                     //lblCargo.Text = dr["CARGO"].ToString();
-
                     //lblTipoContrato.Text = dr["TIPO_CONTRATO"].ToString();
-
                     //if (!string.IsNullOrEmpty(dr["FECHA_INGRESO"].ToString()))
                     //{
-                    //    lblFechaIngreso.Text =
-                    //        Convert.ToDateTime(dr["FECHA_INGRESO"])
-                    //        .ToString("dd/MM/yyyy");
+                    //    lblFechaIngreso.Text = Convert.ToDateTime(dr["FECHA_INGRESO"]).ToString("dd/MM/yyyy");
                     //}
-
                     //lblJefatura.Text = dr["JEFATURA"].ToString();
-
                     // Estado
                     if (dr["IDESTADO"].ToString() == "1")
                     {
@@ -106,7 +89,6 @@ public partial class contenido_RRHH_VistaDatosTrabajador : System.Web.UI.Page
                     {
                         lbEstado.Text = "INACTIVO";
                     }
-
                     //LbTitulo.Text = lblRutCompleto.Text;
                 }
             }
@@ -133,7 +115,6 @@ public partial class contenido_RRHH_VistaDatosTrabajador : System.Web.UI.Page
         this.ddlComuna.Items.Insert(0, item);
     }
 
-
     private void LlenarComuna()
     {
         DataSet dat = new DataSet();
@@ -149,7 +130,6 @@ public partial class contenido_RRHH_VistaDatosTrabajador : System.Web.UI.Page
         item.Value = "0";
         this.ddlComuna.Items.Insert(0, item);
     }
-
     private void LlenarRegion()
     {
         DataSet dat = new DataSet();
@@ -165,7 +145,6 @@ public partial class contenido_RRHH_VistaDatosTrabajador : System.Web.UI.Page
         item.Value = "0";
         this.ddlRegion.Items.Insert(0, item);
     }
-
     private void LlenarEstCivil()
     {
         DataSet dat = new DataSet();
@@ -176,13 +155,10 @@ public partial class contenido_RRHH_VistaDatosTrabajador : System.Web.UI.Page
         this.ddlEstadoCivil.DataValueField = "IDESTADOCIVIL";
         this.ddlEstadoCivil.DataSource = dat;
         this.ddlEstadoCivil.DataBind();
-
         System.Web.UI.WebControls.ListItem item = new ListItem();
         item.Text = "Seleccione Estado";
         item.Value = "0";
         this.ddlEstadoCivil.Items.Insert(0, item);
-
-
     }
     private void LlenarPrevision()
     {
@@ -202,7 +178,25 @@ public partial class contenido_RRHH_VistaDatosTrabajador : System.Web.UI.Page
 
     protected void btnGuardar_Click(object sender, EventArgs e)
     {
-        //falta agregar esta logica - JOHN
+        per.ls_rut = Session["rut"].ToString();
+        per.ls_estciv = this.ddlEstadoCivil.SelectedValue;
+        per.ls_dir = modFunciones.mfLimpiaString(this.TxtDire.Text);
+        per.ls_idcomuna = this.ddlComuna.SelectedItem.Value;
+        per.ls_idregion = this.ddlRegion.SelectedItem.Value;
+        per.ls_idprevision = this.ddlPrevision.SelectedItem.Value;
+        per.ls_tel1 = this.TFono1.Text;
+        per.ls_tel2 = this.TFono2.Text;
+        per.ls_mail = this.TMail.Text;
+        per.ls_iduser = Session["user"].ToString();
+        string lsRet = "";
+        lsRet = per.UpdateDatosPorTrab();
+
+        if (lsRet != "")
+            mens.mensaje(Page, "Error: Problemas al actualizar sus datos, consulte al administrador...");
+        else
+        {
+            mens.mensaje(Page, "Registro ingresado con Exito.. ");
+        }
     }
 
     protected void btnVolver_Click(object sender, EventArgs e)

@@ -488,6 +488,26 @@ public class Usuarios
         }
         return asID;
     }
+    public string UserServicioDesc(string asrut)
+    {
+        string ret;
+        try
+        {
+            string lsSql = "";
+            lsSql = "select ISNULL(UP.DESCRIPCION,'S/S') " +
+                "from " + modConstantes.gsDbAB + "m_usuarios U " +
+                "INNER JOIN " + modConstantes.gsDbAB + "M_UNIDAD_OPERATIVA UP ON UP.CODUNIOP = U.CODUNIOP " +
+                "where rut = " + asrut;
+            con = bd.fnGetConn();
+            ret = bd.ExecuteScalar(con, lsSql);
+            con.Close();
+        }
+        catch (Exception ex)
+        {
+            ret = "Sin Unidad, ERROR LECTURA";
+        }
+        return ret;
+    }
     public string mfUserIdServicio(string asIdentificador)
     {
         String asID;

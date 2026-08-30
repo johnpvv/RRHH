@@ -9,6 +9,7 @@ public class modConstantes
 
     BaseDatos bd = new BaseDatos();
     System.Data.SqlClient.SqlConnection con = null;
+    Usuarios usr = new Usuarios();
 
     //private const string alserver = "[10.6.24.11].";
     private const string alserver = "";
@@ -46,7 +47,7 @@ public class modConstantes
     public const double gdIva = 1.19;
 
     public const string gsTitAB = "Sistema RR.HH.";
-    public const string gsInst = "Unidad RR.HH.";
+    public const string gsInst = "I. Municipalidad de lo Espejo";
 
     public const string gsSystemAB = "1"; // Abastecimiento.
 

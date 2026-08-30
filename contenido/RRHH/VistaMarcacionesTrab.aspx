@@ -21,21 +21,19 @@
         <p class="textoTitLeft">Gestión Marcaciones</p>
         <table style="width: 100%; margin-bottom: 10px;">
             <tr>
-                <td style="width: 70px;" class="textoNorm">Mes:
-                </td>
-                <td style="width: 180px;">
-                    <asp:DropDownList ID="ddlMes" runat="server" Width="150px" CssClass="form-control">
+                <td style="width: 70px;" class="textoNorm">Año:</td>                    
+                <td style="width: 100px;">
+                    <asp:DropDownList ID="ddlAnio" runat="server" Width="100px" CssClass="form-control" 
+                        AutopostBack="true" OnSelectedIndexChanged="ddlAnio_SelectedIndexChanged" onchange="mostrarSpinner();">
                     </asp:DropDownList>
                 </td>
-                <td style="width: 70px;" class="textoNorm">Año:
-                </td>
-
+                <td style="width: 70px;" class="textoNorm">Mes:</td>                
                 <td style="width: 120px;">
-                    <asp:DropDownList ID="ddlAnio" runat="server" Width="100px" CssClass="form-control">
+                    <asp:DropDownList ID="ddlMes" runat="server" Width="150px" CssClass="form-control"
+                        AutopostBack="true" OnSelectedIndexChanged="ddlMes_SelectedIndexChanged" onchange="mostrarSpinner();">
                     </asp:DropDownList>
                 </td>
-                <td style="width: 70px;" class="textoNorm">Tipo Vista:
-                </td>
+                <td style="width: 70px;" class="textoNorm">Tipo Vista:</td>                
                 <td style="width: 220px;">
                     <asp:DropDownList ID="ddlVistaMarcas" runat="server" CssClass="form-control" onchange="mostrarSpinner();"
                         AutoPostBack="true" OnSelectedIndexChanged="ddlVistaMarcas_SelectedIndexChanged">

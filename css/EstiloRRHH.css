@@ -1,4 +1,58 @@
-﻿.GridGral {
+﻿/*Estilos Vista Datos Trabajador*/
+.PortalFicha {
+    width: 95%;
+    margin: 15px auto;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.CardPerfil {
+    background: #FFFFFF;
+    border: 1px solid #DDE3EA;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-shadow: 0px 1px 4px rgba(0,0,0,0.15);
+}
+
+
+.TablaPerfil {
+    width: 100%;
+}
+
+    .TablaPerfil td {
+        padding: 8px;
+    }
+
+.CampoTitulo {
+    font-weight: bold;
+    color: #555555;
+    width: 180px;
+}
+
+.CampoLectura {
+    color: #333333;
+    background-color: #F8F9FA;
+    border: 1px solid #DDDDDD;
+    padding: 5px;
+}
+
+.TextoPortal {
+    width: 350px;
+    padding: 6px;
+    border: 1px solid #CCCCCC;
+    border-radius: 4px;
+}
+
+.ComboPortal {
+    width: 250px;
+    padding: 5px;
+}
+
+.BarraBotones {
+    text-align: center;
+    margin-top: 20px;
+}
+/*************************************************************************/
+.GridGral {
     border-collapse: collapse;
     width: 100%;
     font-family: Arial, Helvetica, sans-serif;
@@ -622,7 +676,7 @@
     padding: 10px 0;
 }
 
-/*Spiner Carga*/
+/***********************************Spiner Carga*****************************************/
 .spinner-overlay {
     position: fixed;
     top: 0;
@@ -662,3 +716,91 @@
         transform: rotate(360deg);
     }
 }
+/************************************************************************************/
+/*Calendario Turnos*/
+.calendario {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.calendario-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background: #f2f4f7;
+    border-bottom: 1px solid #ddd;
+}
+
+    .calendario-header div {
+        padding: 10px;
+        text-align: center;
+        font-weight: bold;
+        color: #555;
+        border-right: 1px solid #ddd;
+    }
+
+.calendario-semana {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.calendario-dia {
+    min-height: 115px;
+    padding: 8px;
+    font-size: 20px;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    background: #fff;
+}
+
+.calendario-dia-vacio {
+    background: #f8f8f8;
+}
+
+.calendario-numero {
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 6px;
+    color: #555;
+}
+
+.calendario-turno {
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.calendario-horario {
+    font-size: 12px;
+    margin-bottom: 3px;
+}
+
+.calendario-duracion {
+    font-size: 11px;
+    color: #777;
+}
+
+.calendario-libre {
+    font-size: 12px;
+    color: #999;
+    font-style: italic;
+}
+
+.calendario-hoy {
+    border: 2px solid #3498db;
+}
+
+.calendario-feriado {
+    min-height: 115px;
+    padding: 8px;
+    font-size: 20px;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    background: #fce8e8;
+}
+
+    .calendario-feriado .calendario-numero {
+        color: #c0392b;
+    }

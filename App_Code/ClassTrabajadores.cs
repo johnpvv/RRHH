@@ -128,7 +128,7 @@ public class ClassTrabajadores
             "UOP.DESCRIPCION AS CENTRO, " +
             "P.OBSERVACION " +
             "FROM " + modConstantes.gsDbRH + "M_USUARIOS P " +
-            "LEFT JOIN " + modConstantes.gsDbRH + "M_UNIDAD_OPERATIVA UOP ON UOP.CODUNIOP = P.CODUNIOP "+
+            "LEFT JOIN " + modConstantes.gsDbRH + "M_UNIDAD_OPERATIVA UOP ON UOP.CODUNIOP = P.CODUNIOP " +
             "WHERE	(P.RUT = " + ls_rut + " ) ";
 
         con = bd.fnGetConnRH();
@@ -175,7 +175,7 @@ public class ClassTrabajadores
                     "Nombre,  " +
                     "Nombre_Social,  " +
                     "AP_Paterno, " +
-                    "AP_Materno,  " +                    
+                    "AP_Materno,  " +
                     "FECHA_NACIMIENTO,  " +
                     "SEXO,  " +
                     "FONO1,  " +
@@ -242,7 +242,30 @@ public class ClassTrabajadores
         con.Close();
         return lsRet;
     }
+    public string UpdateDatosPorTrab()
+    {
+        string lsRet = "";
+        string lsSql = "";
+        lsSql = "UPDATE M_USUARIOS " +
+            "SET	" +
+            "Idprevision =  " + ls_idprevision + ", " +
+            "Idregion	=  " + ls_idregion + ", " +
+            "Idcomuna	=  " + ls_idcomuna + ", " +
+            "EST_CIVIL	=  " + ls_estciv + ", " +
+            "FONO1	=  '" + ls_tel1 + "', " +
+            "FONO2	=  '" + ls_tel2 + "', " +
+            "EMAIL	=  '" + ls_mail + "', " +
+            "OBSERVACION	=  'Datos Actualizados por el Usuario', " +
+            "Direccion	=  '" + ls_dir.ToUpper() + "', " +
+            "IDUSERMOD	=  " + ls_iduser + ", " +
+            "F_H_MOD   =   GETDATE() " +
+            "WHERE RUT = " + ls_rut;
+        con = bd.fnGetConnRH();
+        lsRet = bd.EjecutarComando(con, lsSql);
 
+        con.Close();
+        return lsRet;
+    }
     public string mfDevuelveID()
     {
         string lsRet = "";
@@ -277,8 +300,6 @@ public class ClassTrabajadores
         con.Close();
         return aoDF;
     }
-
-
 
     public DataSet ConsultaComuna(string idregion = "")
     {
@@ -366,7 +387,7 @@ public class ClassTrabajadores
 
         if (!string.IsNullOrWhiteSpace(ls_rut))
         {
-            lsWhere +=" AND RUT = " + ls_rut.Trim().Replace("'", "'' ");
+            lsWhere += " AND RUT = " + ls_rut.Trim().Replace("'", "'' ");
         }
 
         if (!string.IsNullOrWhiteSpace(ls_nomb))

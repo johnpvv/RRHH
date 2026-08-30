@@ -45,13 +45,10 @@ public partial class contenido_RRHH_VistaMarcacionesTrab : System.Web.UI.Page
     }
     private void CargarMarcaciones()
     {
-
         usr.ls_rut = Session["rut"].ToString();
-        rlj.ls_iduser = usr.mfDevuelveID();
-        //en caso de homologar con otro id desde los relojes u otros
-        //dgData.DataSource = rlj.mfBuscarMarcaciones();
-        //dgData.DataSource = rlj.mfBuscarMarcasReloj();
-        //dgData.DataBind();
+        rlj.ls_iduser = usr.mfDevuelveID();//en caso de homologar con otro id desde los relojes u otros        
+        rlj.ls_mes = ddlMes.SelectedValue;
+        rlj.ls_anio = ddlAnio.SelectedValue;
         if (ddlVistaMarcas.SelectedValue == "1")
         {
             dgData.Visible = true;
@@ -77,19 +74,24 @@ public partial class contenido_RRHH_VistaMarcacionesTrab : System.Web.UI.Page
 
     protected void btnBuscar_Click(object sender, EventArgs e)
     {
-        rlj.ls_mes = ddlMes.SelectedValue;
-        rlj.ls_anio = ddlAnio.SelectedValue;
         CargarMarcaciones();
     }
 
+    protected void ddlVistaMarcas_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        CargarMarcaciones();
+    }
+    protected void ddlMes_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        CargarMarcaciones();
+    }
+
+    protected void ddlAnio_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        CargarMarcaciones();
+    }
     protected void btnExportar_Click(object sender, EventArgs e)
     {
 
-    }
-    protected void ddlVistaMarcas_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        rlj.ls_mes = ddlMes.SelectedValue;
-        rlj.ls_anio = ddlAnio.SelectedValue;
-        CargarMarcaciones();
     }
 }
