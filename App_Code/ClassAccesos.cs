@@ -351,14 +351,16 @@ public class ClassAccesos
     }
 
 
-    public DataSet jaxListaRoles(string asHosp, string asCodApp)
+    public DataSet jaxListaRoles(string asHosp, string asCodApp, string nombre)
     {
 
         DataSet aoDsSel;
         string lsSql = "";
+        string lswhere = "";
 
-
-        //' Recupera Roles asociados.
+        // Si se ingresó nombre las agrega al WHERE.
+        if (nombre != "")
+            lswhere += " and b.descripcion like '%" + nombre + "%'  ";
 
         lsSql =
           "select a.idrolapp , a.idrol , a.permiso , ltrim(rtrim(b.descripcion)) as descripcion " +
@@ -370,6 +372,7 @@ public class ClassAccesos
           "a.idestado <> 3 and " +
           "a.idapp = " + asCodApp + " and " +
           "a.id_inst = " + asHosp + " " +
+          " " + lswhere + " " +
           "order by b.descripcion";
 
         con = bd.fnGetConn();
@@ -379,14 +382,16 @@ public class ClassAccesos
         return aoDsSel;
     }
 
-    public DataSet jaxListaRolesDisp(string asHosp, string asCodApp)
+    public DataSet jaxListaRolesDisp(string asHosp, string asCodApp, string nombre)
     {
 
         DataSet aoDsSel;
         string lsSql = "";
+        string lswhere = "";
 
-
-        //' Recupera Roles asociados.
+        // Si se ingresó nombre las agrega al WHERE.
+        if (nombre != "")
+            lswhere += " and descripcion like '%" + nombre + "%'  ";
 
         lsSql =
           "select a.idrolapp , a.idrol , a.permiso , ltrim(rtrim(b.descripcion)) as descripcion " +
@@ -425,6 +430,7 @@ public class ClassAccesos
           "from tg_roles " +
           "where idestado <> 3 " + lsNoT + " and " +
           " id_inst = " + asHosp + " " +
+          " " + lswhere + " " +
           "order by descripcion";
 
         con = bd.fnGetConn();
@@ -436,17 +442,26 @@ public class ClassAccesos
     }
 
 
-    public DataSet jaxListaUsuarios(string asHosp, string asCodApp)
+    public DataSet jaxListaUsuarios(string asHosp, string asCodApp, string asNombre, string asRut)
     {
 
         DataSet aoDsSel;
         string lsSql = "";
+        string ls_where = "";
 
+        // Si se ingresó nombre las agrega al WHERE.
+        if (asNombre != "")
+            ls_where += " and b.nombre like '%" + asNombre + "%'  ";
+
+
+        // Si se ingresó rut las agrega al WHERE.
+        if (asRut != "")
+            ls_where += " and  b.rut = " + asRut + "  ";
 
         //' Recupera Roles asociados.
 
         lsSql =
-          "select a.idusapp , a.idusuario , a.permiso , ltrim(rtrim(b.nombre)) as descripcion " +
+          "select a.idusapp , a.idusuario, b.rut , a.permiso , ltrim(rtrim(b.nombre)) as descripcion " +
           "from m_usapp a " +
           "inner join m_usuarios b " +
           "on a.idusuario = b.idusuario and " +
@@ -455,6 +470,7 @@ public class ClassAccesos
           "a.idestado <> 3 and " +
           "a.idapp = " + asCodApp + " and " +
           "a.id_inst = " + asHosp + " " +
+          ls_where + " " +
           "order by b.nombre";
 
 
@@ -518,7 +534,7 @@ public class ClassAccesos
 
         lsSql =
                "select " +
-               "usr.idusuario , " +
+               "usr.idusuario , usr.rut, " +
                "ltrim(rtrim(usr.nombre)) as descripcion " +
                "from m_usuarios usr " +
                "where usr.idestado <> 3 " + lsNoT + " " +

@@ -1,596 +1,255 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="GestionAccesos.aspx.cs" Inherits="contenido_SysAdmin_GestionAccesos" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
-
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
     <title>Selecting GridView Row</title>
     <script language="text/javascript" src="../../js/common.js" type="text/javascript"></script>
-
-
-    <link runat="server" href="~/css/Estilos1.css" rel="stylesheet" type="text/css" id="Link1" />
-    <link href="~/css/css.css" rel="stylesheet" type="text/css" />
-
-
-    <style type="text/css">
-        .modalbackgbround {
-            background-color: Black;
-            filter: alpha(opacity=25);
-            opacity: 0.8;
-            z-index: 10000;
-        }
-
-        .Titulo {
-            font-family: Verdana, Arial, Helvetica, sans-serif;
-            font: bold;
-            text-align: center;
-            background-color: #CCFFFF;
-            font-size: 14px;
-        }
-
-        .Titulo2 {
-            font-family: Verdana, Arial, Helvetica, sans-serif;
-            font: bold;
-            text-align: center;
-            background-color: #CCFFFF;
-            font-size: 12px;
-        }
-
-        .TextoRigth {
-            text-align: right;
-            font-family: Verdana, Arial, Helvetica, sans-serif;
-            font-size: 12px;
-            font: bold;
-        }
-
-        .TextoRigthGrilla {
-            text-align: right;
-            font-family: Verdana, Arial, Helvetica, sans-serif;
-            font-size: 10px;
-            font: bold;
-        }
-
-
-        .TextoLeft {
-            text-align: left;
-            font-family: Verdana, Arial, Helvetica, sans-serif;
-            font-size: 12px;
-            margin-left: 0px;
-        }
-
-        .TextoLeftGrilla {
-            text-align: left;
-            font-family: Verdana, Arial, Helvetica, sans-serif;
-            font-size: 10px;
-        }
-
-        .TextoCenter {
-            text-align: center;
-            font-family: Verdana, Arial, Helvetica, sans-serif;
-            font-size: 12px;
-            font: bold;
-        }
-
-        .TextoCenterGrilla {
-            text-align: center;
-            font-family: Verdana, Arial, Helvetica, sans-serif;
-            font-size: 10px;
-            font: bold;
-        }
-
-
-        .TextoForm {
-            text-align: left;
-            font-family: Verdana, Arial, Helvetica, sans-serif;
-            font-size: 12px;
-            font: bold;
-        }
-
-        .TextoCheck {
-            text-align: left;
-            font-family: Verdana, Arial, Helvetica, sans-serif;
-            font-size: 12px;
-            align: left;
-            width: 1197px;
-        }
-
-
-
-
-        body, html {
-            font-family: Tahoma;
-            font-size: small;
-        }
-
-        .Normal {
-            background-color: #EFF3FB;
-            cursor: hand;
-        }
-
-            .Normal:Hover, .Alternate:Hover {
-                background-color: #D1DDF1;
-                cursor: hand;
-            }
-
-        .Alternate {
-            background-color: White;
-            cursor: hand;
-        }
-
-        .style4 {
-            width: 106px;
-        }
-
-        .style12 {
-            text-align: left;
-            font-family: Verdana, Arial, Helvetica, sans-serif;
-            font-size: 10px;
-            width: 578px;
-        }
-
-        .style13 {
-            width: 578px;
-        }
-
-        .style21 {
-            width: 877px;
-        }
-
-        .style27 {
-            text-align: right;
-            font-family: Verdana, Arial, Helvetica, sans-serif;
-            font-size: 12px;
-            width: 313px;
-        }
-
-        .style28 {
-            width: 313px;
-        }
-
-        .style30 {
-            text-align: left;
-            font-family: Verdana, Arial, Helvetica, sans-serif;
-            font-size: 12px;
-            width: 710px;
-        }
-
-        .style31 {
-            width: 710px;
-        }
-
-        .auto-style1 {
-            width: 561px;
-        }
-
-        .auto-style44 {
-            width: 1008px;
-            height: 328px;
-        }
-
-        .auto-style45 {
-            width: 689px;
-        }
-    </style>
+    <link runat="server" href="~/css/EstiloRRHH.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
     <form id="form1" runat="server">
-
-        <asp:ScriptManager ID="TS_1" runat="server" EnableScriptGlobalization="True"></asp:ScriptManager>
-        <table style="width: 1000px;">
-            <tr>
-                <td class="auto-style1">Gestión Accesos<label>&nbsp; --&gt; Detalle --&gt;
-                        <asp:Label ID="LbTitulo" runat="server" Text="Label"></asp:Label>
-                </label>
-                </td>
-                <td style="text-align: right">
-                    <asp:ImageButton ID="ImgBtnBack" runat="server" ImageUrl="~/imagenes/back.png"
-                        OnClick="ImgBtnBack_Click" Style="width: 24px; text-align: right" />
-                </td>
-            </tr>
-        </table>
-        <ajaxToolkit:TabContainer runat="server" ID="TC_1" Height="500px" Width="1000px"
-            Font-Names="Tahoma" Font-Size="13px" ForeColor="#666666" ScrollBars="Auto"
-            ActiveTabIndex="0">
-            <ajaxToolkit:TabPanel runat="server" ID="TabPanel1" HeaderText="Prueba4" Font-Names="Tahoma" ForeColor="#666666" Font-Size="13px">
+        <asp:ScriptManager ID="TS_1" runat="server" EnableScriptGlobalization="True" />
+        <div class="bloque">
+            <div class="bloque-titulo">
+                Gestión Accesos --> Detalle -->
+                <asp:Label ID="LbTitulo" runat="server" />
+            </div>
+        </div>
+        <ajaxToolkit:TabContainer runat="server" ID="TC_1" ActiveTabIndex="0" Width="100%"
+            CssClass="tabs-rrhh">
+            <ajaxToolkit:TabPanel runat="server" ID="TabPanel1">
                 <HeaderTemplate>Detalle Acceso</HeaderTemplate>
                 <ContentTemplate>
-                    <table border="1" style="width: 958px">
-                        <tr>
-                            <td class="auto-style44">
-                                <table width="1020" border="0" style="width: 853px">
-                                    <tr>
-                                        <td class="style1" style="text-align: left">
-                                            <label>&#160;</label><asp:Button
-                                                ID="Button1" runat="server"
-                                                Text="Agregar" OnClick="BtnAgregar_Click" Style="height: 26px" />
-
-                                        </td>
-                                        <td class="style2" style="text-align: left">
-                                            <asp:Button ID="btnNuevo" runat="server" OnClick="btnNuevo_Click"
-                                                Text="Nuevo" /></td>
-                                        <td class="style3" style="text-align: left">
-                                            <asp:Button ID="btnEliminar" runat="server"
-                                                Text="Eliminar" OnClick="btnEliminar_Click" />
-                                        </td>
-                                        <td class="style4" style="text-align: left">
-                                            <asp:Button ID="btnRehabilitar" runat="server"
-                                                Text="Rehabilitar" OnClick="btnRehabilitar_Click" />
-
-                                        </td>
-                                        <td width="451" style="text-align: left; width: 225px"></td>
-
-                                    </tr>
-
-                                </table>
-                                <table border="0" style="width: 849px">
-                                    <tr>
-                                        <td width="170">&nbsp;</td>
-                                        <td class="auto-style2">&nbsp;</td>
-                                        <td class="auto-style4">&nbsp;</td>
-                                        <td width="144">&nbsp;</td>
-                                        <td width="93">&nbsp;</td>
-                                        <td width="235">&nbsp;</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td class="TextoRigth">Código:</td>
-                                        <td class="auto-style3">
-                                            <asp:TextBox ID="TCodigo" runat="server" MaxLength="20"></asp:TextBox>
-                                        </td>
-                                        <td class="auto-style5">&nbsp;</td>
-                                        <td class="TextoLeft">&nbsp;</td>
-                                        <td class="TextoRigth">&nbsp;</td>
-                                        <td class="TextoLeft">&nbsp;</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="TextoRigth">Nombre:</td>
-                                        <td colspan="5" class="TextoLeft">
-                                            <asp:TextBox ID="TNombre" runat="server" Height="24px" Width="544px" MaxLength="80"></asp:TextBox>
-                                        </td>
-                                    </tr>
-                                </table>
-                                <table border="0" style="width: 850px">
-                                    <tr>
-                                        <td class="TextoRigth">Observaciones:</td>
-                                        <td class="auto-style7"></td>
-                                        <td class="auto-style8"></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="auto-style10">&nbsp;</td>
-                                        <td class="auto-style2">
-                                            <asp:TextBox runat="server" MaxLength="400" TextMode="MultiLine" Height="46px" Width="592px" ID="TObser"></asp:TextBox>
-                                        </td>
-                                        <td class="auto-style4">&nbsp;</td>
-                                    </tr>
-                                </table>
-
-
-                            </td>
-
-                        </tr>
-
-                    </table>
-
+                    <div class="bloque">
+                        <div class="titulo-seccion">Información del Acceso</div>
+                        <div class="form-linea">
+                            <div class="campo">
+                                <label>Código:</label>
+                                <asp:TextBox ID="TCodigo" runat="server" MaxLength="20" CssClass="form-control" Width="140px" />
+                            </div>
+                            <div class="campo">
+                                <label>Nombre:</label>
+                                <asp:TextBox ID="TNombre" runat="server" MaxLength="80" CssClass="form-control" Width="420px" />
+                            </div>
+                            <div class="campo">
+                                <label>Observaciones:</label>
+                                <asp:TextBox ID="TObser" runat="server" MaxLength="400" TextMode="MultiLine"
+                                    CssClass="form-control" Width="800px" Height="70px" />
+                            </div>
+                        </div>
+                        <div class="botones-form">
+                            <asp:Button ID="Button1" runat="server" Text="Agregar"
+                                OnClick="BtnAgregar_Click" CssClass="BotonPortalAzul" />
+                            <asp:Button ID="btnNuevo" runat="server" Text="Nuevo"
+                                OnClick="btnNuevo_Click" CssClass="BotonPortalAmarillo" />
+                            <asp:Button ID="btnEliminar" runat="server" Text="Eliminar"
+                                OnClick="btnEliminar_Click" CssClass="BotonPortalRojo" />
+                            <asp:Button ID="btnRehabilitar" runat="server" Text="Rehabilitar"
+                                OnClick="btnRehabilitar_Click" CssClass="BotonPortalVerde" />
+                            <asp:Button ID="btnVolver" runat="server" Text="Volver"
+                                CssClass="BotonPortalGris" OnClick="btnVolver_Click" />
+                        </div>
+                    </div>
                 </ContentTemplate>
             </ajaxToolkit:TabPanel>
-
-
-            <ajaxToolkit:TabPanel ID="TabPanel2" runat="server" HeaderText="TabPanel2">
+            <ajaxToolkit:TabPanel ID="TabPanel2" runat="server">
                 <HeaderTemplate>Roles</HeaderTemplate>
                 <ContentTemplate>
+                    <div class="bloque">
+                        <div class="titulo-seccion">Asignación de Roles</div>
+                        <div class="filtros-grid">
+                            <div class="campo">
+                                <label>Nombre:</label>
+                                <asp:TextBox ID="TNombreRol" runat="server" MaxLength="80"
+                                    CssClass="form-control" Width="280px" />
+                            </div>
 
-                    <table border="0">
-                        <tr>
-                            <td width="132">
-                                <label>&#160;</label><asp:Button ID="btn_Buscar" runat="server"
-                                    Text="Buscar" OnClick="btn_Buscar_Click" />
-
-                            </td>
-                            <td width="214">&#160;</td>
-                            <td width="195">&nbsp;</td>
-                            <td width="451">&nbsp;</td>
-
-                        </tr>
-
-                        <tr>
-                            <td width="132">
-                                <asp:RadioButtonList ID="rbTipo" runat="server" CssClass="TextoCheck" RepeatDirection="Horizontal" Width="279px">
-                                    <asp:ListItem Value="L">Lectura</asp:ListItem>
-                                    <asp:ListItem Value="M">Modificación</asp:ListItem>
+                            <div class="campo">
+                                <label>Tipo de Búsqueda:</label>
+                                <asp:RadioButtonList ID="rbTipo" runat="server" CssClass="TextoCheck"
+                                    RepeatDirection="Horizontal" Width="280px">
+                                    <asp:ListItem Value="L" Selected="True">Disponibles</asp:ListItem>
+                                    <asp:ListItem Value="M">Asociados</asp:ListItem>
                                 </asp:RadioButtonList>
-                            </td>
-                            <td width="214">&nbsp;</td>
-                            <td width="195">&nbsp;</td>
-                            <td width="451">&nbsp;</td>
-                        </tr>
+                            </div>
 
-                    </table>
-
-
-                    <table border="0" style="width: 925px">
-                        <tr>
-                            <td class="TextoCenter">Disponibles</td>
-                            <td align="left" class="style1">&nbsp;</td>
-                            <td class="TextoCenter">Asociados</td>
-                        </tr>
-                        <tr>
-                            <td valign="top">
-                                <table border="1">
-                                    <tr>
-                                        <td>
-                                            <asp:GridView ID="gdArt" runat="server" AutoGenerateColumns="False"
-                                                Font-Names="Tahoma" Font-Size="Small" ForeColor="#333333" GridLines="None"
-                                                OnRowDataBound="gdArt_RowDataBound"
-                                                OnSelectedIndexChanged="gdArt_SelectedIndexChanged" Width="390px"
-                                                AllowPaging="True" OnPageIndexChanging="gdArt_PageIndexChanging"
-                                                DataKeyNames="idrol" PageSize="50">
-                                                <Columns>
-                                                    <asp:BoundField DataField="idrol" HeaderText="Id" ReadOnly="True">
-                                                        <ItemStyle CssClass="TextoCenter" />
-                                                    </asp:BoundField>
-                                                    <asp:BoundField DataField="descripcion" HeaderText="descripcion">
-                                                        <ItemStyle CssClass="TextoCenter" />
-                                                    </asp:BoundField>
-                                                    <asp:BoundField DataField="descripcion" HeaderText="descripcion">
-                                                        <ItemStyle CssClass="TextoLeft" />
-                                                    </asp:BoundField>
-
-                                                    <asp:TemplateField HeaderText="Add">
-                                                        <ItemTemplate>
-                                                            <asp:ImageButton ID="btn_Add" runat="server" ImageUrl="~/imagenes/check.png"
-                                                                OnClick="AddRol" />
-
-                                                        </ItemTemplate>
-                                                        <HeaderStyle Width="50px" />
-                                                        <ItemStyle Width="50px" HorizontalAlign="Center" VerticalAlign="Middle" />
-
-                                                    </asp:TemplateField>
-
-                                                    <asp:CommandField SelectText="Enroll" ShowSelectButton="True"
-                                                        Visible="False" />
-                                                </Columns>
-                                                <HeaderStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
-                                                <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" />
-                                            </asp:GridView>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td align="left" class="style1">&nbsp;</td>
-                            <td valign="top">
-                                <table border="1">
-                                    <tr>
-                                        <td class="auto-style45">
-                                            <asp:GridView ID="gbArtSer" runat="server" AutoGenerateColumns="False"
-                                                Font-Names="Tahoma" Font-Size="Small" ForeColor="#333333" GridLines="None"
-                                                OnRowDataBound="gbArtSer_RowDataBound"
-                                                OnSelectedIndexChanged="gbArtSer_SelectedIndexChanged" Width="494px"
-                                                AllowPaging="True" OnPageIndexChanging="gbArtSer_PageIndexChanging"
-                                                DataKeyNames="idrolapp" PageSize="50">
-                                                <Columns>
-                                                    <asp:BoundField DataField="idrolapp" HeaderText="Id" ReadOnly="True">
-                                                        <ItemStyle CssClass="TextoCenter" />
-                                                    </asp:BoundField>
-                                                    <asp:BoundField DataField="descripcion" HeaderText="descripcion">
-                                                        <ItemStyle CssClass="TextoCenter" />
-                                                    </asp:BoundField>
-                                                    <asp:BoundField DataField="descripcion" HeaderText="descripcion">
-                                                        <ItemStyle CssClass="TextoLeft" />
-                                                    </asp:BoundField>
-                                                    <asp:TemplateField HeaderText="Elim">
-                                                        <ItemTemplate>
-                                                            <asp:ImageButton ID="btn_Elim" runat="server" ImageUrl="~/imagenes/close.png"
-                                                                OnClick="ElimRol" />
-
-                                                        </ItemTemplate>
-                                                        <HeaderStyle Width="50px" />
-                                                        <ItemStyle Width="50px" HorizontalAlign="Center" VerticalAlign="Middle" />
-
-                                                    </asp:TemplateField>
-
-                                                    <asp:CommandField SelectText="Enroll" ShowSelectButton="True"
-                                                        Visible="False" />
-                                                </Columns>
-                                                <HeaderStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
-                                                <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" />
-                                            </asp:GridView>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>&nbsp;</td>
-                            <td class="style1">&nbsp;</td>
-                            <td>&nbsp;</td>
-                        </tr>
-                    </table>
-                    <br />
-
-
-
-
+                            <div class="campo">
+                                <label>&nbsp;</label>
+                                <asp:Button ID="btn_Buscar" runat="server" Text="Buscar"
+                                    OnClick="btn_Buscar_Click" CssClass="BotonPortalAzul" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="asignacion-grid">
+                        <div class="asignacion-columna">
+                            <div class="asignacion-titulo">Disponibles</div>
+                            <asp:GridView ID="gdArt" runat="server" AutoGenerateColumns="False"
+                                CssClass="grid-reloj" GridLines="None"
+                                OnRowDataBound="gdArt_RowDataBound"
+                                OnSelectedIndexChanged="gdArt_SelectedIndexChanged"
+                                AllowPaging="True" OnPageIndexChanging="gdArt_PageIndexChanging"
+                                DataKeyNames="idrol" PageSize="50"
+                                EmptyDataText="No existen Resultados."
+                                EmptyDataRowStyle-CssClass="textoEmpty">
+                                <Columns>
+                                    <asp:BoundField DataField="idrol" HeaderText="Id" ReadOnly="True">
+                                        <ItemStyle CssClass="textoGridLeft" />
+                                    </asp:BoundField>
+                                    <asp:BoundField DataField="descripcion" HeaderText="Rol">
+                                        <ItemStyle CssClass="textoGridLeft" />
+                                    </asp:BoundField>
+                                    <asp:TemplateField HeaderText="Agregar">
+                                        <ItemTemplate>
+                                            <asp:ImageButton ID="btn_Add" runat="server"
+                                                ImageUrl="~/imagenes/check.png"
+                                                OnClick="AddRol" ToolTip="Agregar rol" />
+                                        </ItemTemplate>
+                                        <ItemStyle Width="50px" HorizontalAlign="Center" />
+                                    </asp:TemplateField>
+                                    <asp:CommandField SelectText="Enroll" ShowSelectButton="True" Visible="False" />
+                                </Columns>
+                            </asp:GridView>
+                        </div>
+                        <div class="asignacion-separador">
+                            <span>→</span>
+                        </div>
+                        <div class="asignacion-columna">
+                            <div class="asignacion-titulo">Asociados</div>
+                            <asp:GridView ID="gbArtSer" runat="server" AutoGenerateColumns="False"
+                                CssClass="grid-reloj" GridLines="None"
+                                OnRowDataBound="gbArtSer_RowDataBound"
+                                OnSelectedIndexChanged="gbArtSer_SelectedIndexChanged"
+                                AllowPaging="True" OnPageIndexChanging="gbArtSer_PageIndexChanging"
+                                DataKeyNames="idrolapp" PageSize="50"
+                                EmptyDataText="No existen Resultados."
+                                EmptyDataRowStyle-CssClass="textoEmpty">
+                                <Columns>
+                                    <asp:BoundField DataField="idrolapp" HeaderText="Id" ReadOnly="True">
+                                        <ItemStyle CssClass="textoGridLeft" />
+                                    </asp:BoundField>
+                                    <asp:BoundField DataField="descripcion" HeaderText="Rol">
+                                        <ItemStyle CssClass="textoGridLeft" />
+                                    </asp:BoundField>
+                                    <asp:TemplateField HeaderText="Eliminar">
+                                        <ItemTemplate>
+                                            <asp:ImageButton ID="btn_Elim" runat="server"
+                                                ImageUrl="~/imagenes/close.png"
+                                                OnClick="ElimRol" ToolTip="Eliminar rol" />
+                                        </ItemTemplate>
+                                        <ItemStyle Width="50px" HorizontalAlign="Center" />
+                                    </asp:TemplateField>
+                                    <asp:CommandField SelectText="Enroll" ShowSelectButton="True" Visible="False" />
+                                </Columns>
+                            </asp:GridView>
+                        </div>
+                    </div>
                 </ContentTemplate>
             </ajaxToolkit:TabPanel>
-
-            <ajaxToolkit:TabPanel ID="TabPanel4" runat="server" HeaderText="TabPanel2">
-                <HeaderTemplate>
-                    Usuarios
-                </HeaderTemplate>
+            <ajaxToolkit:TabPanel ID="TabPanel4" runat="server">
+                <HeaderTemplate>Usuarios</HeaderTemplate>
                 <ContentTemplate>
-                    <table border="0" style="width: 811px">
-                        <tr>
-                            <td width="170">
-                                <asp:Button ID="BtBuscarUser" runat="server" Text="Buscar" OnClick="BtBuscarUser_Click" />
-                            </td>
-                            <td width="147">&nbsp;</td>
-                            <td class="auto-style5">&nbsp;</td>
-                            <td class="auto-style3">&nbsp;</td>
-                            <td width="93">&nbsp;</td>
-                            <td width="235">&nbsp;</td>
-
-                        </tr>
-                        <tr>
-                            <td class="TextoRigth">Nombre:</td>
-                            <td colspan="5" class="TextoLeft">
-                                <asp:TextBox ID="TNombreUsr" runat="server" Height="24px" Width="307px" MaxLength="80"></asp:TextBox></td>
-
-                        </tr>
-                        <tr>
-                            <td class="TextoRigth">Rut:</td>
-                            <td class="TextoLeft">
-                                <asp:TextBox ID="TRut" runat="server"></asp:TextBox></td>
-                            <td class="auto-style2">
-                                <p>&nbsp;</p>
-                            </td>
-                            <td class="auto-style4">&#160;</td>
-                            <td class="TextoRigth">&nbsp;</td>
-                            <td class="TextoLeft">&#160;</td>
-
-                        </tr>
-
-                    </table>
-                    <table border="0" style="width: 810px">
-                        <tr>
-                            <td width="132">
-                                <label>&#160;</label></td>
-                            <td width="214">&#160;</td>
-                            <td width="195">&nbsp;</td>
-                            <td width="451">&nbsp;</td>
-
-                        </tr>
-
-                        <tr>
-                            <td width="132">
-                                <asp:RadioButtonList ID="dbTipoUser" runat="server" CssClass="TextoCheck" RepeatDirection="Horizontal" Width="279px">
-                                    <asp:ListItem Value="L" Selected="True">Lectura</asp:ListItem>
-                                    <asp:ListItem Value="M">Modificación</asp:ListItem>
+                    <div class="bloque">
+                        <div class="titulo-seccion">Asignación de Usuarios</div>
+                        <div class="filtros-grid">
+                            <div class="campo">
+                                <label>Nombre:</label>
+                                <asp:TextBox ID="TNombreUsr" runat="server" MaxLength="80"
+                                    CssClass="form-control" Width="280px" />
+                            </div>
+                            <div class="campo">
+                                <label>RUT:</label>
+                                <asp:TextBox ID="TRut" runat="server"
+                                    CssClass="form-control" Width="120px" />
+                            </div>                            
+                            <div class="campo">
+                                <label>Tipo de Búsqueda:</label>
+                                <asp:RadioButtonList ID="dbTipoUser" runat="server" CssClass="TextoCheck"
+                                    RepeatDirection="Horizontal" Width="280px">
+                                    <asp:ListItem Value="L" Selected="True">Disponibles</asp:ListItem>
+                                    <asp:ListItem Value="M">Asociados</asp:ListItem>
                                 </asp:RadioButtonList>
-                            </td>
-                            <td width="214">&nbsp;</td>
-                            <td width="195">&nbsp;</td>
-                            <td width="451">&nbsp;</td>
-                        </tr>
-                    </table>
-
-
-                    <table border="0" style="width: 925px">
-                        <tr>
-                            <td class="TextoCenter">Disponibles</td>
-                            <td align="left" class="style1">&nbsp;</td>
-                            <td class="TextoCenter">Asociados</td>
-                        </tr>
-                        <tr>
-                            <td valign="top">
-                                <table border="1">
-                                    <tr>
-                                        <td>
-                                            <asp:GridView ID="gbUserDisp" runat="server" AutoGenerateColumns="False"
-                                                Font-Names="Tahoma" Font-Size="Small" ForeColor="#333333" GridLines="None"
-                                                OnRowDataBound="dvUser_RowDataBound"
-                                                OnSelectedIndexChanged="dvUser_SelectedIndexChanged" Width="390px"
-                                                AllowPaging="True" OnPageIndexChanging="dvUser_PageIndexChanging"
-                                                DataKeyNames="idusuario" PageSize="50">
-                                                <Columns>
-                                                    <asp:BoundField DataField="idusuario" HeaderText="Id" ReadOnly="True">
-                                                        <ItemStyle CssClass="TextoCenter" />
-                                                    </asp:BoundField>
-                                                    <asp:BoundField DataField="descripcion" HeaderText="descripcion">
-                                                        <ItemStyle CssClass="TextoCenter" />
-                                                    </asp:BoundField>
-                                                    <asp:BoundField DataField="descripcion" HeaderText="descripcion">
-                                                        <ItemStyle CssClass="TextoLeft" />
-                                                    </asp:BoundField>
-
-                                                    <asp:TemplateField HeaderText="Add">
-                                                        <ItemTemplate>
-                                                            <asp:ImageButton ID="btn_Add" runat="server" ImageUrl="~/imagenes/check.png"
-                                                                OnClick="AddUser" />
-
-                                                        </ItemTemplate>
-                                                        <HeaderStyle Width="50px" />
-                                                        <ItemStyle Width="50px" HorizontalAlign="Center" VerticalAlign="Middle" />
-
-                                                    </asp:TemplateField>
-
-                                                    <asp:CommandField SelectText="Enroll" ShowSelectButton="True"
-                                                        Visible="False" />
-                                                </Columns>
-                                                <HeaderStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
-                                                <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" />
-                                            </asp:GridView>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td align="left" class="style1">&nbsp;</td>
-                            <td valign="top">
-                                <table border="1">
-                                    <tr>
-                                        <td class="auto-style45">
-                                            <asp:GridView ID="gbUser" runat="server" AutoGenerateColumns="False"
-                                                Font-Names="Tahoma" Font-Size="Small" ForeColor="#333333" GridLines="None"
-                                                OnRowDataBound="gbUserDisp_RowDataBound"
-                                                OnSelectedIndexChanged="gbUserDisp_SelectedIndexChanged" Width="494px"
-                                                AllowPaging="True" OnPageIndexChanging="gbUserDisp_PageIndexChanging"
-                                                DataKeyNames="idusapp" PageSize="50">
-                                                <Columns>
-                                                    <asp:BoundField DataField="idusapp" HeaderText="Id" ReadOnly="True">
-                                                        <ItemStyle CssClass="TextoCenter" />
-                                                    </asp:BoundField>
-                                                    <asp:BoundField DataField="descripcion" HeaderText="descripcion">
-                                                        <ItemStyle CssClass="TextoCenter" />
-                                                    </asp:BoundField>
-                                                    <asp:BoundField DataField="descripcion" HeaderText="descripcion">
-                                                        <ItemStyle CssClass="TextoLeft" />
-                                                    </asp:BoundField>
-                                                    <asp:TemplateField HeaderText="Elim">
-                                                        <ItemTemplate>
-                                                            <asp:ImageButton ID="btn_Elim" runat="server" ImageUrl="~/imagenes/close.png"
-                                                                OnClick="ElimUser" />
-
-                                                        </ItemTemplate>
-                                                        <HeaderStyle Width="50px" />
-                                                        <ItemStyle Width="50px" HorizontalAlign="Center" VerticalAlign="Middle" />
-
-                                                    </asp:TemplateField>
-
-                                                    <asp:CommandField SelectText="Enroll" ShowSelectButton="True"
-                                                        Visible="False" />
-                                                </Columns>
-                                                <HeaderStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
-                                                <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" />
-                                            </asp:GridView>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>&nbsp;</td>
-                            <td class="style1">&nbsp;</td>
-                            <td>&nbsp;</td>
-                        </tr>
-                    </table>
-                    <br />
-
-
-                    </td>
-
-                       </tr>
-
-                    </table>
-
-
-
+                            </div>
+                            <div class="campo">
+                                <label>&nbsp;</label>
+                                <asp:Button ID="BtBuscarUser" runat="server" Text="Buscar"
+                                    OnClick="BtBuscarUser_Click" CssClass="BotonPortalAzul" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="asignacion-grid">
+                        <div class="asignacion-columna">
+                            <div class="asignacion-titulo">Disponibles</div>
+                            <asp:GridView ID="gbUserDisp" runat="server" AutoGenerateColumns="False"
+                                CssClass="grid-reloj" GridLines="None"
+                                OnRowDataBound="dvUser_RowDataBound"
+                                OnSelectedIndexChanged="dvUser_SelectedIndexChanged"
+                                AllowPaging="True" OnPageIndexChanging="dvUser_PageIndexChanging"
+                                DataKeyNames="idusuario" PageSize="50"
+                                EmptyDataText="No existen Resultados."
+                                EmptyDataRowStyle-CssClass="textoEmpty">
+                                <Columns>
+                                    <asp:BoundField DataField="idusuario" HeaderText="Id" ReadOnly="True">
+                                        <ItemStyle CssClass="textoGridLeft" />
+                                    </asp:BoundField>
+                                    <asp:BoundField DataField="rut" HeaderText="RUN">
+                                        <ItemStyle CssClass="textoGridLeft" />
+                                    </asp:BoundField>
+                                    <asp:BoundField DataField="descripcion" HeaderText="Usuario">
+                                        <ItemStyle CssClass="textoGridLeft" />
+                                    </asp:BoundField>
+                                    <asp:TemplateField HeaderText="Agregar">
+                                        <ItemTemplate>
+                                            <asp:ImageButton ID="btn_Add" runat="server"
+                                                ImageUrl="~/imagenes/check.png"
+                                                OnClick="AddUser" ToolTip="Agregar usuario" />
+                                        </ItemTemplate>
+                                        <ItemStyle Width="50px" HorizontalAlign="Center" />
+                                    </asp:TemplateField>
+                                    <asp:CommandField SelectText="Enroll" ShowSelectButton="True" Visible="False" />
+                                </Columns>
+                            </asp:GridView>
+                        </div>
+                        <div class="asignacion-separador">
+                            <span>→</span>
+                        </div>
+                        <div class="asignacion-columna">
+                            <div class="asignacion-titulo">Asociados</div>
+                            <asp:GridView ID="gbUser" runat="server" AutoGenerateColumns="False"
+                                CssClass="grid-reloj" GridLines="None"
+                                OnRowDataBound="gbUserDisp_RowDataBound"
+                                OnSelectedIndexChanged="gbUserDisp_SelectedIndexChanged"
+                                AllowPaging="True" OnPageIndexChanging="gbUserDisp_PageIndexChanging"
+                                DataKeyNames="idusapp" PageSize="50"
+                                EmptyDataText="No existen Resultados."
+                                EmptyDataRowStyle-CssClass="textoEmpty">
+                                <Columns>
+                                    <asp:BoundField DataField="idusapp" HeaderText="Id" ReadOnly="True">
+                                        <ItemStyle CssClass="textoGridLeft" />
+                                    </asp:BoundField>
+                                    <asp:BoundField DataField="rut" HeaderText="RUN">
+                                        <ItemStyle CssClass="textoGridLeft" />
+                                    </asp:BoundField>
+                                    <asp:BoundField DataField="descripcion" HeaderText="Usuario">
+                                        <ItemStyle CssClass="textoGridLeft" />
+                                    </asp:BoundField>
+                                    <asp:TemplateField HeaderText="Eliminar">
+                                        <ItemTemplate>
+                                            <asp:ImageButton ID="btn_Elim" runat="server"
+                                                ImageUrl="~/imagenes/close.png"
+                                                OnClick="ElimUser" ToolTip="Eliminar usuario" />
+                                        </ItemTemplate>
+                                        <ItemStyle Width="50px" HorizontalAlign="Center" />
+                                    </asp:TemplateField>
+                                    <asp:CommandField SelectText="Enroll" ShowSelectButton="True" Visible="False" />
+                                </Columns>
+                            </asp:GridView>
+                        </div>
+                    </div>
                 </ContentTemplate>
             </ajaxToolkit:TabPanel>
         </ajaxToolkit:TabContainer>
     </form>
 </body>
 </html>
-
