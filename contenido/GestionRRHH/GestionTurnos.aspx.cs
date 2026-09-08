@@ -348,6 +348,7 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
                 txtHr.Text = "";
             }
         }
+        CalcularTotalTurno();
     }
     protected void chkTrabaja_CheckedChanged(object sender, EventArgs e)
     {
@@ -362,6 +363,7 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
             ((TextBox)row.FindControl("txtFin")).Text = "";
             ((TextBox)row.FindControl("txtHr")).Text = "";
         }
+        CalcularTotalTurno();
     }
     protected void ddlHorario_SelectedIndexChanged(object sender, EventArgs e)
     {
@@ -385,6 +387,31 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
             txtFin.Text = Convert.ToDateTime(ds.Tables[0].Rows[0]["HORA_FIN"]).ToString("HH:mm");
             txtHr.Text = ds.Tables[0].Rows[0]["HORA"].ToString() + "h, " + ds.Tables[0].Rows[0]["MINUTO"].ToString() + "m";
         }
+        CalcularTotalTurno();
+    }
+    private void CalcularTotalTurno()
+    {
+        int totalMinutos = 0;
+        foreach (GridViewRow fila in dgSemana.Rows)
+        {
+            if (fila.RowType != DataControlRowType.DataRow)
+            {
+                continue;
+            }
+            CheckBox chk = (CheckBox)fila.FindControl("chkTrabaja");
+            DropDownList ddl = (DropDownList)fila.FindControl("ddlHorario");
+
+            if (chk == null || ddl == null)
+                continue;
+
+            if (chk.Checked && ddl.SelectedValue != "0")
+            {
+                totalMinutos += ObtenerMinutosHorario(ddl.SelectedValue);
+            }
+        }
+        int totalHoras = totalMinutos / 60;
+        int minutos = totalMinutos % 60;
+        lblTotal.Text = "Total Jornada Semanal: " + totalHoras + " horas, " + minutos + " minutos";
     }
     #endregion
 
@@ -431,7 +458,8 @@ public partial class contenido_GestionRRHH_GestionTurnos : System.Web.UI.Page
     {
         string lsRet = "";
         tur.ls_idturno = this.hdIdTurno.Value;
-        tur.ls_user = asIdentificador;
+        tur.ls_user = asIdentificador;        
+        tur.ls_iduselim = Session["user"].ToString();
         tur.mfAgregarUserTurno();
         if (lsRet != "")
         {

@@ -523,6 +523,10 @@
         border-color: #1976d2;
         box-shadow: 0 0 6px rgba(25,118,210,.25);
     }
+    .form-control:disabled {
+        opacity: 0.9;
+        cursor: not-allowed;
+    }
 
 /* Sábado */
 .GridMesFinSemana {
@@ -543,6 +547,7 @@
 
 .titulo-seccion {
     background: #1F6FB2;
+    font-family: Arial, Helvetica, sans-serif;
     color: white;
     padding: 12px 16px;
     font-size: 18px;
@@ -597,19 +602,6 @@
         color: #555;
     }
 
-.form-control {
-    height: 32px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 5px 8px;
-    box-sizing: border-box;
-}
-
-    .form-control:focus {
-        border-color: #3498db;
-        outline: none;
-        box-shadow: 0 0 3px rgba(52, 152, 219, .35);
-    }
 
 .filtros-grid {
     display: flex;

@@ -30,7 +30,7 @@
                         <div class="filtros-grid">
                             <div class="campo">
                                 <label>Centro / Unidad:</label>
-                                <asp:DropDownList ID="ddlCentroSincroniza" runat="server" CssClass="form-control" 
+                                <asp:DropDownList ID="ddlCentroSincroniza" runat="server" CssClass="form-control"
                                     AutoPostBack="true" Width="350px" onchange="mostrarSpinner();"
                                     OnSelectedIndexChanged="ddlCentroSincroniza_SelectedIndexChanged">
                                 </asp:DropDownList>
@@ -65,6 +65,10 @@
                             <div class="bloque-titulo">
                                 <asp:Label ID="lblSincr" runat="server"></asp:Label>
                             </div>
+                        </div>
+                        <div class="botones-form">
+                            <asp:Button ID="btnVolver" runat="server" Text="Volver"
+                                CssClass="BotonPortalGris" OnClick="btnVolver_Click" />
                         </div>
                     </div>
                 </ContentTemplate>
@@ -134,6 +138,10 @@
                                 </asp:GridView>
                             </div>
                         </asp:Panel>
+                        <div class="botones-form">
+                            <asp:Button ID="btn_Volver1" runat="server" Text="Volver"
+                                CssClass="BotonPortalGris" OnClick="btnVolver_Click" />
+                        </div>
                     </div>
                 </ContentTemplate>
             </ajaxToolkit:TabPanel>

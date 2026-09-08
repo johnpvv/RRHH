@@ -20,6 +20,10 @@ public partial class contenido_GestionRRHH_GestionSincronizacion : System.Web.UI
             CargarSincronizaciones();
         }
     }
+    protected void btnVolver_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("~/contenido/frmblksiab.aspx");
+    }
     #region Crear SIncronizacion
 
     private void CargarCentrosAdmin()

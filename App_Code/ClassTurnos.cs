@@ -126,6 +126,10 @@ public class ClassTurnos
             "END ESTADO, " +
             "T.F_H_CREACION, " +
             "T.CODIGO, " +
+            "CASE " +
+            "   WHEN ISNULL(T.TIPO_TURNO,0) = 0 THEN 'Turno Normal' " +
+            "   ELSE 'Turno Mensual' " +
+            "END AS TIPO_TURNO_P," +
             "ISNULL(T.TIPO_TURNO,0) AS TIPO_TURNO " +
             "FROM " + modConstantes.gsDbRH + "M_TURNOS T " +
             "WHERE 1=1 " +
@@ -475,28 +479,51 @@ public class ClassTurnos
         string lsSql;
         string lsRes;
 
+        //lsSql =
+        //    "IF EXISTS ( " +
+        //    "SELECT 1 FROM " + modConstantes.gsDbRH + "M_TURNO_USUARIOS " +
+        //    "WHERE IDUSUARIO = " + ls_user + " AND IDTURNOS = " + ls_idturno + " ) " +
+        //    "BEGIN " +
+        //    "UPDATE " + modConstantes.gsDbRH + "M_TURNO_USUARIOS SET " +
+        //    "IDESTADO = 1, " +
+        //    "F_H_ELIM = NULL, " +
+        //    "IDUSELIM = NULL, " +
+        //    "IDTURNOS = " + ls_idturno + ", " +
+        //    "OBSERVACION = 'Re-Asignado' " +
+        //    "WHERE IDUSUARIO = " + ls_user +
+        //    " END " +
+        //    "ELSE " +
+        //    "BEGIN " +
+        //    "INSERT INTO " + modConstantes.gsDbRH + "M_TURNO_USUARIOS " +
+        //    "(IDTURNOS,IDUSUARIO,F_H_CREACION,IDESTADO) VALUES (" +
+        //    ls_idturno + "," +
+        //    ls_user + "," +
+        //    "GETDATE(),1)" +
+        //    " END";
         lsSql =
-            "IF EXISTS ( " +
+        "IF EXISTS ( " +
             "SELECT 1 FROM " + modConstantes.gsDbRH + "M_TURNO_USUARIOS " +
-            "WHERE IDUSUARIO = " + ls_user + " AND IDTURNOS = " + ls_idturno + " ) " +
-            "BEGIN " +
-            "UPDATE " + modConstantes.gsDbRH + "M_TURNO_USUARIOS SET " +
-            "IDESTADO = 1, " +
-            "F_H_ELIM = NULL, " +
-            "IDUSELIM = NULL, " +
-            "IDTURNOS = " + ls_idturno + ", " +
-            "OBSERVACION = 'Re-Asignado' " +
             "WHERE IDUSUARIO = " + ls_user +
-            " END " +
-            "ELSE " +
-            "BEGIN " +
-            "INSERT INTO " + modConstantes.gsDbRH + "M_TURNO_USUARIOS " +
-            "(IDTURNOS,IDUSUARIO,F_H_CREACION,IDESTADO) VALUES (" +
-            ls_idturno + "," +
-            ls_user + "," +
-            "GETDATE(),1)" +
-            " END";
-
+            " AND IDTURNOS = " + ls_idturno +
+            " AND IDESTADO = 1 " +
+        ") " +
+        "BEGIN " +
+            "UPDATE " + modConstantes.gsDbRH + "M_TURNO_USUARIOS SET " +
+            "IDESTADO = 3, " +
+            "F_H_ELIM = GETDATE(), " +
+            "IDUSELIM = " + ls_iduselim + ", " +
+            "OBSERVACION = 'Cambio de turno' " +
+            "WHERE IDUSUARIO = " + ls_user +
+            " AND IDESTADO = 1; " +
+        "END; " +
+        "INSERT INTO " + modConstantes.gsDbRH + "M_TURNO_USUARIOS " +
+            "(IDTURNOS, IDUSUARIO, F_H_CREACION, IDESTADO, OBSERVACION) " +
+        "VALUES (" +
+            ls_idturno + ", " +
+            ls_user + ", " +
+            "GETDATE(), " +
+            "1, " +
+            "'Asignado por user id:  "+ ls_iduselim + "')";
         con = bd.fnGetConn();
         lsRes = bd.ExecuteScalar(con, lsSql);
         con.Close();

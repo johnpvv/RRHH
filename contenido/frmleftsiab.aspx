@@ -205,6 +205,7 @@
                             <asp:TreeNode NavigateUrl="~/contenido/GestionRRHH/ListaTurnos.aspx" Target="main" ImageUrl="~/imagenes/menu/ajustesroles.png" Text="Gestión Turnos" ToolTip="Turnos" Value="MANT_ROLES"></asp:TreeNode>
                             <asp:TreeNode NavigateUrl="~/contenido/GestionRRHH/GestionTurnosExcel.aspx" Target="main" ImageUrl="~/imagenes/menu/firmas.png" Text="Cargar Turnos <br> desde Excel" ToolTip="Turnos" Value="MANT_ROLES"></asp:TreeNode>
                             <asp:TreeNode NavigateUrl="~/contenido/GestionRRHH/ListaHorarios.aspx" Target="main" ImageUrl="~/imagenes/menu/ajustesunidadoperativa.png" Text="Gestión Horarios" ToolTip="Horarios" Value="MANT_ROLES"></asp:TreeNode>
+                            <asp:TreeNode NavigateUrl="~/contenido/GestionRRHH/GestionMarcaciones.aspx" Target="main" ImageUrl="~/imagenes/menu/ajustesroles.png" Text="Gestión Marcaciones" ToolTip="Marcaciones" Value="MANT_ROLES"></asp:TreeNode>
                             <asp:TreeNode NavigateUrl="~/contenido/GestionRRHH/GestionEquivalenciaReloj.aspx" Target="main" ImageUrl="~/imagenes/menu/archivos.png" Text="Equivalencia Relojes" ToolTip="Equivalencia" Value="MANT_ROLES"></asp:TreeNode>
                             <asp:TreeNode NavigateUrl="~/contenido/GestionRRHH/GestionSincronizacion.aspx" Target="main" ImageUrl="~/imagenes/menu/ajustesusuario.png" Text="Sincronización" ToolTip="Sincronización" Value="MANT_ROLES"></asp:TreeNode>
                             

@@ -6,6 +6,14 @@
 <head id="Head1" runat="server">
     <title>Selecting GridView Row</title>
     <script language="text/javascript" src="../../js/common.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        function mostrarSpinner() {
+            var spinner = document.getElementById('spinnerCarga');
+            if (spinner) {
+                spinner.style.display = 'flex';
+            }
+        }
+    </script>
     <link runat="server" href="~/css/EstiloRRHH.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -17,8 +25,7 @@
                 <asp:Label ID="LbTitulo" runat="server" />
             </div>
         </div>
-        <ajaxToolkit:TabContainer runat="server" ID="TC_1" ActiveTabIndex="0" Width="100%"
-            CssClass="tabs-rrhh">
+        <ajaxToolkit:TabContainer runat="server" ID="TC_1" ActiveTabIndex="0" Width="100%">
             <ajaxToolkit:TabPanel runat="server" ID="TabPanel1">
                 <HeaderTemplate>Detalle Acceso</HeaderTemplate>
                 <ContentTemplate>
@@ -40,14 +47,17 @@
                             </div>
                         </div>
                         <div class="botones-form">
-                            <asp:Button ID="Button1" runat="server" Text="Agregar"
-                                OnClick="BtnAgregar_Click" CssClass="BotonPortalAzul" />
+                            <asp:Button ID="BtnAgregar" runat="server" Text="Agregar"
+                                OnClick="BtnAgregar_Click" CssClass="BotonPortalAzul"
+                                OnClientClick="if (!confirm('¿Desea Agregar el Acceso..?')) return false; mostrarSpinner();" />
                             <asp:Button ID="btnNuevo" runat="server" Text="Nuevo"
                                 OnClick="btnNuevo_Click" CssClass="BotonPortalAmarillo" />
                             <asp:Button ID="btnEliminar" runat="server" Text="Eliminar"
-                                OnClick="btnEliminar_Click" CssClass="BotonPortalRojo" />
+                                OnClick="btnEliminar_Click" CssClass="BotonPortalRojo"
+                                OnClientClick="if (!confirm('¿Desea Eliminar el Acceso..?')) return false; mostrarSpinner();" />
                             <asp:Button ID="btnRehabilitar" runat="server" Text="Rehabilitar"
-                                OnClick="btnRehabilitar_Click" CssClass="BotonPortalVerde" />
+                                OnClick="btnRehabilitar_Click" CssClass="BotonPortalVerde"
+                                OnClientClick="if (!confirm('¿Desea guardar los cambios..?')) return false; mostrarSpinner();" />
                             <asp:Button ID="btnVolver" runat="server" Text="Volver"
                                 CssClass="BotonPortalGris" OnClick="btnVolver_Click" />
                         </div>
@@ -78,7 +88,9 @@
                             <div class="campo">
                                 <label>&nbsp;</label>
                                 <asp:Button ID="btn_Buscar" runat="server" Text="Buscar"
-                                    OnClick="btn_Buscar_Click" CssClass="BotonPortalAzul" />
+                                    OnClick="btn_Buscar_Click" 
+                                    OnClientClick="mostrarSpinner();"
+                                    CssClass="BotonPortalAzul" />
                             </div>
                         </div>
                     </div>
@@ -162,7 +174,7 @@
                                 <label>RUT:</label>
                                 <asp:TextBox ID="TRut" runat="server"
                                     CssClass="form-control" Width="120px" />
-                            </div>                            
+                            </div>
                             <div class="campo">
                                 <label>Tipo de Búsqueda:</label>
                                 <asp:RadioButtonList ID="dbTipoUser" runat="server" CssClass="TextoCheck"
@@ -174,7 +186,9 @@
                             <div class="campo">
                                 <label>&nbsp;</label>
                                 <asp:Button ID="BtBuscarUser" runat="server" Text="Buscar"
-                                    OnClick="BtBuscarUser_Click" CssClass="BotonPortalAzul" />
+                                    OnClick="BtBuscarUser_Click" 
+                                    OnClientClick="mostrarSpinner();"
+                                    CssClass="BotonPortalAzul" />
                             </div>
                         </div>
                     </div>
@@ -203,12 +217,17 @@
                                         <ItemTemplate>
                                             <asp:ImageButton ID="btn_Add" runat="server"
                                                 ImageUrl="~/imagenes/check.png"
-                                                OnClick="AddUser" ToolTip="Agregar usuario" />
+                                                OnClick="AddUser"
+                                                OnClientClick="mostrarSpinner();"
+                                                ToolTip="Agregar usuario" />
                                         </ItemTemplate>
                                         <ItemStyle Width="50px" HorizontalAlign="Center" />
                                     </asp:TemplateField>
                                     <asp:CommandField SelectText="Enroll" ShowSelectButton="True" Visible="False" />
                                 </Columns>
+                                <PagerStyle
+                                    CssClass="GridPager"
+                                    HorizontalAlign="Center" />
                             </asp:GridView>
                         </div>
                         <div class="asignacion-separador">
@@ -244,12 +263,21 @@
                                     </asp:TemplateField>
                                     <asp:CommandField SelectText="Enroll" ShowSelectButton="True" Visible="False" />
                                 </Columns>
+                                <PagerStyle
+                                    CssClass="GridPager"
+                                    HorizontalAlign="Center" />
                             </asp:GridView>
                         </div>
                     </div>
                 </ContentTemplate>
             </ajaxToolkit:TabPanel>
         </ajaxToolkit:TabContainer>
+        <div id="spinnerCarga" class="spinner-overlay" style="display: none;">
+            <div class="spinner"></div>
+            <div class="spinner-text">
+                Cargando Datos, Favor Espere...
+            </div>
+        </div>
     </form>
 </body>
 </html>

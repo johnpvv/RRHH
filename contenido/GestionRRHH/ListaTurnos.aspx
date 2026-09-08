@@ -56,6 +56,8 @@
                     HeaderText="Descripción" ItemStyle-CssClass="textoGrid" />
                 <asp:BoundField DataField="CODIGO"
                     HeaderText="Código" ItemStyle-CssClass="textoGridBold" />
+                <asp:BoundField DataField="TIPO_TURNO_P"
+                    HeaderText="Tipo de Turno" ItemStyle-CssClass="textoGrid" />
                 <asp:BoundField DataField="Estado"
                     HeaderText="Estado" ItemStyle-CssClass="textoGrid" />
                 <asp:BoundField DataField="F_H_CREACION"
