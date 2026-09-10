@@ -66,7 +66,7 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
             dv.Sort = OrdenTrabajadores;
             dgTrabajadores.DataSource = dv;
             dgTrabajadores.DataBind();
-            lblTotalTrab.Text = ds.Tables[0].Rows.Count.ToString() + " resultado(s)";
+            lblTotalTrab.Text = ds.Tables[0].Rows.Count.ToString();
         }
         else
         {
@@ -78,8 +78,8 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
     {
         get
         {
-            return ViewState["OrdenTrabajadores"] == null 
-                ? "NOMBRE ASC" : 
+            return ViewState["OrdenTrabajadores"] == null
+                ? "NOMBRE ASC" :
                 ViewState["OrdenTrabajadores"].ToString();
         }
         set
@@ -94,7 +94,7 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
         string direccionActual = ordenActual.Split(' ')[1];
         if (campoActual == e.SortExpression)
         {
-            direccionActual = direccionActual == "ASC" ? "DESC": "ASC";
+            direccionActual = direccionActual == "ASC" ? "DESC" : "ASC";
         }
         else
         {
@@ -108,7 +108,7 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
         CargarTrabajadoresMarcas();
         divDetalleMarcas.Visible = false;
     }
-    protected void dgTrabajadores_SelectedIndexChanged(object sender,EventArgs e)
+    protected void dgTrabajadores_SelectedIndexChanged(object sender, EventArgs e)
     {
         CargarMarcasTrabajador();
     }
@@ -121,7 +121,7 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
     #region grid detalle por trabajador
     private void CargarMarcasTrabajador()
     {
-        string idSeleccion =dgTrabajadores.SelectedDataKey.Values["ID_SELECCION"].ToString();
+        string idSeleccion = dgTrabajadores.SelectedDataKey.Values["ID_SELECCION"].ToString();
         //string idReloj =dgTrabajadores.SelectedDataKey.Values["IDRELOJ"].ToString();
         rlj.ls_mes = ddlMes.SelectedValue;
         rlj.ls_anio = ddlAnio.SelectedValue;
@@ -132,17 +132,129 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
         if (idSeleccion.StartsWith("U:"))
         {
             rlj.ls_iduser = idSeleccion.Substring(2);
+            lblTituloMarcas.Text = dgTrabajadores.SelectedRow.Cells[2].Text;
         }
         else if (idSeleccion.StartsWith("R:"))
         {
             rlj.ls_iduserreloj = idSeleccion.Substring(2);
+            lblTituloMarcas.Text = idSeleccion.Substring(2) + " (Sin identificación RRHH)";
         }
         DataSet ds = rlj.mfBuscarMarcasTrabajador();
         dgMarcas.DataSource = ds;
         dgMarcas.DataBind();
         lblTotalMarcas.Text = ds.Tables[0].Rows.Count.ToString() + " resultado(s)";
         divDetalleMarcas.Visible = true;
+        int ok = 0, entradaRep = 0, salidaRep = 0, faltantes = 0, revisar = 0;
+        foreach (DataRow r in ds.Tables[0].Rows)
+        {
+            string e = r["ESTADO"].ToString();
+            if (e == "OK")
+                ok++;
+            else if
+                (e == "ENTRADA REPETIDA") entradaRep++;
+            else if
+                (e == "SALIDA REPETIDA") salidaRep++;
+            else if
+                (e.Contains("FALTANTE")) faltantes++;
+            else
+                revisar++;
+        }
+        lblResumenMarcas.Text = 
+            "<span>Resumen Marcas: OK: " + ok + ",</span> &nbsp; " +                                
+            "<span>Repetidas: " + (entradaRep + salidaRep) + ",</span> &nbsp; " +                                
+            "<span>Faltantes: " + faltantes + ",</span> &nbsp; " +                                
+            "<span>Para Revisar: " + revisar + ",</span> &nbsp;" +                                
+            "<span>Total: " + (ok + revisar + faltantes + entradaRep + salidaRep) + "</span>";
     }
+    protected void dgMarcas_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType != DataControlRowType.DataRow) return;
 
+        string estado = DataBinder.Eval(e.Row.DataItem, "ESTADO").ToString();
+
+        if (estado == "OK")
+            e.Row.Cells[5].CssClass = "marca-ok";
+        else if (estado.Contains("FALTANTE"))
+            e.Row.Cells[5].CssClass = "marca-alerta";
+        else if (estado.Contains("REPETIDA"))
+            e.Row.Cells[5].CssClass = "marca-warning";
+    }
+    protected void dgMarcas_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        string id = e.CommandArgument.ToString();
+
+        if (e.CommandName == "EditarMarca")
+            mfEditarMarca(id);
+        else if (e.CommandName == "EliminarMarca")
+            mfAnularMarca(id);
+        else if (e.CommandName == "InsertarMarca")
+            mfInsertarMarca(e.CommandArgument.ToString());
+    }
+    private void mfEditarMarca(string id)
+    {
+        rlj.ls_idmarca = id;
+        DataSet ds = rlj.mfBuscarMarca();
+
+        if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+        {
+            DataRow r = ds.Tables[0].Rows[0];
+            hdIdMarcacion.Value = id;
+            DateTime f = Convert.ToDateTime(r["F_H_MARCA"]);
+            txtFechaMarca.Text = f.ToString("dd/MM/yyyy");
+            txtHoraMarca.Text = f.ToString("HH:mm:ss");
+            ddlTipoMarca.SelectedValue = r["TIPO_MARCA"].ToString();
+            lblCentroMarca.Text = r["CENTRO"].ToString();
+            txtObsMarca.Text = r["OBSERVACIONES"].ToString();
+            pnlEditarMarca.Style["display"] = "flex";
+        }
+    }
+    protected void btnCancelarMarca_Click(object sender, EventArgs e)
+    {
+        pnlEditarMarca.Style["display"] = "none";
+    }
+    protected void btnGuardarMarca_Click(object sender, EventArgs e)
+    {
+        rlj.ls_idmarca = hdIdMarcacion.Value;
+        rlj.ls_fecha = txtFechaMarca.Text;
+        rlj.ls_hora = txtHoraMarca.Text;
+        rlj.ls_tipo = ddlTipoMarca.SelectedValue;
+        rlj.ls_obs = txtObsMarca.Text.Trim();
+        rlj.ls_iduserweb = Session["user"].ToString();
+
+        if (rlj.ls_obs == "")
+        {
+            rlj.ls_obs = "Marca Modificada Por Analista";
+        }
+        rlj.mfActualizarMarca();
+        pnlEditarMarca.Style["display"] = "none";
+        CargarMarcasTrabajador();
+    }
+    private void mfAnularMarca(string id)
+    {
+        rlj.ls_idmarca = id;
+        rlj.ls_iduserweb= Session["user"].ToString();
+        rlj.mfAnularMarca();
+        CargarTrabajadoresMarcas();
+        CargarMarcasTrabajador();
+    }
+    private void mfInsertarMarca(string id)
+    {
+        //rlj.ls_idmarca = id;
+        //DataSet ds = rlj.mfBuscarMarca();
+
+        //if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+        //{
+        //    DataRow r = ds.Tables[0].Rows[0];
+        //    hdIdMarcacion.Value = id;
+        //    DateTime f = Convert.ToDateTime(r["F_H_MARCA"]);
+        //    txtFechaMarca.Text = f.ToString("dd/MM/yyyy");
+        //    txtHoraMarca.Text = f.ToString("HH:mm:ss");
+        //    ddlTipoMarca.SelectedValue = r["TIPO_MARCA"].ToString();
+        //    lblCentroMarca.Text = r["CENTRO"].ToString();
+        //    txtObsMarca.Text = r["OBSERVACIONES"].ToString();
+        //    pnlEditarMarca.Style["display"] = "flex";
+        //}
+        pnlEditarMarca.Style["display"] = "flex";
+    }
     #endregion
 }
