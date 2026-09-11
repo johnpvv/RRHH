@@ -633,6 +633,7 @@ public class ClassReloj
                     "M.IDMARCACION, " +
                     "M.CODIGO_EMP_RELOJ, " +
                     "M.IDRELOJ, " +
+                    "UR.IDUSRELOJ, " +
                     "M.F_H_MARCA, " +
                     "UR.IDUSUARIO, " +
                     "U.RUT, " +
@@ -666,7 +667,8 @@ public class ClassReloj
                 "ELSE " +
                     "'U:' + CAST(IDUSUARIO AS VARCHAR(20)) " +
                 "END AS ID_SELECCION, " +
-                "IDUSUARIO, " +
+                "IDUSUARIO," +
+                "IDUSRELOJ, " +
                 "CASE " +
                     "WHEN IDUSUARIO IS NULL THEN MAX(CODIGO_EMP_RELOJ) " +
                     "ELSE NULL END AS CODIGO_EMP_RELOJ, " +
@@ -700,6 +702,7 @@ public class ClassReloj
             "FROM MARCAS " +
             "GROUP BY " +
                 "IDUSUARIO," +
+                "IDUSRELOJ, " +
                 "RUT_C, " +
                 "CASE " +
                     "WHEN IDUSUARIO IS NULL THEN CODIGO_EMP_RELOJ " +
@@ -790,48 +793,64 @@ public class ClassReloj
 
         if (ls_iduser != "")
         {
-            lsSql += "SELECT M.IDMARCACION,CAST(M.F_H_MARCA AS DATE) FECHA,CONVERT(VARCHAR(8),M.F_H_MARCA,108) HORA," +
-                    "M.CODIGO_EMP_RELOJ,M.IDRELOJ,UOP.DESCRIPCION CENTRO,M.F_H_MARCA,M.TIPO_MARCA, " +
-                    "CASE WHEN M.TIPO_MARCA=0 THEN 'ENTRADA' " +
-                    "WHEN M.TIPO_MARCA=1 THEN 'SALIDA' " +
-                    "ELSE 'OTRO' END TIPO_MARCA_DESC, " +
-                    "M.TIPO_CARGA, M.OBSERVACIONES, " +
-                    "CASE WHEN R.ENTRADAS=1 AND R.SALIDAS = 1 THEN 'OK' " +
-                    "WHEN R.ENTRADAS > 1 AND M.TIPO_MARCA = 0 THEN 'ENTRADA REPETIDA' " +
-                    "WHEN R.SALIDAS > 1 AND M.TIPO_MARCA = 1 THEN 'SALIDA REPETIDA' " +
-                    "WHEN R.ENTRADAS = 1 AND R.SALIDAS = 0 THEN 'SALIDA FALTANTE' " +
-                    "WHEN R.ENTRADAS = 0 AND R.SALIDAS = 1 THEN 'ENTRADA FALTANTE' " +
-                    "ELSE 'REVISAR' END ESTADO " +
-                    "FROM " + modConstantes.gsDbRH + "M_MARCACIONES M " +
-                    "INNER JOIN " + modConstantes.gsDbRH + "M_USR_RELOJ UR ON UR.IDUSRELOJ=M.CODIGO_EMP_RELOJ " +
-                    "LEFT JOIN " + modConstantes.gsDbRH + "M_RELOJES RE ON RE.IDRELOJ=M.IDRELOJ " +
-                    "LEFT JOIN " + modConstantes.gsDbRH + "M_UNIDAD_OPERATIVA UOP ON UOP.CODUNIOP=RE.CODUNIOP " +
-                    "INNER JOIN (SELECT CAST(M2.F_H_MARCA AS DATE) FECHA," +
-                    "SUM(CASE WHEN M2.TIPO_MARCA=0 THEN 1 ELSE 0 END) ENTRADAS,SUM(CASE WHEN M2.TIPO_MARCA=1 THEN 1 ELSE 0 END)" +
-                    "SALIDAS FROM " + modConstantes.gsDbRH + "M_MARCACIONES M2 " +
-                    "INNER JOIN " + modConstantes.gsDbRH + "M_USR_RELOJ UR2 ON UR2.IDUSRELOJ=M2.CODIGO_EMP_RELOJ AND ISNULL(M2.IDESTADO,1) <> 3 " +
-                    "WHERE UR2.IDUSUARIO=" + ls_iduser + " AND M2.F_H_MARCA >= @FECHA_INICIO AND M2.F_H_MARCA < @FECHA_FIN " +
-                    "GROUP BY CAST(M2.F_H_MARCA AS DATE)) R ON R.FECHA=CAST(M.F_H_MARCA AS DATE) " +
-                    "WHERE UR.IDUSUARIO=" + ls_iduser + " " +
-                    "AND M.F_H_MARCA >= @FECHA_INICIO AND M.F_H_MARCA < @FECHA_FIN " +
-                    "AND ISNULL(M.IDESTADO,1) <> 3 " +
-                    "ORDER BY M.F_H_MARCA";
+            lsSql += 
+                "SELECT M.IDMARCACION,CAST(M.F_H_MARCA AS DATE) FECHA,CONVERT(VARCHAR(8),M.F_H_MARCA,108) HORA," +
+                "M.CODIGO_EMP_RELOJ,M.IDRELOJ,UOP.DESCRIPCION CENTRO,M.F_H_MARCA,M.TIPO_MARCA, " +
+                "CASE WHEN M.TIPO_MARCA=0 THEN 'ENTRADA' " +
+                "WHEN M.TIPO_MARCA=1 THEN 'SALIDA' " +
+                "ELSE 'OTRO' END TIPO_MARCA_DESC, " +
+                "M.TIPO_CARGA, M.OBSERVACIONES, " +
+                "CASE WHEN R.ENTRADAS=1 AND R.SALIDAS = 1 THEN 'OK' " +
+                "WHEN R.ENTRADAS > 1 AND M.TIPO_MARCA = 0 THEN 'ENTRADA REPETIDA' " +
+                "WHEN R.SALIDAS > 1 AND M.TIPO_MARCA = 1 THEN 'SALIDA REPETIDA' " +
+                "WHEN R.ENTRADAS = 1 AND R.SALIDAS = 0 THEN 'SALIDA FALTANTE' " +
+                "WHEN R.ENTRADAS = 0 AND R.SALIDAS = 1 THEN 'ENTRADA FALTANTE' " +
+                "ELSE 'REVISAR' END ESTADO " +
+                "FROM " + modConstantes.gsDbRH + "M_MARCACIONES M " +
+                "INNER JOIN " + modConstantes.gsDbRH + "M_USR_RELOJ UR ON UR.IDUSRELOJ=M.CODIGO_EMP_RELOJ " +
+                "LEFT JOIN " + modConstantes.gsDbRH + "M_RELOJES RE ON RE.IDRELOJ=M.IDRELOJ " +
+                "LEFT JOIN " + modConstantes.gsDbRH + "M_UNIDAD_OPERATIVA UOP ON UOP.CODUNIOP=RE.CODUNIOP " +
+                "INNER JOIN (SELECT CAST(M2.F_H_MARCA AS DATE) FECHA," +
+                "SUM(CASE WHEN M2.TIPO_MARCA=0 THEN 1 ELSE 0 END) ENTRADAS,SUM(CASE WHEN M2.TIPO_MARCA=1 THEN 1 ELSE 0 END)" +
+                "SALIDAS FROM " + modConstantes.gsDbRH + "M_MARCACIONES M2 " +
+                "INNER JOIN " + modConstantes.gsDbRH + "M_USR_RELOJ UR2 ON UR2.IDUSRELOJ=M2.CODIGO_EMP_RELOJ AND ISNULL(M2.IDESTADO,1) <> 3 " +
+                "WHERE UR2.IDUSUARIO=" + ls_iduser + " AND M2.F_H_MARCA >= @FECHA_INICIO AND M2.F_H_MARCA < @FECHA_FIN " +
+                "GROUP BY CAST(M2.F_H_MARCA AS DATE)) R ON R.FECHA=CAST(M.F_H_MARCA AS DATE) " +
+                "WHERE UR.IDUSUARIO=" + ls_iduser + " " +
+                "AND M.F_H_MARCA >= @FECHA_INICIO AND M.F_H_MARCA < @FECHA_FIN " +
+                "AND ISNULL(M.IDESTADO,1) <> 3 " +
+                "ORDER BY M.F_H_MARCA";
         }
         else
         {
-            lsSql += "SELECT M.IDMARCACION,CAST(M.F_H_MARCA AS DATE) FECHA,CONVERT(VARCHAR(8),M.F_H_MARCA,108) HORA, " +
-                    "M.CODIGO_EMP_RELOJ,M.IDRELOJ,UOP.DESCRIPCION CENTRO,M.F_H_MARCA,M.TIPO_MARCA, " +
-                    "CASE WHEN M.TIPO_MARCA=0 THEN 'ENTRADA' WHEN M.TIPO_MARCA=1 THEN 'SALIDA' ELSE 'OTRO' END TIPO_MARCA_DESC, " +
-                    "M.TIPO_CARGA,M.OBSERVACIONES " +
-                    "FROM " + modConstantes.gsDbRH + "M_MARCACIONES M " +
-                    "LEFT JOIN " + modConstantes.gsDbRH + "M_RELOJES RE ON RE.IDRELOJ=M.IDRELOJ " +
-                    "LEFT JOIN " + modConstantes.gsDbRH + "M_UNIDAD_OPERATIVA UOP ON UOP.CODUNIOP=RE.CODUNIOP " +
-                    "WHERE M.CODIGO_EMP_RELOJ='" + ls_iduserreloj.Replace("'", "''") + "' " +
-                    "AND M.F_H_MARCA >= @FECHA_INICIO AND M.F_H_MARCA < @FECHA_FIN " +
-                    "AND ISNULL(M.IDESTADO,1) <> 3 " +
-                    "ORDER BY M.F_H_MARCA";
+            lsSql +=
+                "SELECT M.IDMARCACION,CAST(M.F_H_MARCA AS DATE) FECHA,CONVERT(VARCHAR(8),M.F_H_MARCA,108) HORA, " +
+                "M.CODIGO_EMP_RELOJ,M.IDRELOJ,UOP.DESCRIPCION CENTRO,M.F_H_MARCA,M.TIPO_MARCA, " +
+                "CASE WHEN M.TIPO_MARCA=0 THEN 'ENTRADA' WHEN M.TIPO_MARCA=1 THEN 'SALIDA' ELSE 'OTRO' END TIPO_MARCA_DESC, " +
+                "M.TIPO_CARGA,M.OBSERVACIONES, " +
+                "CASE WHEN R.ENTRADAS=1 AND R.SALIDAS = 1 THEN 'OK' " +
+                "WHEN R.ENTRADAS > 1 AND M.TIPO_MARCA = 0 THEN 'ENTRADA REPETIDA' " +
+                "WHEN R.SALIDAS > 1 AND M.TIPO_MARCA = 1 THEN 'SALIDA REPETIDA' " +
+                "WHEN R.ENTRADAS = 1 AND R.SALIDAS = 0 THEN 'SALIDA FALTANTE' " +
+                "WHEN R.ENTRADAS = 0 AND R.SALIDAS = 1 THEN 'ENTRADA FALTANTE' " +
+                "ELSE 'REVISAR' END ESTADO " +
+                "FROM " + modConstantes.gsDbRH + "M_MARCACIONES M " +
+                "LEFT JOIN " + modConstantes.gsDbRH + "M_RELOJES RE ON RE.IDRELOJ=M.IDRELOJ " +
+                "LEFT JOIN " + modConstantes.gsDbRH + "M_UNIDAD_OPERATIVA UOP ON UOP.CODUNIOP=RE.CODUNIOP " +
+                "INNER JOIN (SELECT CAST(M2.F_H_MARCA AS DATE) FECHA, " +
+                "SUM(CASE WHEN M2.TIPO_MARCA=0 THEN 1 ELSE 0 END) ENTRADAS, " +
+                "SUM(CASE WHEN M2.TIPO_MARCA=1 THEN 1 ELSE 0 END) SALIDAS " +
+                "FROM " + modConstantes.gsDbRH + "M_MARCACIONES M2 " +
+                "WHERE M2.CODIGO_EMP_RELOJ='" + ls_iduserreloj.Replace("'", "''") + "' " +
+                "AND ISNULL(M2.IDESTADO,1) <> 3 " +
+                "AND M2.F_H_MARCA >= @FECHA_INICIO AND M2.F_H_MARCA < @FECHA_FIN " +
+                "GROUP BY CAST(M2.F_H_MARCA AS DATE)) R " +
+                "ON R.FECHA = CAST(M.F_H_MARCA AS DATE) " +
+                "WHERE M.CODIGO_EMP_RELOJ='" + ls_iduserreloj.Replace("'", "''") + "' " +
+                "AND ISNULL(M.IDESTADO,1) <> 3 " +
+                "AND M.F_H_MARCA >= @FECHA_INICIO AND M.F_H_MARCA < @FECHA_FIN " +
+                "ORDER BY M.F_H_MARCA";
         }
-
         con = bd.fnGetConn();
         ds = bd.Fill(con, lsSql);
         con.Close();
@@ -880,6 +899,37 @@ public class ClassReloj
         con = bd.fnGetConn();
         bd.ExecuteScalar(con, lsSql);
         con.Close();
+    }
+    public void mfInsertarMarca()
+    {
+        string lsSql =
+            "INSERT INTO " + modConstantes.gsDbRH + "M_MARCACIONES " +
+            "(IDSINCRONIZA,CODIGO_EMP_RELOJ,F_H_MARCA,TIPO_MARCA,F_H_CARGA, " +
+            "TIPO_CARGA,OBSERVACIONES,IDRELOJ,IDESTADO,F_H_MOD,IDUSERMOD) " +
+            "VALUES (NULL,'" + ls_iduserreloj + "', " +
+            "CONVERT(DATETIME,'" + ls_fecha + " " + ls_hora + "',103)," +
+            " " + ls_tipo + ",GETDATE(),2,'" +
+            " " + ls_obs.Replace("'", "''") + "'," +
+            " " + ls_idreloj + "," +
+            " 1," +
+            " GETDATE()," +
+            " " + ls_iduserweb + ")";
+        con = bd.fnGetConn();
+        bd.ExecuteScalar(con, lsSql);
+        con.Close();
+    }
+    public DataSet mfBuscarRelojesUsuario()
+    {
+        string lsSql =
+            "SELECT UR.IDUSRRELOJ,UR.IDRELOJ,UR.IDUSRELOJ,UOP.DESCRIPCION CENTRO " +
+            "FROM " + modConstantes.gsDbRH + "M_USR_RELOJ UR " +
+            "LEFT JOIN " + modConstantes.gsDbRH + "M_RELOJES RE ON RE.IDRELOJ=UR.IDRELOJ " +
+            "LEFT JOIN " + modConstantes.gsDbRH + "M_UNIDAD_OPERATIVA UOP ON UOP.CODUNIOP=RE.CODUNIOP " +
+            "WHERE UR.IDUSUARIO=" + ls_iduser + " " +
+            "ORDER BY UOP.DESCRIPCION";
+        con = bd.fnGetConn();
+        DataSet ds = bd.Fill(con, lsSql);
+        con.Close(); return ds;
     }
     #endregion
 }

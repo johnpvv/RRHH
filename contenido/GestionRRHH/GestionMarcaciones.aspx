@@ -146,12 +146,14 @@
                     Width="100%"
                     CssClass="grid-reloj"
                     GridLines="None"
+                    DataKeyNames="IDMARCACION,CODIGO_EMP_RELOJ,IDRELOJ"
                     EmptyDataText="No Hay Marcas para el Período"
                     EmptyDataRowStyle-CssClass="textoEmpty"
                     OnRowCommand="dgMarcas_RowCommand"
                     OnRowDataBound="dgMarcas_RowDataBound">
                     <Columns>
                         <asp:BoundField DataField="IDMARCACION" HeaderText="Id" ItemStyle-Font-Size="0px" ItemStyle-Width="0px" HeaderStyle-Font-Size="0px" />
+                        <asp:BoundField DataField="IDRELOJ" HeaderText="Idreloj" ItemStyle-Font-Size="0px" ItemStyle-Width="0px" HeaderStyle-Font-Size="0px" />
                         <asp:BoundField DataField="F_H_MARCA" HeaderText="Fecha Marca" DataFormatString="{0:dd/MM/yyyy}" ItemStyle-Font-Bold="true" />
                         <asp:BoundField DataField="F_H_MARCA" HeaderText="Hora Marca" DataFormatString="{0:HH:mm:ss}" />
                         <asp:BoundField DataField="TIPO_MARCA_DESC" HeaderText="Tipo" ItemStyle-Font-Bold="true" />
@@ -180,7 +182,7 @@
                                     OnClientClick="guardarScroll();return confirm('¿Está seguro de eliminar esta marca?');" />
                                 <asp:ImageButton ID="btnInsertar" runat="server" ImageUrl="~/imagenes/add.png"
                                     CommandName="InsertarMarca"
-                                    CommandArgument='<%# Eval("FECHA") %>' ToolTip="Agregar marca"
+                                    CommandArgument='<%# Eval("FECHA") + "|" + Eval("ESTADO")  %>' ToolTip="Agregar marca"
                                     Visible='<%# Eval("ESTADO").ToString().Contains("FALTANTE") %>'
                                     OnClientClick="guardarScroll();" />
                             </ItemTemplate>
@@ -189,6 +191,14 @@
                     <PagerStyle CssClass="GridPager" HorizontalAlign="Center" />
                     <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" />
                 </asp:GridView>
+            </div>
+            <div class="botones-form">
+                <asp:Button ID="btnNuevaMarca" runat="server"
+                    Text="+ Agregar Marcación"
+                    CssClass="BotonPortalAmarillo"
+                    OnClick="btnNuevaMarca_Click"
+                    Width="200px"
+                    OnClientClick="guardarScroll();" />
             </div>
             <div class="filtros-grid">
                 <asp:Label ID="lblTotalMarcas" runat="server" CssClass="contador-grid" Text="0 registro(s)">
@@ -200,26 +210,46 @@
         </div>
         <asp:Panel ID="pnlEditarMarca" runat="server" CssClass="modal-marca" Style="display: none;">
             <div class="modal-marca-contenido">
-                <div class="modal-marca-titulo">Editar Marcación:</div>
+                <div class="modal-marca-titulo">
+                    <asp:Label ID="lblTituloMarca" runat="server" />
+                </div>
                 <div class="filtros-grid">
                     <div class="campo">
-                        <label>Fecha:</label><asp:TextBox ID="txtFechaMarca" runat="server" CssClass="form-control" Width="100px" Enabled="false" /></div>
+                        <label>Fecha:</label><asp:TextBox ID="txtFechaMarca" runat="server" CssClass="form-control" Width="100px" Enabled="false" />
+                    </div>
                     <div class="campo">
-                        <label>Hora:</label><asp:TextBox ID="txtHoraMarca" runat="server" CssClass="form-control" Width="100px" MaxLength="8" /></div>
+                        <label>Hora:</label><asp:TextBox ID="txtHoraMarca" runat="server" CssClass="form-control" Width="100px" MaxLength="8" />
+                    </div>
                     <div class="campo">
                         <label>Tipo:</label><asp:DropDownList ID="ddlTipoMarca" runat="server" CssClass="form-control" Width="120px">
                             <asp:ListItem Value="0">ENTRADA</asp:ListItem>
                             <asp:ListItem Value="1">SALIDA</asp:ListItem>
-                        </asp:DropDownList></div>
+                        </asp:DropDownList>
+                    </div>
                     <div class="campo">
-                        <label>Centro:</label><asp:Label ID="lblCentroMarca" runat="server" CssClass="textoNormLeft" /></div>
+                        <label>Centro:</label>
+                        <%--<asp:Label ID="lblCentroMarca" runat="server" CssClass="textoNormLeft" />--%>
+                        <asp:DropDownList ID="ddlCentroMarca" runat="server" CssClass="form-control" />
+                    </div>
                     <div class="campo">
-                        <label>Observación:</label><asp:TextBox ID="txtObsMarca" runat="server" CssClass="form-control" MaxLength="800" Width="200px" TextMode="MultiLine"/></div>
+                        <label>Observación:</label><asp:TextBox ID="txtObsMarca" runat="server" CssClass="form-control" MaxLength="800" Width="200px" TextMode="MultiLine" />
+                    </div>
                 </div>
                 <asp:HiddenField ID="hdIdMarcacion" runat="server" />
-                <div class="botones-formulario">
-                    <asp:Button ID="btnGuardarMarca" runat="server" Text="Guardar" CssClass="BotonPortalAzul" OnClick="btnGuardarMarca_Click" />
-                    <asp:Button ID="btnCancelarMarca" runat="server" Text="Cancelar" CssClass="BotonPortalGris" OnClick="btnCancelarMarca_Click" />
+                <asp:HiddenField ID="hdIdUserReloj" runat="server" />
+                <asp:HiddenField ID="hdIdReloj" runat="server" />
+                <br />
+                <div class="botones-form">
+                    <asp:Button ID="btnGuardarMarca" runat="server"
+                        Text="Guardar"
+                        CssClass="BotonPortalAzul"
+                        OnClick="btnGuardarMarca_Click"
+                        OnClientClick="guardarScroll();" />
+                    <asp:Button ID="btnCancelarMarca" runat="server"
+                        Text="Cancelar"
+                        CssClass="BotonPortalGris"
+                        OnClick="btnCancelarMarca_Click"
+                        OnClientClick="guardarScroll();" />
                 </div>
             </div>
         </asp:Panel>
