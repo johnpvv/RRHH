@@ -30,6 +30,7 @@
 </head>
 <body>
     <form id="form1" runat="server">
+        <asp:ScriptManager ID="TS_1" runat="server" EnableScriptGlobalization="True"></asp:ScriptManager>
         <div class="bloque">
             <div class="titulo-seccion">
                 Filtro de Marcas
@@ -75,6 +76,7 @@
                     <asp:Button ID="btnVolver"
                         runat="server"
                         Text="Volver"
+                        CausesValidation="false"
                         CssClass="BotonPortalGris"
                         OnClick="btnVolver_Click" />
                 </div>
@@ -215,10 +217,12 @@
                 </div>
                 <div class="filtros-grid">
                     <div class="campo">
-                        <label>Fecha:</label><asp:TextBox ID="txtFechaMarca" runat="server" CssClass="form-control" Width="100px" Enabled="false" />
+                        <label>Fecha:</label><asp:TextBox ID="txtFechaMarca" runat="server" CssClass="form-control" Width="120px" Enabled="false" />
+                        <ajaxToolkit:CalendarExtender ID="calFechaMarca" runat="server" TargetControlID="txtFechaMarca" Format="dd/MM/yyyy" />
                     </div>
                     <div class="campo">
-                        <label>Hora:</label><asp:TextBox ID="txtHoraMarca" runat="server" CssClass="form-control" Width="100px" MaxLength="8" />
+                        <label>Hora:</label><asp:TextBox ID="txtHoraMarca" runat="server" CssClass="form-control" Width="120px" TextMode="Time" step="1" MaxLength="8" />
+
                     </div>
                     <div class="campo">
                         <label>Tipo:</label><asp:DropDownList ID="ddlTipoMarca" runat="server" CssClass="form-control" Width="120px">
@@ -228,8 +232,12 @@
                     </div>
                     <div class="campo">
                         <label>Centro:</label>
-                        <%--<asp:Label ID="lblCentroMarca" runat="server" CssClass="textoNormLeft" />--%>
-                        <asp:DropDownList ID="ddlCentroMarca" runat="server" CssClass="form-control" />
+                        <asp:DropDownList ID="ddlCentroMarca" runat="server"
+                            CssClass="form-control"
+                            AutoPostBack="true"
+                            OnSelectedIndexChanged="ddlCentroMarca_SelectedIndexChanged"
+                            onchange="mostrarSpinner();">
+                        </asp:DropDownList>
                     </div>
                     <div class="campo">
                         <label>Observación:</label><asp:TextBox ID="txtObsMarca" runat="server" CssClass="form-control" MaxLength="800" Width="200px" TextMode="MultiLine" />
@@ -238,18 +246,20 @@
                 <asp:HiddenField ID="hdIdMarcacion" runat="server" />
                 <asp:HiddenField ID="hdIdUserReloj" runat="server" />
                 <asp:HiddenField ID="hdIdReloj" runat="server" />
+                <asp:HiddenField ID="hdTipoAgrega" runat="server" />
                 <br />
                 <div class="botones-form">
                     <asp:Button ID="btnGuardarMarca" runat="server"
                         Text="Guardar"
                         CssClass="BotonPortalAzul"
                         OnClick="btnGuardarMarca_Click"
-                        OnClientClick="guardarScroll();" />
+                        OnClientClick="guardarScroll();mostrarSpinner();" />
                     <asp:Button ID="btnCancelarMarca" runat="server"
                         Text="Cancelar"
                         CssClass="BotonPortalGris"
                         OnClick="btnCancelarMarca_Click"
-                        OnClientClick="guardarScroll();" />
+                        OnClientClick="guardarScroll();"
+                        CausesValidation="false" />
                 </div>
             </div>
         </asp:Panel>

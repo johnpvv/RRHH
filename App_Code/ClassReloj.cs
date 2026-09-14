@@ -668,7 +668,7 @@ public class ClassReloj
                     "'U:' + CAST(IDUSUARIO AS VARCHAR(20)) " +
                 "END AS ID_SELECCION, " +
                 "IDUSUARIO," +
-                "IDUSRELOJ, " +
+                //"IDUSRELOJ, " +
                 "CASE " +
                     "WHEN IDUSUARIO IS NULL THEN MAX(CODIGO_EMP_RELOJ) " +
                     "ELSE NULL END AS CODIGO_EMP_RELOJ, " +
@@ -702,7 +702,7 @@ public class ClassReloj
             "FROM MARCAS " +
             "GROUP BY " +
                 "IDUSUARIO," +
-                "IDUSRELOJ, " +
+                //"IDUSRELOJ, " +
                 "RUT_C, " +
                 "CASE " +
                     "WHEN IDUSUARIO IS NULL THEN CODIGO_EMP_RELOJ " +
@@ -719,70 +719,7 @@ public class ClassReloj
         con.Close();
         return ds;
     }
-    //public DataSet mfBuscarMarcasTrabajador()
-    //{
-    //    string lsSql;
-    //    DataSet ds;
-    //    lsSql =
-    //        "DECLARE @FECHA_INICIO DATE = DATEFROMPARTS(" + ls_anio + "," + ls_mes + ",1); " +
-    //        "DECLARE @FECHA_FIN DATE = DATEADD(MONTH,1,@FECHA_INICIO); ";
-    //    if (ls_iduser != "")
-    //    {
-    //        lsSql +=
-    //            "SELECT DISTINCT " +
-    //                "M.IDMARCACION, " +
-    //                "M.CODIGO_EMP_RELOJ, " +
-    //                "M.IDRELOJ, " +
-    //                "UOP.DESCRIPCION AS CENTRO, " +
-    //                "M.F_H_MARCA, " +
-    //                "M.TIPO_MARCA, " +
-    //                "CASE " +
-    //                    "WHEN M.TIPO_MARCA = 0 THEN 'ENTRADA' " +
-    //                    "WHEN M.TIPO_MARCA = 1 THEN 'SALIDA' " +
-    //                    "ELSE 'OTRO' " +
-    //                "END AS TIPO_MARCA_DESC, " +
-    //                "M.TIPO_CARGA, " +
-    //                "M.OBSERVACIONES " +
-    //            "FROM " + modConstantes.gsDbRH + "M_MARCACIONES M " +
-    //            //"INNER JOIN " + modConstantes.gsDbRH + "M_USR_RELOJ UR ON UR.IDUSRELOJ = M.CODIGO_EMP_RELOJ AND UR.IDRELOJ = M.IDRELOJ " +
-    //            "INNER JOIN " + modConstantes.gsDbRH + "M_USR_RELOJ UR ON UR.IDUSRELOJ = M.CODIGO_EMP_RELOJ " +
-    //            "LEFT JOIN " + modConstantes.gsDbRH + "M_RELOJES RE ON RE.IDRELOJ = M.IDRELOJ " +
-    //            "LEFT JOIN " + modConstantes.gsDbRH + "M_UNIDAD_OPERATIVA UOP ON UOP.CODUNIOP = RE.CODUNIOP " +
-    //            "WHERE UR.IDUSUARIO = " + ls_iduser +
-    //                " AND M.F_H_MARCA >= @FECHA_INICIO " +
-    //                " AND M.F_H_MARCA < @FECHA_FIN " +
-    //            "ORDER BY M.F_H_MARCA ";
-    //    }
-    //    else
-    //    {
-    //        lsSql +=
-    //            "SELECT DISTINCT " +
-    //                "M.IDMARCACION, " +
-    //                "M.CODIGO_EMP_RELOJ, " +
-    //                "M.IDRELOJ, " +
-    //                "M.F_H_MARCA, " +
-    //                "UOP.DESCRIPCION AS CENTRO, " +
-    //                "M.TIPO_MARCA, " +
-    //                "CASE " +
-    //                    "WHEN M.TIPO_MARCA = 0 THEN 'ENTRADA' " +
-    //                    "WHEN M.TIPO_MARCA = 1 THEN 'SALIDA' " +
-    //                    "ELSE 'OTRO' " +
-    //                "END AS TIPO_MARCA_DESC, " +
-    //                "M.TIPO_CARGA, " +
-    //                "M.OBSERVACIONES " +
-    //            "FROM " + modConstantes.gsDbRH + "M_MARCACIONES M " +
-    //            "LEFT JOIN " + modConstantes.gsDbRH + "M_RELOJES RE ON RE.IDRELOJ = M.IDRELOJ " +
-    //            "LEFT JOIN " + modConstantes.gsDbRH + "M_UNIDAD_OPERATIVA UOP ON UOP.CODUNIOP = RE.CODUNIOP " +
-    //            "WHERE M.CODIGO_EMP_RELOJ = '" + ls_iduserreloj.Replace("'", "''") + "'" +//revisar mas de un reloj
-    //                //" AND M.IDRELOJ = " + ls_idreloj + "" +
-    //                " AND M.F_H_MARCA >= @FECHA_INICIO " + " AND M.F_H_MARCA < @FECHA_FIN " +
-    //            "ORDER BY M.F_H_MARCA ";
-    //    }
-    //    con = bd.fnGetConn();
-    //    ds = bd.Fill(con, lsSql);
-    //    con.Close();
-    //    return ds;
-    //}
+    
     public DataSet mfBuscarMarcasTrabajador()
     {
         string lsSql;
@@ -929,7 +866,31 @@ public class ClassReloj
             "ORDER BY UOP.DESCRIPCION";
         con = bd.fnGetConn();
         DataSet ds = bd.Fill(con, lsSql);
-        con.Close(); return ds;
+        con.Close();
+        return ds;
+    }
+    public bool mfExisteMarca()
+    {
+        string lsSql = "SELECT COUNT(*) FROM " + modConstantes.gsDbRH + "M_MARCACIONES M " +
+            "INNER JOIN " + modConstantes.gsDbRH + "M_USR_RELOJ UR ON UR.IDUSRELOJ=M.CODIGO_EMP_RELOJ " +
+            "WHERE UR.IDUSUARIO=" + ls_iduser + " " +
+            "AND CAST(M.F_H_MARCA AS DATE)=CONVERT(DATE,'" + ls_fecha + "',103) " +
+            "AND ISNULL(M.IDESTADO,1)<>3";
+        con = bd.fnGetConn();
+        DataSet ds = bd.Fill(con, lsSql);
+        con.Close();
+        return Convert.ToInt32(ds.Tables[0].Rows[0][0]) > 0;
+    }
+    public DataSet mfBuscarUsrReloj()
+    {
+        string lsSql = "SELECT IDUSRRELOJ,IDUSRELOJ,IDRELOJ " +
+            "FROM " + modConstantes.gsDbRH + "M_USR_RELOJ " +
+            "WHERE IDUSRELOJ=" + ls_iduserreloj;
+
+        con = bd.fnGetConn();
+        DataSet ds = bd.Fill(con, lsSql);
+        con.Close();
+        return ds;
     }
     #endregion
 }
