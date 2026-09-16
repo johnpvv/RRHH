@@ -90,49 +90,108 @@ public class ClassReloj
         return ds;
     }
 
-    public DataSet mfBuscarMarcasReloj()
+    //public DataSet mfBuscarMarcasReloj()
+    //{
+    //    string lsSql;
+    //    string lsWhe = "";
+    //    DataSet ds;
+
+    //    lsWhe = " AND UR.IDUSUARIO = " + ls_iduser;
+
+    //    if (ls_mes != "" && ls_anio != "")
+    //        lsWhe += " AND MR.[MONTH] = " + ls_mes + " AND MR.[YEAR] = " + ls_anio;
+
+    //    lsSql = "SELECT " +
+    //            "MR.IDMARCARELOJ, " +
+    //            "MR.IDRELOJ, " +
+    //            "MR.ENROLLNUMBER, " +
+    //            "MR.VERIFYMODE, " +
+    //            "MR.INOUTMODE, " +
+    //            "CASE " +
+    //            "WHEN MR.INOUTMODE = 0 THEN 'ENTRADA' " +
+    //            "WHEN MR.INOUTMODE = 1 THEN 'SALIDA' " +
+    //            "ELSE 'Otro' END AS TIPO_MARCA, " +
+    //            "CASE DATEPART(WEEKDAY, DATETIMEFROMPARTS(MR.[YEAR],MR.[MONTH],MR.[DAY],MR.[HOUR],MR.[MINUTE],MR.[SECOND],0)) " +
+    //            "WHEN 1 THEN 'Domingo' " +
+    //            "WHEN 2 THEN 'Lunes' " +
+    //            "WHEN 3 THEN 'Martes' " +
+    //            "WHEN 4 THEN 'Miércoles' " +
+    //            "WHEN 5 THEN 'Jueves' " +
+    //            "WHEN 6 THEN 'Viernes' " +
+    //            "WHEN 7 THEN 'Sábado' " +
+    //            "END DIA, " +
+    //            "DATETIMEFROMPARTS(MR.[YEAR],MR.[MONTH],MR.[DAY],MR.[HOUR],MR.[MINUTE],MR.[SECOND],0) AS F_H_MARCA, " +
+    //            "MR.WORKCODE, " +
+    //            "MR.F_H_CREACION, " +
+    //            "MR.TIPO, " +
+    //            "MR.IDUSR, " +
+    //            "UOP.DESCRIPCION AS CENTRO, " +
+    //            "MR.IDESTADO " +
+    //            "FROM " + modConstantes.gsDbRH + "M_MARCA_RELOJ MR " +
+    //            "INNER JOIN " + modConstantes.gsDbRH + "M_USR_RELOJ UR ON UR.IDUSRELOJ = MR.ENROLLNUMBER " +
+    //            "INNER JOIN " + modConstantes.gsDbRH + "M_RELOJES RE ON RE.IDRELOJ = MR.IDRELOJ " +
+    //            "INNER JOIN " + modConstantes.gsDbRH + "M_UNIDAD_OPERATIVA UOP ON UOP.CODUNIOP = RE.CODUNIOP " +
+    //            "WHERE 1=1 " + lsWhe +
+    //            " ORDER BY MR.[DAY] DESC, MR.[HOUR] DESC,MR.[MINUTE] DESC, MR.[SECOND] DESC ";
+
+    //    con = bd.fnGetConn();
+    //    ds = bd.Fill(con, lsSql);
+    //    con.Close();
+
+    //    return ds;
+    //}
+    public DataSet mfBuscarMarcasReloj()//nuevo que apunta a m_marcaciones
     {
         string lsSql;
         string lsWhe = "";
         DataSet ds;
 
-        lsWhe = " AND UR.IDUSUARIO = " + ls_iduser;
+        lsWhe = " AND UR.IDUSUARIO=" + ls_iduser;
 
         if (ls_mes != "" && ls_anio != "")
-            lsWhe += " AND MR.[MONTH] = " + ls_mes + " AND MR.[YEAR] = " + ls_anio;
+            lsWhe += " AND MONTH(M.F_H_MARCA)=" + ls_mes + " AND YEAR(M.F_H_MARCA)=" + ls_anio;
 
         lsSql = "SELECT " +
-                "MR.IDMARCARELOJ, " +
-                "MR.IDRELOJ, " +
-                "MR.ENROLLNUMBER, " +
-                "MR.VERIFYMODE, " +
-                "MR.INOUTMODE, " +
-                "CASE " +
-                "WHEN MR.INOUTMODE = 0 THEN 'ENTRADA' " +
-                "WHEN MR.INOUTMODE = 1 THEN 'SALIDA' " +
-                "ELSE 'Otro' END AS TIPO_MARCA, " +
-                "CASE DATEPART(WEEKDAY, DATETIMEFROMPARTS(MR.[YEAR],MR.[MONTH],MR.[DAY],MR.[HOUR],MR.[MINUTE],MR.[SECOND],0)) " +
-                "WHEN 1 THEN 'Domingo' " +
-                "WHEN 2 THEN 'Lunes' " +
-                "WHEN 3 THEN 'Martes' " +
-                "WHEN 4 THEN 'Miércoles' " +
-                "WHEN 5 THEN 'Jueves' " +
-                "WHEN 6 THEN 'Viernes' " +
-                "WHEN 7 THEN 'Sábado' " +
-                "END DIA, " +
-                "DATETIMEFROMPARTS(MR.[YEAR],MR.[MONTH],MR.[DAY],MR.[HOUR],MR.[MINUTE],MR.[SECOND],0) AS F_H_MARCA, " +
-                "MR.WORKCODE, " +
-                "MR.F_H_CREACION, " +
-                "MR.TIPO, " +
-                "MR.IDUSR, " +
-                "UOP.DESCRIPCION AS CENTRO, " +
-                "MR.IDESTADO " +
-                "FROM " + modConstantes.gsDbRH + "M_MARCA_RELOJ MR " +
-                "INNER JOIN " + modConstantes.gsDbRH + "M_USR_RELOJ UR ON UR.IDUSRELOJ = MR.ENROLLNUMBER " +
-                "INNER JOIN " + modConstantes.gsDbRH + "M_RELOJES RE ON RE.IDRELOJ = MR.IDRELOJ " +
-                "INNER JOIN " + modConstantes.gsDbRH + "M_UNIDAD_OPERATIVA UOP ON UOP.CODUNIOP = RE.CODUNIOP " +
-                "WHERE 1=1 " + lsWhe +
-                " ORDER BY MR.[DAY] DESC, MR.[HOUR] DESC,MR.[MINUTE] DESC, MR.[SECOND] DESC ";
+              "M.IDMARCACION AS IDMARCARELOJ, " +
+              "M.IDRELOJ, " +
+              "M.CODIGO_EMP_RELOJ AS ENROLLNUMBER, " +
+              "NULL AS VERIFYMODE, " +
+              "M.TIPO_MARCA AS INOUTMODE, " +
+              "CASE " +
+              "WHEN M.TIPO_MARCA=0 THEN 'ENTRADA' " +
+              "WHEN M.TIPO_MARCA=1 THEN 'SALIDA' " +
+              "ELSE 'Otro' END AS TIPO_MARCA, " +
+              "CASE DATEPART(WEEKDAY,M.F_H_MARCA) " +
+              "WHEN 1 THEN 'Domingo' " +
+              "WHEN 2 THEN 'Lunes' " +
+              "WHEN 3 THEN 'Martes' " +
+              "WHEN 4 THEN 'Miércoles' " +
+              "WHEN 5 THEN 'Jueves' " +
+              "WHEN 6 THEN 'Viernes' " +
+              "WHEN 7 THEN 'Sábado' " +
+              "END AS DIA, " +
+              "M.F_H_MARCA, " +
+              "NULL AS WORKCODE, " +
+              "M.F_H_CARGA AS F_H_CREACION, " +
+              "M.TIPO_CARGA AS TIPO, " +
+              "M.IDUSERMOD AS IDUSR, " +
+              "UOP.DESCRIPCION AS CENTRO, " +
+              "ISNULL(M.IDESTADO,1) AS IDESTADO, " +
+              "CASE " +
+              "WHEN ISNULL(M.IDUSERMOD,0)>0 THEN 'MARCA EDITADA' " +
+              "ELSE 'MARCA ORIGINAL' " +
+              "END AS ESTADO_MARCA " +
+              "FROM " + modConstantes.gsDbRH + "M_MARCACIONES M " +
+              "INNER JOIN " + modConstantes.gsDbRH + "M_USR_RELOJ UR " +
+              "ON UR.IDUSRELOJ=M.CODIGO_EMP_RELOJ " +
+              "AND UR.IDUSUARIO=" + ls_iduser + " " +
+              "INNER JOIN " + modConstantes.gsDbRH + "M_RELOJES RE " +
+              "ON RE.IDRELOJ=M.IDRELOJ " +
+              "INNER JOIN " + modConstantes.gsDbRH + "M_UNIDAD_OPERATIVA UOP " +
+              "ON UOP.CODUNIOP=RE.CODUNIOP " +
+              "WHERE ISNULL(M.IDESTADO,1)<>3 " +
+              lsWhe +
+              " ORDER BY M.F_H_MARCA DESC";
 
         con = bd.fnGetConn();
         ds = bd.Fill(con, lsSql);
@@ -141,55 +200,123 @@ public class ClassReloj
         return ds;
     }
 
-    public DataSet mfBuscarMarcasRelojAgrupadas()
+    //public DataSet mfBuscarMarcasRelojAgrupadas()
+    //{
+    //    string lsSql;
+    //    string lsWhe = "";
+    //    DataSet ds;
+
+    //    lsWhe = " AND UR.IDUSUARIO = " + ls_iduser;
+
+    //    if (ls_mes != "" && ls_anio != "")
+    //        lsWhe += " AND MR.[MONTH] = " + ls_mes + " AND MR.[YEAR] = " + ls_anio;
+
+    //    lsSql = "WITH MARCAS AS ( " +
+    //            "SELECT MR.IDMARCARELOJ, MR.IDRELOJ, MR.ENROLLNUMBER, " +
+    //            "MR.INOUTMODE, " +
+    //            "DATETIMEFROMPARTS(MR.[YEAR],MR.[MONTH],MR.[DAY],MR.[HOUR],MR.[MINUTE],MR.[SECOND],0) AS F_H_MARCA, " +
+    //            "MR.[YEAR], MR.[MONTH], MR.[DAY], UOP.DESCRIPCION AS CENTRO " +
+    //            "FROM " + modConstantes.gsDbRH + "M_MARCA_RELOJ MR " +
+    //            "INNER JOIN " + modConstantes.gsDbRH + "M_USR_RELOJ UR ON UR.IDUSRELOJ = MR.ENROLLNUMBER " +
+    //            "INNER JOIN " + modConstantes.gsDbRH + "M_RELOJES RE ON RE.IDRELOJ = MR.IDRELOJ " +
+    //            "INNER JOIN " + modConstantes.gsDbRH + "M_UNIDAD_OPERATIVA UOP ON UOP.CODUNIOP = RE.CODUNIOP " +
+    //            "WHERE 1=1 " + lsWhe +
+    //            "), " +
+    //            "ENTRADAS AS ( " +
+    //            "SELECT *, ROW_NUMBER() OVER(PARTITION BY [YEAR],[MONTH],[DAY] ORDER BY F_H_MARCA) AS NRO_MARCA " +
+    //            "FROM MARCAS WHERE INOUTMODE = 0 " +
+    //            "), " +
+    //            "SALIDAS AS ( " +
+    //            "SELECT *, ROW_NUMBER() OVER(PARTITION BY [YEAR],[MONTH],[DAY] ORDER BY F_H_MARCA) AS NRO_MARCA " +
+    //            "FROM MARCAS WHERE INOUTMODE = 1 " +
+    //            ") " +
+    //            "SELECT " +
+    //            "ISNULL(E.IDRELOJ,S.IDRELOJ) AS IDRELOJ, " +
+    //            "ISNULL(E.ENROLLNUMBER,S.ENROLLNUMBER) AS ENROLLNUMBER, " +
+    //            "CASE DATEPART(WEEKDAY,DATEFROMPARTS(ISNULL(E.[YEAR],S.[YEAR]),ISNULL(E.[MONTH],S.[MONTH]),ISNULL(E.[DAY],S.[DAY]))) " +
+    //            "WHEN 1 THEN 'Domingo' WHEN 2 THEN 'Lunes' WHEN 3 THEN 'Martes' " +
+    //            "WHEN 4 THEN 'Miércoles' WHEN 5 THEN 'Jueves' WHEN 6 THEN 'Viernes' " +
+    //            "WHEN 7 THEN 'Sábado' END AS DIA, " +
+    //            "RIGHT('0' + CAST(ISNULL(E.[DAY],S.[DAY]) AS VARCHAR(2)),2) + '/' + " +
+    //            "RIGHT('0' + CAST(ISNULL(E.[MONTH],S.[MONTH]) AS VARCHAR(2)),2) + '/' + " +
+    //            "CAST(ISNULL(E.[YEAR],S.[YEAR]) AS VARCHAR(4)) AS FECHA, " +
+    //            "ISNULL(E.NRO_MARCA,S.NRO_MARCA) AS NRO_MARCA, " +
+    //            "E.F_H_MARCA AS ENTRADA, " +
+    //            "S.F_H_MARCA AS SALIDA, " +
+    //            "ISNULL(E.CENTRO,S.CENTRO) AS CENTRO " +
+    //            "FROM ENTRADAS E " +
+    //            "FULL OUTER JOIN SALIDAS S ON S.[YEAR] = E.[YEAR] AND S.[MONTH] = E.[MONTH] " +
+    //            "AND S.[DAY] = E.[DAY] AND S.NRO_MARCA = E.NRO_MARCA " +
+    //            "ORDER BY ISNULL(E.[YEAR],S.[YEAR]) DESC, ISNULL(E.[MONTH],S.[MONTH]) DESC, " +
+    //            "ISNULL(E.[DAY],S.[DAY]) DESC, ISNULL(E.NRO_MARCA,S.NRO_MARCA) DESC";
+
+    //    con = bd.fnGetConn();
+    //    ds = bd.Fill(con, lsSql);
+    //    con.Close();
+
+    //    return ds;
+    //}
+    public DataSet mfBuscarMarcasRelojAgrupadas()//nuevo metodo apunta a m_marcaciones
     {
         string lsSql;
         string lsWhe = "";
         DataSet ds;
 
-        lsWhe = " AND UR.IDUSUARIO = " + ls_iduser;
+        lsWhe = " AND UR.IDUSUARIO=" + ls_iduser;
 
         if (ls_mes != "" && ls_anio != "")
-            lsWhe += " AND MR.[MONTH] = " + ls_mes + " AND MR.[YEAR] = " + ls_anio;
+            lsWhe += " AND MONTH(M.F_H_MARCA)=" + ls_mes + " AND YEAR(M.F_H_MARCA)=" + ls_anio;
 
         lsSql = "WITH MARCAS AS ( " +
-                "SELECT MR.IDMARCARELOJ, MR.IDRELOJ, MR.ENROLLNUMBER, " +
-                "MR.INOUTMODE, " +
-                "DATETIMEFROMPARTS(MR.[YEAR],MR.[MONTH],MR.[DAY],MR.[HOUR],MR.[MINUTE],MR.[SECOND],0) AS F_H_MARCA, " +
-                "MR.[YEAR], MR.[MONTH], MR.[DAY], UOP.DESCRIPCION AS CENTRO " +
-                "FROM " + modConstantes.gsDbRH + "M_MARCA_RELOJ MR " +
-                "INNER JOIN " + modConstantes.gsDbRH + "M_USR_RELOJ UR ON UR.IDUSRELOJ = MR.ENROLLNUMBER " +
-                "INNER JOIN " + modConstantes.gsDbRH + "M_RELOJES RE ON RE.IDRELOJ = MR.IDRELOJ " +
-                "INNER JOIN " + modConstantes.gsDbRH + "M_UNIDAD_OPERATIVA UOP ON UOP.CODUNIOP = RE.CODUNIOP " +
-                "WHERE 1=1 " + lsWhe +
-                "), " +
-                "ENTRADAS AS ( " +
-                "SELECT *, ROW_NUMBER() OVER(PARTITION BY [YEAR],[MONTH],[DAY] ORDER BY F_H_MARCA) AS NRO_MARCA " +
-                "FROM MARCAS WHERE INOUTMODE = 0 " +
-                "), " +
-                "SALIDAS AS ( " +
-                "SELECT *, ROW_NUMBER() OVER(PARTITION BY [YEAR],[MONTH],[DAY] ORDER BY F_H_MARCA) AS NRO_MARCA " +
-                "FROM MARCAS WHERE INOUTMODE = 1 " +
-                ") " +
-                "SELECT " +
-                "ISNULL(E.IDRELOJ,S.IDRELOJ) AS IDRELOJ, " +
-                "ISNULL(E.ENROLLNUMBER,S.ENROLLNUMBER) AS ENROLLNUMBER, " +
-                "CASE DATEPART(WEEKDAY,DATEFROMPARTS(ISNULL(E.[YEAR],S.[YEAR]),ISNULL(E.[MONTH],S.[MONTH]),ISNULL(E.[DAY],S.[DAY]))) " +
-                "WHEN 1 THEN 'Domingo' WHEN 2 THEN 'Lunes' WHEN 3 THEN 'Martes' " +
-                "WHEN 4 THEN 'Miércoles' WHEN 5 THEN 'Jueves' WHEN 6 THEN 'Viernes' " +
-                "WHEN 7 THEN 'Sábado' END AS DIA, " +
-                "RIGHT('0' + CAST(ISNULL(E.[DAY],S.[DAY]) AS VARCHAR(2)),2) + '/' + " +
-                "RIGHT('0' + CAST(ISNULL(E.[MONTH],S.[MONTH]) AS VARCHAR(2)),2) + '/' + " +
-                "CAST(ISNULL(E.[YEAR],S.[YEAR]) AS VARCHAR(4)) AS FECHA, " +
-                "ISNULL(E.NRO_MARCA,S.NRO_MARCA) AS NRO_MARCA, " +
-                "E.F_H_MARCA AS ENTRADA, " +
-                "S.F_H_MARCA AS SALIDA, " +
-                "ISNULL(E.CENTRO,S.CENTRO) AS CENTRO " +
-                "FROM ENTRADAS E " +
-                "FULL OUTER JOIN SALIDAS S ON S.[YEAR] = E.[YEAR] AND S.[MONTH] = E.[MONTH] " +
-                "AND S.[DAY] = E.[DAY] AND S.NRO_MARCA = E.NRO_MARCA " +
-                "ORDER BY ISNULL(E.[YEAR],S.[YEAR]) DESC, ISNULL(E.[MONTH],S.[MONTH]) DESC, " +
-                "ISNULL(E.[DAY],S.[DAY]) DESC, ISNULL(E.NRO_MARCA,S.NRO_MARCA) DESC";
+              "SELECT M.IDMARCACION,M.IDRELOJ,M.CODIGO_EMP_RELOJ,M.TIPO_MARCA, " +
+              "M.F_H_MARCA, " +
+              "YEAR(M.F_H_MARCA) [YEAR],MONTH(M.F_H_MARCA) [MONTH],DAY(M.F_H_MARCA) [DAY], " +
+              "UOP.DESCRIPCION AS CENTRO, " +
+              "CASE WHEN ISNULL(M.IDUSERMOD,0)>0 THEN 'MARCA EDITADA' ELSE 'MARCA ORIGINAL' END AS ESTADO_MARCA " +
+              "FROM " + modConstantes.gsDbRH + "M_MARCACIONES M " +
+              "INNER JOIN " + modConstantes.gsDbRH + "M_USR_RELOJ UR " +
+              "ON UR.IDUSRELOJ=M.CODIGO_EMP_RELOJ " +
+              "AND UR.IDUSUARIO=" + ls_iduser + " " +
+              "INNER JOIN " + modConstantes.gsDbRH + "M_RELOJES RE " +
+              "ON RE.IDRELOJ=M.IDRELOJ " +
+              "INNER JOIN " + modConstantes.gsDbRH + "M_UNIDAD_OPERATIVA UOP " +
+              "ON UOP.CODUNIOP=RE.CODUNIOP " +
+              "WHERE ISNULL(M.IDESTADO,1)<>3 " + lsWhe +
+              "), " +
+              "ENTRADAS AS ( " +
+              "SELECT *,ROW_NUMBER() OVER(PARTITION BY [YEAR],[MONTH],[DAY] ORDER BY F_H_MARCA) AS NRO_MARCA " +
+              "FROM MARCAS WHERE TIPO_MARCA=0 " +
+              "), " +
+              "SALIDAS AS ( " +
+              "SELECT *,ROW_NUMBER() OVER(PARTITION BY [YEAR],[MONTH],[DAY] ORDER BY F_H_MARCA) AS NRO_MARCA " +
+              "FROM MARCAS WHERE TIPO_MARCA=1 " +
+              ") " +
+              "SELECT " +
+              "ISNULL(E.IDRELOJ,S.IDRELOJ) AS IDRELOJ, " +
+              "ISNULL(E.CODIGO_EMP_RELOJ,S.CODIGO_EMP_RELOJ) AS ENROLLNUMBER, " +
+              "CASE DATEPART(WEEKDAY,DATEFROMPARTS(ISNULL(E.[YEAR],S.[YEAR]),ISNULL(E.[MONTH],S.[MONTH]),ISNULL(E.[DAY],S.[DAY]))) " +
+              "WHEN 1 THEN 'Domingo' WHEN 2 THEN 'Lunes' WHEN 3 THEN 'Martes' " +
+              "WHEN 4 THEN 'Miércoles' WHEN 5 THEN 'Jueves' " +
+              "WHEN 6 THEN 'Viernes' WHEN 7 THEN 'Sábado' END AS DIA, " +
+              "RIGHT('0'+CAST(ISNULL(E.[DAY],S.[DAY]) AS VARCHAR(2)),2)+'/'+ " +
+              "RIGHT('0'+CAST(ISNULL(E.[MONTH],S.[MONTH]) AS VARCHAR(2)),2)+'/'+ " +
+              "CAST(ISNULL(E.[YEAR],S.[YEAR]) AS VARCHAR(4)) AS FECHA, " +
+              "ISNULL(E.NRO_MARCA,S.NRO_MARCA) AS NRO_MARCA, " +
+              "E.F_H_MARCA AS ENTRADA, " +
+              "S.F_H_MARCA AS SALIDA, " +
+              "ISNULL(E.CENTRO,S.CENTRO) AS CENTRO, " +
+              "E.ESTADO_MARCA AS ESTADO_ENTRADA, " +
+              "S.ESTADO_MARCA AS ESTADO_SALIDA " +
+              "FROM ENTRADAS E " +
+              "FULL OUTER JOIN SALIDAS S " +
+              "ON S.[YEAR]=E.[YEAR] " +
+              "AND S.[MONTH]=E.[MONTH] " +
+              "AND S.[DAY]=E.[DAY] " +
+              "AND S.NRO_MARCA=E.NRO_MARCA " +
+              "ORDER BY ISNULL(E.[YEAR],S.[YEAR]) DESC, " +
+              "ISNULL(E.[MONTH],S.[MONTH]) DESC, " +
+              "ISNULL(E.[DAY],S.[DAY]) DESC, " +
+              "ISNULL(E.NRO_MARCA,S.NRO_MARCA) DESC";
 
         con = bd.fnGetConn();
         ds = bd.Fill(con, lsSql);
@@ -719,7 +846,7 @@ public class ClassReloj
         con.Close();
         return ds;
     }
-    
+
     public DataSet mfBuscarMarcasTrabajador()
     {
         string lsSql;
@@ -730,7 +857,7 @@ public class ClassReloj
 
         if (ls_iduser != "")
         {
-            lsSql += 
+            lsSql +=
                 "SELECT M.IDMARCACION,CAST(M.F_H_MARCA AS DATE) FECHA,CONVERT(VARCHAR(8),M.F_H_MARCA,108) HORA," +
                 "M.CODIGO_EMP_RELOJ,M.IDRELOJ,UOP.DESCRIPCION CENTRO,M.F_H_MARCA,M.TIPO_MARCA, " +
                 "CASE WHEN M.TIPO_MARCA=0 THEN 'ENTRADA' " +

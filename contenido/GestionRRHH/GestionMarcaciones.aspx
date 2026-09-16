@@ -253,13 +253,13 @@
                         Text="Guardar"
                         CssClass="BotonPortalAzul"
                         OnClick="btnGuardarMarca_Click"
-                        OnClientClick="guardarScroll();mostrarSpinner();" />
+                        OnClientClick="guardarScroll();return validarGuardarMarca();" />
                     <asp:Button ID="btnCancelarMarca" runat="server"
                         Text="Cancelar"
                         CssClass="BotonPortalGris"
                         OnClick="btnCancelarMarca_Click"
                         OnClientClick="guardarScroll();"
-                        CausesValidation="false" />
+                        formnovalidate="formnovalidate" />
                 </div>
             </div>
         </asp:Panel>
@@ -272,3 +272,15 @@
     </form>
 </body>
 </html>
+<script type="text/javascript">
+    function validarGuardarMarca() {
+        var hora = document.getElementById('<%= txtHoraMarca.ClientID %>').value;
+        if (!hora) {
+            alert('Debe ingresar una hora Válida.');
+            return false;
+        }
+        mostrarSpinner();
+        return true;
+    }
+</script>
+

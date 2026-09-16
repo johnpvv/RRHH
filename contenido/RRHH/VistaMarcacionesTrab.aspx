@@ -21,20 +21,20 @@
         <p class="textoTitLeft">Gestión Marcaciones</p>
         <table style="width: 100%; margin-bottom: 10px;">
             <tr>
-                <td style="width: 70px;" class="textoNorm">Año:</td>                    
+                <td style="width: 70px;" class="textoNorm">Año:</td>
                 <td style="width: 100px;">
-                    <asp:DropDownList ID="ddlAnio" runat="server" Width="100px" CssClass="form-control" 
-                        AutopostBack="true" OnSelectedIndexChanged="ddlAnio_SelectedIndexChanged" onchange="mostrarSpinner();">
+                    <asp:DropDownList ID="ddlAnio" runat="server" Width="100px" CssClass="form-control"
+                        AutoPostBack="true" OnSelectedIndexChanged="ddlAnio_SelectedIndexChanged" onchange="mostrarSpinner();">
                     </asp:DropDownList>
                 </td>
-                <td style="width: 70px;" class="textoNorm">Mes:</td>                
+                <td style="width: 70px;" class="textoNorm">Mes:</td>
                 <td style="width: 120px;">
                     <asp:DropDownList ID="ddlMes" runat="server" Width="150px" CssClass="form-control"
-                        AutopostBack="true" OnSelectedIndexChanged="ddlMes_SelectedIndexChanged" onchange="mostrarSpinner();">
+                        AutoPostBack="true" OnSelectedIndexChanged="ddlMes_SelectedIndexChanged" onchange="mostrarSpinner();">
                     </asp:DropDownList>
                 </td>
-                <td style="width: 70px;" class="textoNorm">Tipo Vista:</td>                
-                <td style="width: 220px;">
+                <td style="width: 70px;" class="textoNorm">Tipo Vista:</td>
+                <td style="width: 250px;">
                     <asp:DropDownList ID="ddlVistaMarcas" runat="server" CssClass="form-control" onchange="mostrarSpinner();"
                         AutoPostBack="true" OnSelectedIndexChanged="ddlVistaMarcas_SelectedIndexChanged">
                         <asp:ListItem Value="1">Ver marcas en Lista</asp:ListItem>
@@ -47,7 +47,7 @@
                         Text="Buscar"
                         CssClass="BotonPortal"
                         OnClick="btnBuscar_Click"
-                        OnClientClick="mostrarSpinner();"/>
+                        OnClientClick="mostrarSpinner();" />
                 </td>
             </tr>
         </table>
@@ -66,10 +66,15 @@
                         HeaderText="Día" ItemStyle-CssClass="textoGrid" />
                     <asp:BoundField DataField="F_H_MARCA"
                         HeaderText="Fecha"
-                        DataFormatString="{0:dd/MM/yyyy}" ItemStyle-CssClass="textoGrid" />
-                    <asp:BoundField DataField="F_H_MARCA"
-                        HeaderText="Hora"
-                        DataFormatString="{0:HH:mm:ss}" ItemStyle-CssClass="textoGridBold" />
+                        DataFormatString="{0:dd/MM/yyyy}" ItemStyle-CssClass="textoGridBold" />
+                    <asp:TemplateField HeaderText="Hora Marca" ItemStyle-CssClass="textoGridBoldLeft" HeaderStyle-Width="130px">
+                        <ItemTemplate>
+                            <span class='estado-marca-trabajador <%# Eval("ESTADO_MARCA") %>'
+                                title='<%# Eval("ESTADO_MARCA") %>'>&nbsp;</span>                            
+                            <%# Eval("F_H_MARCA","{0:HH:mm:ss}") %>
+                            <%# Eval("ESTADO_MARCA").ToString()=="MARCA EDITADA" ? "*":"" %>
+                        </ItemTemplate>
+                    </asp:TemplateField>
                     <asp:BoundField DataField="TIPO_MARCA"
                         HeaderText="Marcación" ItemStyle-CssClass="textoGrid" />
                     <asp:BoundField DataField="CENTRO"
@@ -93,17 +98,29 @@
                         HeaderText="Día" ItemStyle-CssClass="textoGrid" />
                     <asp:BoundField DataField="FECHA"
                         HeaderText="Fecha Marcación"
-                        DataFormatString="{0:dd/MM/yyyy}" ItemStyle-CssClass="textoGrid" />
+                        DataFormatString="{0:dd/MM/yyyy}" ItemStyle-CssClass="textoGridBold" />
                     <asp:BoundField DataField="NRO_MARCA"
                         HeaderText="N° Marca" ItemStyle-CssClass="textoGrid" />
-                    <asp:BoundField DataField="ENTRADA"
-                        HeaderText="Hora Entrada"
-                        DataFormatString="{0:HH:mm:ss}" ItemStyle-CssClass="textoGridBold" />
-                    <asp:BoundField DataField="SALIDA"
-                        HeaderText="Hora Salida"
-                        DataFormatString="{0:HH:mm:ss}" ItemStyle-CssClass="textoGridBold" />
+                    <asp:TemplateField HeaderText="Hora Entrada" ItemStyle-CssClass="textoGridBoldLeft" HeaderStyle-Width="130px">
+                        <ItemTemplate>
+                            <span class='estado-marca-trabajador <%# Eval("ESTADO_ENTRADA") %>'
+                                title='<%# Eval("ESTADO_ENTRADA") %>'>&nbsp;
+                            </span>                            
+                            <%# Eval("ENTRADA","{0:HH:mm:ss}") %>
+                            <%# Eval("ESTADO_ENTRADA").ToString()=="MARCA EDITADA" ? "*" : "" %>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Hora Salida" ItemStyle-CssClass="textoGridBoldLeft" HeaderStyle-Width="130px">
+                        <ItemTemplate>
+                            <span class='estado-marca-trabajador <%# Eval("ESTADO_SALIDA") %>'
+                                title='<%# Eval("ESTADO_SALIDA") %>'>&nbsp;                                
+                            </span>                            
+                            <%# Eval("SALIDA","{0:HH:mm:ss}") %>
+                            <%# Eval("ESTADO_SALIDA").ToString()=="MARCA EDITADA" ? "*":"" %>
+                        </ItemTemplate>
+                    </asp:TemplateField>
                     <asp:BoundField DataField="CENTRO"
-                        HeaderText="CENTRO" ItemStyle-CssClass="textoGrid" />
+                        HeaderText="CENTRO" ItemStyle-CssClass="textoGridLeft" />
                 </Columns>
                 <HeaderStyle CssClass="GridGralHeader" />
                 <RowStyle CssClass="GridGralRow" />
