@@ -12,6 +12,8 @@ public partial class contenido_RRHH_VistaTurnosTrab : System.Web.UI.Page
     ClassReloj rlj = new ClassReloj();
     ClassTurnos tur = new ClassTurnos();
     ClassTrabajadores usr = new ClassTrabajadores();
+    ClassFeriado fer = new ClassFeriado();
+    private HashSet<DateTime> feriados = new HashSet<DateTime>();
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)
@@ -40,7 +42,19 @@ public partial class contenido_RRHH_VistaTurnosTrab : System.Web.UI.Page
         ddlAnio.DataValueField = "ID";
         ddlAnio.DataBind();
         ddlAnio.SelectedValue = DateTime.Now.Year.ToString();
-
+    }
+    private void CargarFeriados()
+    {
+        fer.ls_anio = ddlAnio.SelectedValue;
+        DataSet ds = fer.mfBuscar();
+        feriados.Clear();
+        if (ds == null || ds.Tables.Count == 0) return;
+        foreach (DataRow dr in ds.Tables[0].Rows)
+        {
+            DateTime fecha;
+            if (DateTime.TryParse(dr["FECHA"].ToString(), out fecha))
+                feriados.Add(fecha.Date);
+        }
     }
     private void CargarTurnosTrab()
     {
@@ -70,6 +84,7 @@ public partial class contenido_RRHH_VistaTurnosTrab : System.Web.UI.Page
         if (tipoTurno == "1")
         {
             ds = tur.mfBuscarTurnosTrabMes();
+            CargarFeriados();
         }
         else
         {
@@ -82,7 +97,19 @@ public partial class contenido_RRHH_VistaTurnosTrab : System.Web.UI.Page
         dgData.DataSource = ds;
         dgData.DataBind();
     }
+    protected void dgData_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType != DataControlRowType.DataRow) return;
+        DateTime fecha;
+        if (!DateTime.TryParse(DataBinder.Eval(e.Row.DataItem, "FECHA").ToString(), out fecha))
+            return;
 
+        if (fecha.DayOfWeek == DayOfWeek.Sunday || feriados.Contains(fecha.Date))
+        {
+            e.Row.CssClass = "calendario-feriado";
+            e.Row.ToolTip = "Feriado";
+        }
+    }
     protected void btnVolver_Click(object sender, EventArgs e)
     {
         Response.Redirect("~/contenido/frmblksiab.aspx");
@@ -137,6 +164,9 @@ public partial class contenido_RRHH_VistaTurnosTrab : System.Web.UI.Page
         DataSet ds = tur.mfBuscarTurnosTrabMes();
         DataTable dt = ds.Tables[0];
 
+        // Feriados
+        CargarFeriados();
+
         DateTime primerDia = new DateTime(Convert.ToInt32(ddlAnio.SelectedValue), Convert.ToInt32(ddlMes.SelectedValue), 1);
         DateTime ultimoDia = primerDia.AddMonths(1).AddDays(-1);
         StringBuilder sb = new StringBuilder();
@@ -171,11 +201,8 @@ public partial class contenido_RRHH_VistaTurnosTrab : System.Web.UI.Page
 
             string claseDia = "calendario-dia";
 
-            if (fecha.DayOfWeek == DayOfWeek.Sunday)
+            if (fecha.DayOfWeek == DayOfWeek.Sunday || feriados.Contains(fecha.Date))//agregar feriados 21/09/2026
                 claseDia = "calendario-feriado";
-
-            //if (filas.Length > 0 && Convert.ToInt32(filas[0]["FERIADOS"]) == 1)//para cuando hagamos feriados
-            //    claseDia = "calendario-feriado";
 
             sb.Append("<div class='" + claseDia + "'>");
             sb.Append("<div class='calendario-numero'>");

@@ -11,6 +11,8 @@ public partial class contenido_RRHH_VistaMarcacionesTrab : System.Web.UI.Page
     ClassReloj rlj = new ClassReloj();
     ClassTrabajadores usr = new ClassTrabajadores();
     ClassTurnos tur = new ClassTurnos();
+    ClassFeriado fer = new ClassFeriado();
+    private HashSet<DateTime> feriados = new HashSet<DateTime>();
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)
@@ -43,8 +45,48 @@ public partial class contenido_RRHH_VistaMarcacionesTrab : System.Web.UI.Page
         ddlAnio.SelectedValue = DateTime.Now.Year.ToString();
 
     }
+    private void CargarFeriados()
+    {
+        fer.ls_anio = ddlAnio.SelectedValue;
+        DataSet ds = fer.mfBuscar();
+        feriados.Clear();
+        if (ds == null || ds.Tables.Count == 0) return;
+        foreach (DataRow dr in ds.Tables[0].Rows)
+        {
+            DateTime fecha;
+            if (DateTime.TryParse(dr["FECHA"].ToString(), out fecha))
+                feriados.Add(fecha.Date);
+        }
+    }
+    protected void dgData_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType != DataControlRowType.DataRow) return;
+        DateTime fecha;
+        if (!DateTime.TryParse(DataBinder.Eval(e.Row.DataItem, "F_H_MARCA").ToString(), out fecha))
+            return;
+
+        if (fecha.DayOfWeek == DayOfWeek.Sunday || feriados.Contains(fecha.Date))
+        {
+            e.Row.CssClass = "calendario-feriado";
+            e.Row.ToolTip = "Feriado";
+        }
+    }
+    protected void dgDataAgrupada_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType != DataControlRowType.DataRow) return;
+        DateTime fecha;
+        if (!DateTime.TryParse(DataBinder.Eval(e.Row.DataItem, "FECHA").ToString(), out fecha))
+            return;
+
+        if (fecha.DayOfWeek == DayOfWeek.Sunday || feriados.Contains(fecha.Date))
+        {
+            e.Row.CssClass = "calendario-feriado";
+            e.Row.ToolTip = "Feriado";
+        }
+    }
     private void CargarMarcaciones()
     {
+        CargarFeriados();//poblar los feriados para destacar los grids
         usr.ls_rut = Session["rut"].ToString();
         rlj.ls_iduser = usr.mfDevuelveID();//en caso de homologar con otro id desde los relojes u otros        
         rlj.ls_mes = ddlMes.SelectedValue;

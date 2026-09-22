@@ -14,12 +14,14 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
     ClassTurnos tur = new ClassTurnos();
     ClassHorarios hor = new ClassHorarios();
     ClassReloj rlj = new ClassReloj();
+    ClassFeriado fer = new ClassFeriado();
+    private HashSet<DateTime> feriados = new HashSet<DateTime>();
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)
         {
             CargarMeses();
-            CargarAnios();
+            CargarAnios();            
         }
     }
     private void CargarMeses()
@@ -41,6 +43,19 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
         ddlAnio.DataValueField = "ID";
         ddlAnio.DataBind();
         ddlAnio.SelectedValue = DateTime.Now.Year.ToString();
+    }
+    private void CargarFeriados()
+    {
+        fer.ls_anio = ddlAnio.SelectedValue;
+        DataSet ds = fer.mfBuscar();
+        feriados.Clear();
+        if (ds == null || ds.Tables.Count == 0) return;
+        foreach (DataRow dr in ds.Tables[0].Rows)
+        {
+            DateTime fechaVal;
+            if (DateTime.TryParse(dr["FECHA"].ToString(), out fechaVal))
+                feriados.Add(fechaVal.Date);
+        }
     }
     protected void btnVolver_Click(object sender, EventArgs e)//revisar
     {
@@ -165,7 +180,7 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
         rlj.ls_iduser = "";
         rlj.ls_iduserreloj = "";
         //rlj.ls_idreloj = idReloj;
-
+        CargarFeriados();
         if (idSeleccion.StartsWith("U:"))
         {
             rlj.ls_iduser = idSeleccion.Substring(2);
@@ -196,13 +211,13 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
             else
                 revisar++;
         }
-
+        
         lblResumenMarcas.Text =
             "<span>Resumen Marcas: OK: " + ok + ",</span> &nbsp; " +
             "<span>Repetidas: " + (entradaRep + salidaRep) + ",</span> &nbsp; " +
             "<span>Faltantes: " + faltantes + ",</span> &nbsp; " +
             "<span>Para Revisar: " + revisar + ",</span> &nbsp;" +
-            "<span>Total: " + (ok + revisar + faltantes + entradaRep + salidaRep) + "</span>";
+            "<span>Total: " + (ok + revisar + faltantes + entradaRep + salidaRep) + "</span>";        
     }
     protected void dgMarcas_RowDataBound(object sender, GridViewRowEventArgs e)
     {
@@ -221,6 +236,16 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
 
         if (Convert.ToString(ViewState["MarcaDestacada"]) == id)
             e.Row.CssClass = "fila-marca-seleccionada";
+
+        DateTime fechaVal;
+        if (!DateTime.TryParse(DataBinder.Eval(e.Row.DataItem, "F_H_MARCA").ToString(), out fechaVal))
+            return;
+
+        if (fechaVal.DayOfWeek == DayOfWeek.Sunday || feriados.Contains(fechaVal.Date))
+        {
+            e.Row.CssClass = "calendario-feriado";
+            e.Row.ToolTip = "Feriado";
+        }
     }
     protected void dgMarcas_RowCommand(object sender, GridViewCommandEventArgs e)
     {

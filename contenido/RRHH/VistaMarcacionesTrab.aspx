@@ -60,7 +60,8 @@
                 GridLines="None"
                 CellPadding="6"
                 EmptyDataText="Sin Resultados"
-                EmptyDataRowStyle-CssClass="textoEmpty">
+                EmptyDataRowStyle-CssClass="textoEmpty"
+                OnRowDataBound="dgData_RowDataBound">
                 <Columns>
                     <asp:BoundField DataField="DIA"
                         HeaderText="Día" ItemStyle-CssClass="textoGrid" />
@@ -92,7 +93,8 @@
                 GridLines="None"
                 CellPadding="6"
                 EmptyDataText="Sin Resultados"
-                EmptyDataRowStyle-CssClass="textoEmpty">
+                EmptyDataRowStyle-CssClass="textoEmpty"
+                OnRowDataBound="dgDataAgrupada_RowDataBound">
                 <Columns>
                     <asp:BoundField DataField="DIA"
                         HeaderText="Día" ItemStyle-CssClass="textoGrid" />

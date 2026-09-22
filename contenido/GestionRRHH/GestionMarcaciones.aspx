@@ -110,6 +110,7 @@
                         <asp:BoundField DataField="CANT_MARCAS" HeaderText="Marcas" SortExpression="CANT_MARCAS" />
                         <asp:BoundField DataField="CANT_DIAS" HeaderText="Días" SortExpression="CANT_DIAS" />
                         <asp:BoundField DataField="CANT_RELOJES" HeaderText="Relojes" SortExpression="CANT_RELOJES" />
+                        <asp:BoundField DataField="CANT_PROBLEMAS" HeaderText="Posibles Problemas" SortExpression="CANT_PROBLEMAS" ItemStyle-ForeColor="Blue" ItemStyle-Font-Bold="true" HeaderStyle-Width="120px" />
                         <asp:BoundField DataField="ESTADO_RRHH" HeaderText="Estado" SortExpression="ESTADO_RRHH" />
                         <asp:TemplateField HeaderText="Revisar">
                             <ItemTemplate>
@@ -169,7 +170,7 @@
                                 </span>
                             </ItemTemplate>
                         </asp:TemplateField>
-                        <asp:TemplateField HeaderText="Accion" HeaderStyle-Width="50px">
+                        <asp:TemplateField HeaderText="Acciones" HeaderStyle-Width="50px">
                             <ItemTemplate>
                                 <asp:ImageButton ID="btnEditar" runat="server" ImageUrl="~/imagenes/edit.png"
                                     CommandName="EditarMarca"
@@ -221,7 +222,7 @@
                         <ajaxToolkit:CalendarExtender ID="calFechaMarca" runat="server" TargetControlID="txtFechaMarca" Format="dd/MM/yyyy" />
                     </div>
                     <div class="campo">
-                        <label>Hora:</label><asp:TextBox ID="txtHoraMarca" runat="server" CssClass="form-control" Width="120px" TextMode="Time" step="1" MaxLength="8" />
+                        <label>Hora:</label><asp:TextBox ID="txtHoraMarca" runat="server" CssClass="form-control" Width="120px" Height="39px" TextMode="Time" step="1" MaxLength="8" />
 
                     </div>
                     <div class="campo">

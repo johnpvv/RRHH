@@ -68,7 +68,8 @@
                     GridLines="None"
                     CellPadding="6"
                     EmptyDataText="Sin turnos asignados"
-                    EmptyDataRowStyle-CssClass="textoEmpty">
+                    EmptyDataRowStyle-CssClass="textoEmpty"
+                    OnRowDataBound="dgData_RowDataBound">
                     <Columns>
                         <asp:BoundField
                             DataField="DIA"

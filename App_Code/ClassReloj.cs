@@ -161,14 +161,14 @@ public class ClassReloj
               "WHEN M.TIPO_MARCA=0 THEN 'ENTRADA' " +
               "WHEN M.TIPO_MARCA=1 THEN 'SALIDA' " +
               "ELSE 'Otro' END AS TIPO_MARCA, " +
-              "CASE DATEPART(WEEKDAY,M.F_H_MARCA) " +
-              "WHEN 1 THEN 'Domingo' " +
-              "WHEN 2 THEN 'Lunes' " +
-              "WHEN 3 THEN 'Martes' " +
-              "WHEN 4 THEN 'Miércoles' " +
-              "WHEN 5 THEN 'Jueves' " +
-              "WHEN 6 THEN 'Viernes' " +
-              "WHEN 7 THEN 'Sábado' " +
+              "CASE DATEPART(WEEKDAY,M.F_H_MARCA) " +              
+              "WHEN 1 THEN 'Lunes' " +
+              "WHEN 2 THEN 'Martes' " +
+              "WHEN 3 THEN 'Miércoles' " +
+              "WHEN 4 THEN 'Jueves' " +
+              "WHEN 5 THEN 'Viernes' " +
+              "WHEN 6 THEN 'Sábado' " +
+              "WHEN 7 THEN 'Domingo' " +
               "END AS DIA, " +
               "M.F_H_MARCA, " +
               "NULL AS WORKCODE, " +
@@ -295,9 +295,14 @@ public class ClassReloj
               "ISNULL(E.IDRELOJ,S.IDRELOJ) AS IDRELOJ, " +
               "ISNULL(E.CODIGO_EMP_RELOJ,S.CODIGO_EMP_RELOJ) AS ENROLLNUMBER, " +
               "CASE DATEPART(WEEKDAY,DATEFROMPARTS(ISNULL(E.[YEAR],S.[YEAR]),ISNULL(E.[MONTH],S.[MONTH]),ISNULL(E.[DAY],S.[DAY]))) " +
-              "WHEN 1 THEN 'Domingo' WHEN 2 THEN 'Lunes' WHEN 3 THEN 'Martes' " +
-              "WHEN 4 THEN 'Miércoles' WHEN 5 THEN 'Jueves' " +
-              "WHEN 6 THEN 'Viernes' WHEN 7 THEN 'Sábado' END AS DIA, " +
+              "WHEN 1 THEN 'Lunes' " +
+              "WHEN 2 THEN 'Martes' " +
+              "WHEN 3 THEN 'Miércoles' " +
+              "WHEN 4 THEN 'Jueves' " +
+              "WHEN 5 THEN 'Viernes' " +
+              "WHEN 6 THEN 'Sábado' " +
+              "WHEN 7 THEN 'Domingo' " +
+              "END AS DIA, " +
               "RIGHT('0'+CAST(ISNULL(E.[DAY],S.[DAY]) AS VARCHAR(2)),2)+'/'+ " +
               "RIGHT('0'+CAST(ISNULL(E.[MONTH],S.[MONTH]) AS VARCHAR(2)),2)+'/'+ " +
               "CAST(ISNULL(E.[YEAR],S.[YEAR]) AS VARCHAR(4)) AS FECHA, " +
@@ -746,107 +751,214 @@ public class ClassReloj
     }
     #endregion
     #region Marcas Reloj Edicion
+    //public DataSet mfBuscarTrabajadoresMarcas()
+    //{
+    //    string lsSql;
+    //    DataSet ds;
+    //    lsSql =
+    //        "DECLARE @FECHA_INICIO DATE = DATEFROMPARTS(" + ls_anio + "," + ls_mes + ",1); " +
+    //        "DECLARE @FECHA_FIN DATE = DATEADD(MONTH,1,@FECHA_INICIO); " +
+    //        "DECLARE @BUSQUEDA VARCHAR(100) = '" + ls_nombre.Replace("'", "''") + "'; " +
+    //        ";WITH MARCAS AS " +
+    //        "( " +
+    //            "SELECT DISTINCT " +
+    //                "M.IDMARCACION, " +
+    //                "M.CODIGO_EMP_RELOJ, " +
+    //                "M.IDRELOJ, " +
+    //                "UR.IDUSRELOJ, " +
+    //                "M.F_H_MARCA, " +
+    //                "UR.IDUSUARIO, " +
+    //                "U.RUT, " +
+    //                "U.DV, " +
+    //                "CONVERT(VARCHAR, U.RUT) + '-' + U.DV as RUT_C, " +
+    //                "U.NOMBRE, " +
+    //                "U.AP_PATERNO, " +
+    //                "U.AP_MATERNO, " +
+    //                "CASE " +
+    //                    "WHEN UR.IDUSRRELOJ IS NULL THEN 'SIN EQUIVALENCIA' " +
+    //                    "WHEN U.IDUSUARIO IS NULL THEN 'PENDIENTE RRHH' " +
+    //                    "ELSE 'REGISTRADO RRHH' " +
+    //                "END AS ESTADO_RRHH " +
+    //            "FROM " + modConstantes.gsDbRH + "M_MARCACIONES M " +
+    //            //"LEFT JOIN " + modConstantes.gsDbRH + "M_USR_RELOJ UR ON UR.IDUSRELOJ = M.CODIGO_EMP_RELOJ AND UR.IDRELOJ = M.IDRELOJ " +
+    //            "LEFT JOIN " + modConstantes.gsDbRH + "M_USR_RELOJ UR ON UR.IDUSRELOJ = M.CODIGO_EMP_RELOJ " +
+    //            "LEFT JOIN " + modConstantes.gsDbRH + "M_USUARIOS U ON U.IDUSUARIO = UR.IDUSUARIO " +
+    //            "WHERE M.F_H_MARCA >= @FECHA_INICIO AND M.F_H_MARCA < @FECHA_FIN  AND ISNULL(M.IDESTADO,1) <> 3" +
+    //            "AND " +
+    //                "(@BUSQUEDA = '' " +
+    //                "OR CAST(U.RUT AS VARCHAR(20)) LIKE '%' + @BUSQUEDA + '%' " +
+    //                "OR U.NOMBRE LIKE '%' + @BUSQUEDA + '%' " +
+    //                "OR U.AP_PATERNO LIKE '%' + @BUSQUEDA + '%' " +
+    //                "OR U.AP_MATERNO LIKE '%' + @BUSQUEDA + '%' " +
+    //                "OR M.CODIGO_EMP_RELOJ LIKE '%' + @BUSQUEDA + '%') " +
+    //        ") " +
+    //        "SELECT " +
+    //            "CASE " +
+    //                "WHEN IDUSUARIO IS NULL " +
+    //                "THEN 'R:' + MAX(CODIGO_EMP_RELOJ) " +
+    //            "ELSE " +
+    //                "'U:' + CAST(IDUSUARIO AS VARCHAR(20)) " +
+    //            "END AS ID_SELECCION, " +
+    //            "IDUSUARIO," +
+    //            //"IDUSRELOJ, " +
+    //            "CASE " +
+    //                "WHEN IDUSUARIO IS NULL THEN MAX(CODIGO_EMP_RELOJ) " +
+    //                "ELSE NULL END AS CODIGO_EMP_RELOJ, " +
+    //            "MAX(RUT) AS RUT, " +
+    //            "MAX(DV) AS DV, " +
+    //            "RUT_C," +
+    //            "CASE " +
+    //                "WHEN IDUSUARIO IS NULL " +
+    //                    "THEN 'Pendiente de identificación' " +
+    //                "ELSE " +
+    //                    "LTRIM(RTRIM( " +
+    //                        "MAX(ISNULL(NOMBRE,'')) + ' ' + " +
+    //                        "MAX(ISNULL(AP_PATERNO,'')) + ' ' + " +
+    //                        "MAX(ISNULL(AP_MATERNO,'')) " +
+    //                    ")) " +
+    //            "END AS NOMBRE, " +
+    //            "0 AS CANT_PROBLEMAS, " +
+    //            "COUNT(*) AS CANT_MARCAS, " +
+    //            "COUNT(DISTINCT CAST(F_H_MARCA AS DATE)) AS CANT_DIAS, " +
+    //            "COUNT(DISTINCT IDRELOJ) AS CANT_RELOJES, " +
+    //            "CASE " +
+    //                "WHEN SUM(CASE " +
+    //                    "WHEN ESTADO_RRHH = 'SIN EQUIVALENCIA' " +
+    //                    "THEN 1 ELSE 0 END) > 0 " +
+    //                    "THEN 'SIN EQUIVALENCIA' " +
+    //                "WHEN SUM(CASE " +
+    //                    "WHEN ESTADO_RRHH = 'PENDIENTE RRHH' " +
+    //                    "THEN 1 ELSE 0 END) > 0 " +
+    //                    "THEN 'PENDIENTE RRHH' ELSE 'REGISTRADO RRHH' " +
+    //            "END AS ESTADO_RRHH " +
+    //        //"MAX(IDRELOJ) AS IDRELOJ " +
+    //        "FROM MARCAS " +
+    //        "GROUP BY " +
+    //            "IDUSUARIO," +
+    //            //"IDUSRELOJ, " +
+    //            "RUT_C, " +
+    //            "CASE " +
+    //                "WHEN IDUSUARIO IS NULL THEN CODIGO_EMP_RELOJ " +
+    //                "ELSE NULL " +
+    //            "END " +
+    //        "ORDER BY " +
+    //            "CASE " +
+    //                "WHEN IDUSUARIO IS NULL THEN 0 " +
+    //                "ELSE 1 " +
+    //            "END, " +
+    //            "NOMBRE ";
+    //    con = bd.fnGetConn();
+    //    ds = bd.Fill(con, lsSql);
+    //    con.Close();
+    //    return ds;
+    //}
     public DataSet mfBuscarTrabajadoresMarcas()
     {
         string lsSql;
         DataSet ds;
+
         lsSql =
-            "DECLARE @FECHA_INICIO DATE = DATEFROMPARTS(" + ls_anio + "," + ls_mes + ",1); " +
-            "DECLARE @FECHA_FIN DATE = DATEADD(MONTH,1,@FECHA_INICIO); " +
-            "DECLARE @BUSQUEDA VARCHAR(100) = '" + ls_nombre.Replace("'", "''") + "'; " +
+            "DECLARE @FECHA_INICIO DATE=DATEFROMPARTS(" + ls_anio + "," + ls_mes + ",1); " +
+            "DECLARE @FECHA_FIN DATE=DATEADD(MONTH,1,@FECHA_INICIO); " +
+            "DECLARE @BUSQUEDA VARCHAR(100)='" + ls_nombre.Replace("'", "''") + "'; " +
+
             ";WITH MARCAS AS " +
             "( " +
-                "SELECT DISTINCT " +
-                    "M.IDMARCACION, " +
-                    "M.CODIGO_EMP_RELOJ, " +
-                    "M.IDRELOJ, " +
-                    "UR.IDUSRELOJ, " +
-                    "M.F_H_MARCA, " +
-                    "UR.IDUSUARIO, " +
-                    "U.RUT, " +
-                    "U.DV, " +
-                    "CONVERT(VARCHAR, U.RUT) + '-' + U.DV as RUT_C, " +
-                    "U.NOMBRE, " +
-                    "U.AP_PATERNO, " +
-                    "U.AP_MATERNO, " +
-                    "CASE " +
-                        "WHEN UR.IDUSRRELOJ IS NULL THEN 'SIN EQUIVALENCIA' " +
-                        "WHEN U.IDUSUARIO IS NULL THEN 'PENDIENTE RRHH' " +
-                        "ELSE 'REGISTRADO RRHH' " +
-                    "END AS ESTADO_RRHH " +
+                "SELECT " +
+                    "M.IDMARCACION,M.CODIGO_EMP_RELOJ,M.IDRELOJ,M.F_H_MARCA,M.TIPO_MARCA, " +
+                    "UR.IDUSUARIO,U.RUT,U.DV, " +
+                    "CONVERT(VARCHAR,U.RUT)+'-'+U.DV RUT_C, " +
+                    "U.NOMBRE,U.AP_PATERNO,U.AP_MATERNO, " +
+                    "CASE WHEN UR.IDUSRRELOJ IS NULL THEN 'SIN EQUIVALENCIA' " +
+                    "WHEN U.IDUSUARIO IS NULL THEN 'PENDIENTE RRHH' " +
+                    "ELSE 'REGISTRADO RRHH' END ESTADO_RRHH, " +
+                    "CASE WHEN UR.IDUSUARIO IS NULL " +
+                        "THEN 'R:'+M.CODIGO_EMP_RELOJ " +
+                        "ELSE 'U:'+CAST(UR.IDUSUARIO AS VARCHAR(20)) END TRABAJADOR_KEY " +
                 "FROM " + modConstantes.gsDbRH + "M_MARCACIONES M " +
-                //"LEFT JOIN " + modConstantes.gsDbRH + "M_USR_RELOJ UR ON UR.IDUSRELOJ = M.CODIGO_EMP_RELOJ AND UR.IDRELOJ = M.IDRELOJ " +
-                "LEFT JOIN " + modConstantes.gsDbRH + "M_USR_RELOJ UR ON UR.IDUSRELOJ = M.CODIGO_EMP_RELOJ " +
-                "LEFT JOIN " + modConstantes.gsDbRH + "M_USUARIOS U ON U.IDUSUARIO = UR.IDUSUARIO " +
-                "WHERE M.F_H_MARCA >= @FECHA_INICIO AND M.F_H_MARCA < @FECHA_FIN  AND ISNULL(M.IDESTADO,1) <> 3" +
-                "AND " +
-                    "(@BUSQUEDA = '' " +
-                    "OR CAST(U.RUT AS VARCHAR(20)) LIKE '%' + @BUSQUEDA + '%' " +
-                    "OR U.NOMBRE LIKE '%' + @BUSQUEDA + '%' " +
-                    "OR U.AP_PATERNO LIKE '%' + @BUSQUEDA + '%' " +
-                    "OR U.AP_MATERNO LIKE '%' + @BUSQUEDA + '%' " +
-                    "OR M.CODIGO_EMP_RELOJ LIKE '%' + @BUSQUEDA + '%') " +
+                "OUTER APPLY " +
+                "( " +
+                    "SELECT TOP 1 UR1.IDUSRRELOJ,UR1.IDUSUARIO " +
+                    "FROM " + modConstantes.gsDbRH + "M_USR_RELOJ UR1 " +
+                    "WHERE UR1.IDUSRELOJ=M.CODIGO_EMP_RELOJ " +
+                    "ORDER BY CASE WHEN UR1.IDUSUARIO IS NOT NULL THEN 0 ELSE 1 END,UR1.IDUSRRELOJ DESC " +
+                ") UR " +
+                "LEFT JOIN " + modConstantes.gsDbRH + "M_USUARIOS U " +
+                    "ON U.IDUSUARIO=UR.IDUSUARIO " +
+                "WHERE M.F_H_MARCA>=@FECHA_INICIO " +
+                "AND M.F_H_MARCA<@FECHA_FIN " +
+                "AND ISNULL(M.IDESTADO,1)<>3 " +
+                "AND (@BUSQUEDA='' " +
+                    "OR CAST(U.RUT AS VARCHAR(20)) LIKE '%'+@BUSQUEDA+'%' " +
+                    "OR U.NOMBRE LIKE '%'+@BUSQUEDA+'%' " +
+                    "OR U.AP_PATERNO LIKE '%'+@BUSQUEDA+'%' " +
+                    "OR U.AP_MATERNO LIKE '%'+@BUSQUEDA+'%' " +
+                    "OR M.CODIGO_EMP_RELOJ LIKE '%'+@BUSQUEDA+'%') " +
+            "), " +
+
+            "CONTEO_DIAS AS " +
+            "( " +
+                "SELECT TRABAJADOR_KEY,CAST(F_H_MARCA AS DATE) FECHA, " +
+                    "SUM(CASE WHEN TIPO_MARCA=0 THEN 1 ELSE 0 END) ENTRADAS, " +
+                    "SUM(CASE WHEN TIPO_MARCA=1 THEN 1 ELSE 0 END) SALIDAS " +
+                "FROM MARCAS " +
+                "GROUP BY TRABAJADOR_KEY,CAST(F_H_MARCA AS DATE) " +
+            "), " +
+
+            "ESTADOS AS " +
+            "( " +
+                "SELECT M.TRABAJADOR_KEY,M.IDMARCACION, " +
+                    "CASE " +
+                        "WHEN C.ENTRADAS=1 AND C.SALIDAS=1 THEN 'OK' " +
+                        "WHEN C.ENTRADAS>1 AND M.TIPO_MARCA=0 THEN 'ENTRADA REPETIDA' " +
+                        "WHEN C.SALIDAS>1 AND M.TIPO_MARCA=1 THEN 'SALIDA REPETIDA' " +
+                        "WHEN C.ENTRADAS=1 AND C.SALIDAS=0 THEN 'SALIDA FALTANTE' " +
+                        "WHEN C.ENTRADAS=0 AND C.SALIDAS=1 THEN 'ENTRADA FALTANTE' " +
+                        "ELSE 'REVISAR' " +
+                    "END ESTADO " +
+                "FROM MARCAS M " +
+                "INNER JOIN CONTEO_DIAS C " +
+                    "ON C.TRABAJADOR_KEY=M.TRABAJADOR_KEY " +
+                    "AND C.FECHA=CAST(M.F_H_MARCA AS DATE) " +
+            "), " +
+
+            "PROBLEMAS AS " +
+            "( " +
+                "SELECT TRABAJADOR_KEY,COUNT(*) CANT_PROBLEMAS " +
+                "FROM ESTADOS " +
+                "WHERE ESTADO<>'OK' " +
+                "GROUP BY TRABAJADOR_KEY " +
             ") " +
+
             "SELECT " +
+                "M.TRABAJADOR_KEY ID_SELECCION, " +
+                "MAX(M.IDUSUARIO) IDUSUARIO, " +
+                "CASE WHEN MAX(M.IDUSUARIO) IS NULL THEN MAX(M.CODIGO_EMP_RELOJ) ELSE NULL END CODIGO_EMP_RELOJ, " +
+                "MAX(M.RUT) RUT, " +
+                "MAX(M.DV) DV, " +
+                "MAX(M.RUT_C) RUT_C, " +
+                "CASE WHEN MAX(M.IDUSUARIO) IS NULL THEN 'Pendiente de identificación' " +
+                    "ELSE LTRIM(RTRIM(MAX(ISNULL(M.NOMBRE,''))+' '+MAX(ISNULL(M.AP_PATERNO,''))+' '+MAX(ISNULL(M.AP_MATERNO,'')))) END NOMBRE, " +
+                "COUNT(*) CANT_MARCAS, " +
+                "COUNT(DISTINCT CAST(M.F_H_MARCA AS DATE)) CANT_DIAS, " +
+                "COUNT(DISTINCT M.IDRELOJ) CANT_RELOJES, " +
+                "ISNULL(MAX(P.CANT_PROBLEMAS),0) CANT_PROBLEMAS, " +
                 "CASE " +
-                    "WHEN IDUSUARIO IS NULL " +
-                    "THEN 'R:' + MAX(CODIGO_EMP_RELOJ) " +
-                "ELSE " +
-                    "'U:' + CAST(IDUSUARIO AS VARCHAR(20)) " +
-                "END AS ID_SELECCION, " +
-                "IDUSUARIO," +
-                //"IDUSRELOJ, " +
-                "CASE " +
-                    "WHEN IDUSUARIO IS NULL THEN MAX(CODIGO_EMP_RELOJ) " +
-                    "ELSE NULL END AS CODIGO_EMP_RELOJ, " +
-                "MAX(RUT) AS RUT, " +
-                "MAX(DV) AS DV, " +
-                "RUT_C," +
-                "CASE " +
-                    "WHEN IDUSUARIO IS NULL " +
-                        "THEN 'Pendiente de identificación' " +
-                    "ELSE " +
-                        "LTRIM(RTRIM( " +
-                            "MAX(ISNULL(NOMBRE,'')) + ' ' + " +
-                            "MAX(ISNULL(AP_PATERNO,'')) + ' ' + " +
-                            "MAX(ISNULL(AP_MATERNO,'')) " +
-                        ")) " +
-                "END AS NOMBRE, " +
-                "COUNT(*) AS CANT_MARCAS, " +
-                "COUNT(DISTINCT CAST(F_H_MARCA AS DATE)) AS CANT_DIAS, " +
-                "COUNT(DISTINCT IDRELOJ) AS CANT_RELOJES, " +
-                "CASE " +
-                    "WHEN SUM(CASE " +
-                        "WHEN ESTADO_RRHH = 'SIN EQUIVALENCIA' " +
-                        "THEN 1 ELSE 0 END) > 0 " +
-                        "THEN 'SIN EQUIVALENCIA' " +
-                    "WHEN SUM(CASE " +
-                        "WHEN ESTADO_RRHH = 'PENDIENTE RRHH' " +
-                        "THEN 1 ELSE 0 END) > 0 " +
-                        "THEN 'PENDIENTE RRHH' ELSE 'REGISTRADO RRHH' " +
-                "END AS ESTADO_RRHH " +
-            //"MAX(IDRELOJ) AS IDRELOJ " +
-            "FROM MARCAS " +
-            "GROUP BY " +
-                "IDUSUARIO," +
-                //"IDUSRELOJ, " +
-                "RUT_C, " +
-                "CASE " +
-                    "WHEN IDUSUARIO IS NULL THEN CODIGO_EMP_RELOJ " +
-                    "ELSE NULL " +
-                "END " +
-            "ORDER BY " +
-                "CASE " +
-                    "WHEN IDUSUARIO IS NULL THEN 0 " +
-                    "ELSE 1 " +
-                "END, " +
-                "NOMBRE ";
+                    "WHEN SUM(CASE WHEN M.ESTADO_RRHH='SIN EQUIVALENCIA' THEN 1 ELSE 0 END)>0 THEN 'SIN EQUIVALENCIA' " +
+                    "WHEN SUM(CASE WHEN M.ESTADO_RRHH='PENDIENTE RRHH' THEN 1 ELSE 0 END)>0 THEN 'PENDIENTE RRHH' " +
+                    "ELSE 'REGISTRADO RRHH' " +
+                "END ESTADO_RRHH " +
+            "FROM MARCAS M " +
+            "LEFT JOIN PROBLEMAS P ON P.TRABAJADOR_KEY=M.TRABAJADOR_KEY " +
+            "GROUP BY M.TRABAJADOR_KEY " +
+            "ORDER BY CASE WHEN LEFT(M.TRABAJADOR_KEY,2)='R:' THEN 0 ELSE 1 END,NOMBRE";
+
         con = bd.fnGetConn();
         ds = bd.Fill(con, lsSql);
         con.Close();
+
         return ds;
     }
-
     public DataSet mfBuscarMarcasTrabajador()
     {
         string lsSql;
@@ -871,14 +983,14 @@ public class ClassReloj
                 "WHEN R.ENTRADAS = 0 AND R.SALIDAS = 1 THEN 'ENTRADA FALTANTE' " +
                 "ELSE 'REVISAR' END ESTADO " +
                 "FROM " + modConstantes.gsDbRH + "M_MARCACIONES M " +
-                "INNER JOIN " + modConstantes.gsDbRH + "M_USR_RELOJ UR ON UR.IDUSRELOJ=M.CODIGO_EMP_RELOJ " +
+                "INNER JOIN " + modConstantes.gsDbRH + "M_USR_RELOJ UR ON UR.IDUSRELOJ=M.CODIGO_EMP_RELOJ AND ISNULL(UR.IDESTADO,1) <> 3 " +
                 "LEFT JOIN " + modConstantes.gsDbRH + "M_RELOJES RE ON RE.IDRELOJ=M.IDRELOJ " +
                 "LEFT JOIN " + modConstantes.gsDbRH + "M_UNIDAD_OPERATIVA UOP ON UOP.CODUNIOP=RE.CODUNIOP " +
                 "INNER JOIN (SELECT CAST(M2.F_H_MARCA AS DATE) FECHA," +
                 "SUM(CASE WHEN M2.TIPO_MARCA=0 THEN 1 ELSE 0 END) ENTRADAS,SUM(CASE WHEN M2.TIPO_MARCA=1 THEN 1 ELSE 0 END)" +
                 "SALIDAS FROM " + modConstantes.gsDbRH + "M_MARCACIONES M2 " +
-                "INNER JOIN " + modConstantes.gsDbRH + "M_USR_RELOJ UR2 ON UR2.IDUSRELOJ=M2.CODIGO_EMP_RELOJ AND ISNULL(M2.IDESTADO,1) <> 3 " +
-                "WHERE UR2.IDUSUARIO=" + ls_iduser + " AND M2.F_H_MARCA >= @FECHA_INICIO AND M2.F_H_MARCA < @FECHA_FIN " +
+                "INNER JOIN " + modConstantes.gsDbRH + "M_USR_RELOJ UR2 ON UR2.IDUSRELOJ=M2.CODIGO_EMP_RELOJ AND ISNULL(UR2.IDESTADO,1) <> 3 " +
+                "WHERE UR2.IDUSUARIO=" + ls_iduser + " AND ISNULL(M2.IDESTADO,1) <> 3 AND M2.F_H_MARCA >= @FECHA_INICIO AND M2.F_H_MARCA < @FECHA_FIN " +
                 "GROUP BY CAST(M2.F_H_MARCA AS DATE)) R ON R.FECHA=CAST(M.F_H_MARCA AS DATE) " +
                 "WHERE UR.IDUSUARIO=" + ls_iduser + " " +
                 "AND M.F_H_MARCA >= @FECHA_INICIO AND M.F_H_MARCA < @FECHA_FIN " +
