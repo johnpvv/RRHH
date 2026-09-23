@@ -42,6 +42,7 @@ public class ClassReloj
     public string ls_tipo { get; set; }
     public string ls_hora { get; set; }
     public string ls_obs { get; set; }
+    public string ls_idestado { get; set; }
 
     public DataSet mfBuscarMarcaciones()//metodo inicial, no considerar
     {
@@ -663,6 +664,16 @@ public class ClassReloj
     {
         string lsSql;
         DataSet ds;
+        string lsWhere = " WHERE 1=1 ";
+
+        if (ls_anio != "")
+            lsWhere += " AND YEAR(S.F_H_INICIO)=" + ls_anio;
+
+        if (ls_mes != "")
+            lsWhere += " AND MONTH(S.F_H_INICIO)=" + ls_mes;
+
+        if (ls_idestado != "")
+            lsWhere += " AND S.IDESTADO=" + ls_idestado;
 
         lsSql = "SELECT " +
                 "S.IDSINCRONIZA, " +
@@ -676,10 +687,16 @@ public class ClassReloj
                 "CASE " +
                 "WHEN S.IDESTADO = 1 THEN 'OK' " +
                 "WHEN S.IDESTADO = 3 THEN 'ERROR' " +
-                "ELSE 'SIN ESTADO' END AS ESTADO, " +
+                "ELSE 'CERRADA' END AS ESTADO, " +
+                "CASE WHEN S.IDESTADO = 1 THEN 1 ELSE 0 END AS ACTUALIZAR, " +
+                "CASE WHEN S.IDESTADO = 1 THEN 1 ELSE 0 END AS CERRAR, " +
+                "CASE WHEN S.IDESTADO = 1 AND NOT EXISTS " +
+                "(SELECT 1 FROM " + modConstantes.gsDbRH + "M_MARCACIONES M WHERE M.IDSINCRONIZA = S.IDSINCRONIZA AND ISNULL(M.IDESTADO,1) = 2) " +
+                "THEN 1 ELSE 0 END AS ELIMINAR, " +
                 "S.IDUSUARIO " +
                 "FROM " + modConstantes.gsDbRH + "M_SINCRONIZACION S " +
                 "LEFT JOIN " + modConstantes.gsDbRH + "M_RELOJES R ON R.IDRELOJ = S.IDRELOJ " +
+                lsWhere +
                 "ORDER BY S.IDSINCRONIZA DESC";
 
         con = bd.fnGetConn();
@@ -692,6 +709,10 @@ public class ClassReloj
     {
         string lsSql;
         DataSet ds;
+        string lsWhere = "";
+
+        if (ls_iduserreloj != "")
+            lsWhere += " AND (M.CODIGO_EMP_RELOJ = '" + ls_iduserreloj + "' OR U.RUT = '" + ls_iduserreloj + "') ";
 
         lsSql = "SELECT " +
                 "M.IDMARCACION, " +
@@ -712,7 +733,7 @@ public class ClassReloj
                 "LEFT JOIN " + modConstantes.gsDbRH + "M_RELOJES R ON R.IDRELOJ = M.IDRELOJ " +
                 "LEFT JOIN " + modConstantes.gsDbRH + "M_USR_RELOJ UR ON UR.IDUSRELOJ = M.CODIGO_EMP_RELOJ AND UR.IDESTADO <> 3 " +
                 "LEFT JOIN " + modConstantes.gsDbRH + "M_USUARIOS U ON U.IDUSUARIO = UR.IDUSUARIO " +
-                "WHERE M.IDSINCRONIZA = " + ls_idsincroniza + " " +
+                "WHERE M.IDSINCRONIZA = " + ls_idsincroniza + " " + lsWhere +
                 "ORDER BY CODIGO_EMP_RELOJ, M.F_H_MARCA";
 
         con = bd.fnGetConn();
@@ -748,6 +769,21 @@ public class ClassReloj
 
             throw new Exception(ex.Message);
         }
+    }
+    public DataSet mfCerrarSincronizacion()
+    {
+        DataSet ds;
+        string lsSql = 
+            "UPDATE " + modConstantes.gsDbRH + "M_SINCRONIZACION " +
+            "SET IDESTADO=2 " +
+            "WHERE IDSINCRONIZA=" + ls_idsincroniza + " AND IDESTADO=1; " +
+            "SELECT " + ls_idsincroniza + " AS IDSINCRONIZA, " +
+            "1 AS IDESTADO, 'Sincronización cerrada correctamente.' AS MENSAJE;";
+
+        con = bd.fnGetConn();
+        ds = bd.Fill(con, lsSql);
+        con.Close();
+        return ds;
     }
     #endregion
     #region Marcas Reloj Edicion

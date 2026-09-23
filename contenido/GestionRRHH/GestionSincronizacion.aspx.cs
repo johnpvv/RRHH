@@ -11,21 +11,45 @@ public partial class contenido_GestionRRHH_GestionSincronizacion : System.Web.UI
     ClassTrabajadores usr = new ClassTrabajadores();
     ClassReloj rlj = new ClassReloj();
     Mensaje mens = new Mensaje();
+    ClassTurnos tur = new ClassTurnos();
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)
         {
+            CargarMeses();
+            CargarAnios();
             CargarCentrosAdmin();
             InicializarRelojAdmin();
-            CargarSincronizaciones();
+            CargarSincronizaciones();            
         }
+    }
+    private void CargarMeses()
+    {
+        DataSet ds = tur.mfGenerarMeses();
+        ddlMes.DataSource = ds.Tables[0];
+        ddlMes.DataTextField = "MES";
+        ddlMes.DataValueField = "IDMES";
+        ddlMes.DataBind();
+        ddlMes.Items.Insert(0, new ListItem("Seleccione", ""));
+        //ddlMes.SelectedValue = DateTime.Now.Month.ToString();
+    }
+
+    private void CargarAnios()
+    {
+        ddlAnio.Items.Clear();
+        DataSet ds = tur.mfGenerarAnios();
+        ddlAnio.DataSource = ds.Tables[0];
+        ddlAnio.DataTextField = "ANIO";
+        ddlAnio.DataValueField = "ID";
+        ddlAnio.DataBind();
+        ddlAnio.SelectedValue = DateTime.Now.Year.ToString();
     }
     protected void btnVolver_Click(object sender, EventArgs e)
     {
         Response.Redirect("~/contenido/frmblksiab.aspx");
     }
-    #region Crear SIncronizacion
 
+    #region Crear SIncronizacion
     private void CargarCentrosAdmin()
     {
         usr.ls_iduser = Session["user"].ToString();
@@ -113,7 +137,7 @@ public partial class contenido_GestionRRHH_GestionSincronizacion : System.Web.UI
                 if (dr["IDESTADO"].ToString() == "1")
                 {
                     mens.mensaje(Page, "Sincronización realizada correctamente. ");
-                    this.lblSincr.Text = "<img src='../../../imagenes/check.png'/> Leídas: " + dr["CANT_LEIDA"].ToString() + " | Insertadas: " + dr["CANT_INSERT"].ToString();
+                    this.lblSincr.Text = "<img src='../../../imagenes/check.png'/> Leídas: " + dr["CANT_LEIDA"].ToString() + " | Insertadas: " + dr["CANT_INSERT"].ToString() + " | Obs: " + dr["MENSAJE"].ToString();
                     CargarSincronizaciones();
                 }
             }
@@ -127,26 +151,78 @@ public partial class contenido_GestionRRHH_GestionSincronizacion : System.Web.UI
     #endregion
 
     #region cargar sincronizaciones
+    protected void btnBuscarSincr_Click(object sender, EventArgs e)
+    {
+        CargarSincronizaciones();
+        pnlDetalleSincronizacion.Visible = false;
+        this.txtBusq.Text = "";
+    }
     private void CargarSincronizaciones()
     {
         DataSet ds;
+        rlj.ls_anio = ddlAnio.SelectedValue;
+        rlj.ls_mes = ddlMes.SelectedValue;
+        rlj.ls_idestado = ddlEstado.SelectedValue;
         ds = rlj.mfBuscarSincronizaciones();
         dgSincronizacion.DataSource = ds;
         dgSincronizacion.DataBind();
     }
     protected void dgSincronizacion_RowCommand(object sender, GridViewCommandEventArgs e)
     {
+        GridViewRow row = (GridViewRow)((Control)e.CommandSource).NamingContainer;
+        string id = dgSincronizacion.DataKeys[row.RowIndex].Value.ToString();
         if (e.CommandName == "VER")
         {
-            int fila = Convert.ToInt32(e.CommandArgument);
-            int idSincroniza = Convert.ToInt32(dgSincronizacion.DataKeys[fila].Value);
-            rlj.ls_idsincroniza = idSincroniza.ToString();
-            DataSet ds = rlj.mfBuscarMarcasSincronizacion();
-            dgMarcasSincronizacion.DataSource = ds;
-            dgMarcasSincronizacion.DataBind();
-            lblIdSincronizacion.Text = " #" + idSincroniza;
-            pnlDetalleSincronizacion.Visible = true;
+            mfVerDetalleSincronizacion(id);
+            this.txtBusq.Text = "";
+        }
+        else if (e.CommandName == "ELIMINAR")
+            mfEliminarSincronizacion(id);
+        else if (e.CommandName == "CERRAR")
+            mfCerrarSincronizacion(id);
+        else if (e.CommandName == "ACTUALIZAR")
+            mfActualizarSincronizacion(id);
+    }
+    private void mfCerrarSincronizacion(string id)
+    {
+        rlj.ls_idsincroniza = id;
+        DataSet ds = rlj.mfCerrarSincronizacion();
+
+        if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+        {
+            mens.mensaje(Page, ds.Tables[0].Rows[0]["MENSAJE"].ToString());
+            CargarSincronizaciones();
         }
     }
+
+    private void mfEliminarSincronizacion(string id)
+    {
+        //throw new NotImplementedException();
+    }
+    private void mfActualizarSincronizacion(string id)
+    {
+        //throw new NotImplementedException();
+    }
+    private void mfVerDetalleSincronizacion(string id)
+    {
+        rlj.ls_idsincroniza = id;
+        rlj.ls_iduserreloj = this.txtBusq.Text.Trim();
+        DataSet ds = rlj.mfBuscarMarcasSincronizacion();
+        dgMarcasSincronizacion.DataSource = ds;
+        dgMarcasSincronizacion.DataBind();
+        lblIdSincronizacion.Text = " N°" + id;
+        hdIdSincronizacion.Value = id;
+        pnlDetalleSincronizacion.Visible = true;
+    }
+    protected void dgMarcasSincronizacion_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    {
+        dgMarcasSincronizacion.PageIndex = e.NewPageIndex;
+        mfVerDetalleSincronizacion(hdIdSincronizacion.Value);
+    }
     #endregion
+
+    protected void btnFiltroDet_Click(object sender, EventArgs e)
+    {
+        mfVerDetalleSincronizacion(hdIdSincronizacion.Value);
+    }
 }

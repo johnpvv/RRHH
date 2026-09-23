@@ -80,6 +80,36 @@
                         <div class="titulo-seccion">
                             Administrar Sincronizaciones          
                         </div>
+                        <div class="filtros-grid">
+                            <div class="campo">
+                                <label>Año:</label>
+                                <asp:DropDownList ID="ddlAnio" runat="server" Width="100px"
+                                    CssClass="form-control">
+                                </asp:DropDownList>
+                            </div>
+                            <div class="campo">
+                                <label>Mes:</label>
+                                <asp:DropDownList ID="ddlMes" runat="server" Width="150px"
+                                    CssClass="form-control">
+                                </asp:DropDownList>
+                            </div>
+                            <div class="campo">
+                                <label>Estado:</label>
+                                <asp:DropDownList ID="ddlEstado" runat="server" CssClass="form-control" Width="140px">
+                                    <asp:ListItem Value="">Todos</asp:ListItem>
+                                    <asp:ListItem Value="1">Activas</asp:ListItem>
+                                    <asp:ListItem Value="2">Cerradas</asp:ListItem>
+                                    <asp:ListItem Value="3">Anuladas</asp:ListItem>
+                                </asp:DropDownList>
+                            </div>
+                            <div class="campo">
+                                <label>&nbsp;</label>
+                                <asp:Button ID="btnBuscarSincr" runat="server"
+                                    Text="Buscar"
+                                    CssClass="BotonPortalAzul"
+                                    OnClick="btnBuscarSincr_Click" />
+                            </div>
+                        </div>
                         <div class="campo">
                             <asp:GridView ID="dgSincronizacion" runat="server"
                                 AutoGenerateColumns="False"
@@ -97,51 +127,100 @@
                                     <asp:BoundField DataField="CANT_LEIDA" HeaderText="Leídas" />
                                     <asp:BoundField DataField="CANT_INSERT" HeaderText="Nuevas" />
                                     <asp:BoundField DataField="ESTADO" HeaderText="Estado" />
-                                    <asp:TemplateField HeaderText="Acción">
+                                    <asp:TemplateField HeaderText="Acciones:">
                                         <ItemTemplate>
-                                            <asp:ImageButton ID="btnVerDetalle"
-                                                runat="server"
-                                                ImageUrl="~/imagenes/check.png"
+                                            <asp:ImageButton ID="btnVerDetalle" runat="server"
+                                                ImageUrl="~/imagenes/eye-icon.png"
                                                 CommandName="VER"
                                                 CommandArgument='<%# Container.DataItemIndex %>'
                                                 ToolTip="Ver Detalle"
                                                 OnClientClick="mostrarSpinner();" />
+                                            &nbsp;
+                                            <asp:ImageButton ID="btnEliminar" runat="server"
+                                                ImageUrl="~/imagenes/delete.png"
+                                                CommandName="ELIMINAR"
+                                                CommandArgument='<%# Container.DataItemIndex %>'
+                                                ToolTip="Eliminar Sincronización"
+                                                Visible='<%# Convert.ToInt32(Eval("ELIMINAR")) == 1 %>'
+                                                OnClientClick="return confirm('¿Está seguro de eliminar esta sincronización?');" />
+                                            &nbsp;
+                                            <asp:ImageButton ID="btnActualizar" runat="server"
+                                                ImageUrl="~/imagenes/refresh.png"
+                                                CommandName="ACTUALIZAR"
+                                                CommandArgument='<%# Container.DataItemIndex %>'
+                                                ToolTip="Actualizar Sincronización"
+                                                Visible='<%# Convert.ToInt32(Eval("ACTUALIZAR")) == 1 %>'
+                                                OnClientClick="mostrarSpinner();" />
+                                            &nbsp;
+                                            <asp:ImageButton ID="btnCerrar" runat="server"
+                                                ImageUrl="~/imagenes/lock.png"
+                                                CommandName="CERRAR"
+                                                CommandArgument='<%# Container.DataItemIndex %>'
+                                                ToolTip="Cerrar Periodo"
+                                                Visible='<%# Convert.ToInt32(Eval("CERRAR")) == 1 %>'
+                                                OnClientClick="return confirm('¿Está seguro de cerrar este periodo? Una vez cerrado no podrá actualizar ni eliminar la sincronización.');" />
                                         </ItemTemplate>
-                                        <ItemStyle Width="40px" HorizontalAlign="center" />
+                                        <ItemStyle Width="150px" HorizontalAlign="Left" />
                                     </asp:TemplateField>
                                 </Columns>
                             </asp:GridView>
                         </div>
-                        <asp:Panel ID="pnlDetalleSincronizacion" runat="server" Visible="false">
-                            <div class="campo">
-                                <div class="bloque-titulo">
-                                    Marcas de la sincronización                                
+                    </div>
+                    <div class="bloque">
+                        <asp:UpdatePanel ID="upd1" runat="server">
+                            <ContentTemplate>
+                                <asp:Panel ID="pnlDetalleSincronizacion" runat="server" Visible="false">
+                                    <div class="bloque">
+                                        <div class="titulo-seccion">
+                                            Marcas de la sincronización                                
                             <asp:Label ID="lblIdSincronizacion" runat="server">
                             </asp:Label>
+                                        </div>
+                                        <div class="filtros-grid">
+                                            <div class="campo">
+                                                <label>Código Trabajador:</label>
+                                                <asp:TextBox ID="txtBusq" runat="server" CssClass="form-control">
+                                                </asp:TextBox>
+                                            </div>
+                                            <div class="campo">
+                                                <label>&nbsp;</label>
+                                                <asp:Button ID="btnFiltroDet" runat="server"
+                                                    Text="Buscar"
+                                                    CssClass="BotonPortalVerde"
+                                                    OnClick="btnFiltroDet_Click" />
+                                            </div>
+                                        </div>
+                                        <div class="campo">
+                                            <asp:HiddenField ID="hdIdSincronizacion" runat="server" />
+                                            <asp:GridView ID="dgMarcasSincronizacion" runat="server"
+                                                AutoGenerateColumns="False"
+                                                GridLines="None"
+                                                EmptyDataText="No existen Sincronizaciones con los filtros aplicados."
+                                                EmptyDataRowStyle-CssClass="bloque-titulo"
+                                                CssClass="grid-reloj"
+                                                AllowPaging="True"
+                                                PageSize="50"
+                                                OnPageIndexChanging="dgMarcasSincronizacion_PageIndexChanging">
+                                                <Columns>
+                                                    <asp:BoundField DataField="CODIGO_EMP_RELOJ" HeaderText="Cód. Trab. Reloj" />
+                                                    <asp:BoundField DataField="NOMBRE" HeaderText="Nombre RR.HH." />
+                                                    <asp:BoundField DataField="RELOJ" HeaderText="Nombre Reloj" />
+                                                    <asp:BoundField DataField="F_H_MARCA" HeaderText="Fecha" DataFormatString="{0:dd/MM/yyyy}" ItemStyle-Font-Bold="true" />
+                                                    <asp:BoundField DataField="F_H_MARCA" HeaderText="Hora" DataFormatString="{0:HH:mm:ss}" />
+                                                    <asp:BoundField DataField="TIPO_MARCA" HeaderText="Tipo" ItemStyle-Font-Bold="true" />
+                                                    <asp:BoundField DataField="F_H_CARGA" HeaderText="Fecha Carga" DataFormatString="{0:dd/MM/yyyy HH:mm:ss}" />
+                                                    <asp:BoundField DataField="OBSERVACIONES" HeaderText="Observaciones" />
+                                                </Columns>
+                                                <PagerStyle CssClass="GridPager" HorizontalAlign="Center" />
+                                            </asp:GridView>
+                                        </div>
+                                </asp:Panel>
+                                <div class="botones-form">
+                                    <asp:Button ID="btn_Volver1" runat="server" Text="Volver"
+                                        CssClass="BotonPortalGris" OnClick="btnVolver_Click" />
                                 </div>
-                                <asp:GridView ID="dgMarcasSincronizacion" runat="server"
-                                    AutoGenerateColumns="False"
-                                    GridLines="None"
-                                    EmptyDataText="No existen Sincronizaciones con los filtros aplicados."
-                                    EmptyDataRowStyle-CssClass="bloque-titulo"
-                                    CssClass="grid-reloj">
-                                    <Columns>
-                                        <asp:BoundField DataField="CODIGO_EMP_RELOJ" HeaderText="Cód. Trab. Reloj" />
-                                        <asp:BoundField DataField="NOMBRE" HeaderText="Nombre RR.HH." />
-                                        <asp:BoundField DataField="RELOJ" HeaderText="Nombre Reloj" />
-                                        <asp:BoundField DataField="F_H_MARCA" HeaderText="Fecha" DataFormatString="{0:dd/MM/yyyy}" ItemStyle-Font-Bold="true" />
-                                        <asp:BoundField DataField="F_H_MARCA" HeaderText="Hora" DataFormatString="{0:HH:mm:ss}" />
-                                        <asp:BoundField DataField="TIPO_MARCA" HeaderText="Tipo" ItemStyle-Font-Bold="true" />
-                                        <asp:BoundField DataField="F_H_CARGA" HeaderText="Fecha Carga" DataFormatString="{0:dd/MM/yyyy HH:mm:ss}" />
-                                        <asp:BoundField DataField="OBSERVACIONES" HeaderText="Observaciones" />
-                                    </Columns>
-                                </asp:GridView>
-                            </div>
-                        </asp:Panel>
-                        <div class="botones-form">
-                            <asp:Button ID="btn_Volver1" runat="server" Text="Volver"
-                                CssClass="BotonPortalGris" OnClick="btnVolver_Click" />
-                        </div>
+                            </ContentTemplate>
+                        </asp:UpdatePanel>
                     </div>
                 </ContentTemplate>
             </ajaxToolkit:TabPanel>
