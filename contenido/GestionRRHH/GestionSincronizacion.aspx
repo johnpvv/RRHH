@@ -43,12 +43,17 @@
 
                             <div class="campo">
                                 <label>Fecha inicio:</label>
-                                <asp:TextBox ID="txtFechaInicio" runat="server" CssClass="form-control" TextMode="Date">
+                                <asp:TextBox ID="txtFechaInicio" runat="server"
+                                    CssClass="form-control"
+                                    TextMode="Date"
+                                    onchange="actualizarFechaFin();">
                                 </asp:TextBox>
                             </div>
                             <div class="campo">
                                 <label>Fecha fin:</label>
-                                <asp:TextBox ID="txtFechaFin" runat="server" CssClass="form-control" TextMode="Date">
+                                <asp:TextBox ID="txtFechaFin" runat="server"
+                                    CssClass="form-control"
+                                    TextMode="Date">
                                 </asp:TextBox>
                             </div>
                             <div class="campo">
@@ -107,7 +112,14 @@
                                 <asp:Button ID="btnBuscarSincr" runat="server"
                                     Text="Buscar"
                                     CssClass="BotonPortalAzul"
-                                    OnClick="btnBuscarSincr_Click" />
+                                    OnClick="btnBuscarSincr_Click"
+                                    OnClientClick="mostrarSpinner();" />
+                            </div>
+                            <div class="campo">
+                                <asp:Button ID="btn_Volver1" runat="server"
+                                    Text="Volver"
+                                    CssClass="BotonPortalGris"
+                                    OnClick="btnVolver_Click" />
                             </div>
                         </div>
                         <div class="campo">
@@ -126,7 +138,7 @@
                                     <asp:BoundField DataField="F_H_FIN" HeaderText="Fin" DataFormatString="{0:dd/MM/yyyy HH:mm}" />
                                     <asp:BoundField DataField="CANT_LEIDA" HeaderText="Leídas" />
                                     <asp:BoundField DataField="CANT_INSERT" HeaderText="Nuevas" />
-                                    <asp:BoundField DataField="ESTADO" HeaderText="Estado" />
+                                    <asp:BoundField DataField="ESTADO" HeaderText="Estado" ItemStyle-Width="150px" />
                                     <asp:TemplateField HeaderText="Acciones:">
                                         <ItemTemplate>
                                             <asp:ImageButton ID="btnVerDetalle" runat="server"
@@ -144,14 +156,14 @@
                                                 Visible='<%# Convert.ToInt32(Eval("ELIMINAR")) == 1 %>'
                                                 OnClientClick="return confirm('¿Está seguro de eliminar esta sincronización?');" />
                                             &nbsp;
-                                            <asp:ImageButton ID="btnActualizar" runat="server"
+                                            <%--<asp:ImageButton ID="btnActualizar" runat="server"
                                                 ImageUrl="~/imagenes/refresh.png"
                                                 CommandName="ACTUALIZAR"
                                                 CommandArgument='<%# Container.DataItemIndex %>'
                                                 ToolTip="Actualizar Sincronización"
                                                 Visible='<%# Convert.ToInt32(Eval("ACTUALIZAR")) == 1 %>'
                                                 OnClientClick="mostrarSpinner();" />
-                                            &nbsp;
+                                            &nbsp;--%>
                                             <asp:ImageButton ID="btnCerrar" runat="server"
                                                 ImageUrl="~/imagenes/lock.png"
                                                 CommandName="CERRAR"
@@ -160,10 +172,14 @@
                                                 Visible='<%# Convert.ToInt32(Eval("CERRAR")) == 1 %>'
                                                 OnClientClick="return confirm('¿Está seguro de cerrar este periodo? Una vez cerrado no podrá actualizar ni eliminar la sincronización.');" />
                                         </ItemTemplate>
-                                        <ItemStyle Width="150px" HorizontalAlign="Left" />
+                                        <ItemStyle Width="120px" HorizontalAlign="Left" />
                                     </asp:TemplateField>
                                 </Columns>
                             </asp:GridView>
+                        </div>
+                        <div class="filtros-grid">
+                            <asp:Label ID="lblTotalSinc" runat="server" CssClass="contador-grid" Text="0 registro(s)">
+                            </asp:Label>
                         </div>
                     </div>
                     <div class="bloque">
@@ -187,7 +203,8 @@
                                                 <asp:Button ID="btnFiltroDet" runat="server"
                                                     Text="Buscar"
                                                     CssClass="BotonPortalVerde"
-                                                    OnClick="btnFiltroDet_Click" />
+                                                    OnClick="btnFiltroDet_Click"
+                                                    OnClientClick="mostrarSpinner();" />
                                             </div>
                                         </div>
                                         <div class="campo">
@@ -213,13 +230,20 @@
                                                 </Columns>
                                                 <PagerStyle CssClass="GridPager" HorizontalAlign="Center" />
                                             </asp:GridView>
+                                            <asp:Label ID="lblTotalMarcas" runat="server" CssClass="contador-grid" Text="0 registro(s)">&nbsp;</asp:Label>
+                                        </div>
+                                        <div class="botones-form">
+                                            <asp:Button ID="btnExportarMarcas"
+                                                runat="server"
+                                                Text="Exportar Excel"
+                                                CssClass="BotonPortalVerde"
+                                                OnClick="btnExportarMarcas_Click"/>
                                         </div>
                                 </asp:Panel>
-                                <div class="botones-form">
-                                    <asp:Button ID="btn_Volver1" runat="server" Text="Volver"
-                                        CssClass="BotonPortalGris" OnClick="btnVolver_Click" />
-                                </div>
                             </ContentTemplate>
+                            <Triggers>
+                                <asp:PostBackTrigger ControlID="btnExportarMarcas" />
+                            </Triggers>
                         </asp:UpdatePanel>
                     </div>
                 </ContentTemplate>
@@ -233,4 +257,20 @@
         </div>
     </form>
 </body>
+<script type="text/javascript">
+    function actualizarFechaFin() {
+        var inicio = document.getElementById('<%= txtFechaInicio.ClientID %>').value;
+        if (!inicio) return;
+
+        var partes = inicio.split('-');
+        var anio = parseInt(partes[0]);
+        var mes = parseInt(partes[1]);
+        var dia = parseInt(partes[2]);
+
+        var ultimoDia = new Date(anio, mes, 0).getDate();
+
+        document.getElementById('<%= txtFechaFin.ClientID %>').value =
+            anio + '-' + String(mes).padStart(2, '0') + '-' + String(ultimoDia).padStart(2, '0');
+    }
+</script>
 </html>

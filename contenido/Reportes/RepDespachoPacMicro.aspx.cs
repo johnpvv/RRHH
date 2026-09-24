@@ -59,7 +59,7 @@ public partial class contenido_Reportes_RepDespachoPacMicro : System.Web.UI.Page
                 }
 
                 llenarDDLServicio();
-                llenarDDLBodega();
+                //llenarDDLBodega();
                 em_f_desde.Text = "01/01/" + (DateTime.Now.Year - 1).ToString();
                 em_f_hasta.Text = DateTime.Now.ToString();
 
@@ -74,24 +74,24 @@ public partial class contenido_Reportes_RepDespachoPacMicro : System.Web.UI.Page
 
     }
 
-    private void llenarDDLBodega()
-    {
-        DataSet dat = new DataSet();
-        ClassReceta rec = new ClassReceta();
+    //private void llenarDDLBodega()
+    //{
+    //    DataSet dat = new DataSet();
+    //   // ClassReceta rec = new ClassReceta();
 
-        dat = rec.mfdllUserBodegas(Session["user"].ToString(), Session["codHosp"].ToString());
+    //    dat = rec.mfdllUserBodegas(Session["user"].ToString(), Session["codHosp"].ToString());
 
 
-        this.ddlBod.DataTextField = "DESCRIPCION";
-        this.ddlBod.DataValueField = "CODIGO";
-        this.ddlBod.DataSource = dat;
-        this.ddlBod.DataBind();
+    //    this.ddlBod.DataTextField = "DESCRIPCION";
+    //    this.ddlBod.DataValueField = "CODIGO";
+    //    this.ddlBod.DataSource = dat;
+    //    this.ddlBod.DataBind();
 
-        System.Web.UI.WebControls.ListItem item = new System.Web.UI.WebControls.ListItem();
-        item.Text = "Seleccione Bodega";
-        item.Value = "0";
-        this.ddlBod.Items.Insert(0, item);
-    }
+    //    System.Web.UI.WebControls.ListItem item = new System.Web.UI.WebControls.ListItem();
+    //    item.Text = "Seleccione Bodega";
+    //    item.Value = "0";
+    //    this.ddlBod.Items.Insert(0, item);
+    //}
 
     private void llenarDDLServicio()
     {

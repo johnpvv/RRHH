@@ -12,6 +12,7 @@ public partial class contenido_GestionRRHH_GestionSincronizacion : System.Web.UI
     ClassReloj rlj = new ClassReloj();
     Mensaje mens = new Mensaje();
     ClassTurnos tur = new ClassTurnos();
+    ClassExcelExportar excel = new ClassExcelExportar();
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)
@@ -166,6 +167,7 @@ public partial class contenido_GestionRRHH_GestionSincronizacion : System.Web.UI
         ds = rlj.mfBuscarSincronizaciones();
         dgSincronizacion.DataSource = ds;
         dgSincronizacion.DataBind();
+        this.lblTotalSinc.Text = ds.Tables[0].Rows.Count.ToString() + " Registro/s";
     }
     protected void dgSincronizacion_RowCommand(object sender, GridViewCommandEventArgs e)
     {
@@ -178,10 +180,12 @@ public partial class contenido_GestionRRHH_GestionSincronizacion : System.Web.UI
         }
         else if (e.CommandName == "ELIMINAR")
             mfEliminarSincronizacion(id);
+
         else if (e.CommandName == "CERRAR")
             mfCerrarSincronizacion(id);
-        else if (e.CommandName == "ACTUALIZAR")
-            mfActualizarSincronizacion(id);
+
+        //else if (e.CommandName == "ACTUALIZAR")//por ahora desactivado, si en un futuro se evalua se puede hacer.
+        //    mfActualizarSincronizacion(id);
     }
     private void mfCerrarSincronizacion(string id)
     {
@@ -197,12 +201,32 @@ public partial class contenido_GestionRRHH_GestionSincronizacion : System.Web.UI
 
     private void mfEliminarSincronizacion(string id)
     {
-        //throw new NotImplementedException();
+        rlj.ls_idsincroniza = id;
+        rlj.ls_iduserweb = Session["user"].ToString();
+
+        DataSet ds = rlj.mfEliminarSincronizacion();
+
+        if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+        {
+            mens.mensaje(Page, "No fue posible procesar la eliminación.");
+            return;
+        }
+
+        string mensaje = ds.Tables[0].Rows[0]["MENSAJE"].ToString();
+        int estado = Convert.ToInt32(ds.Tables[0].Rows[0]["IDESTADO"]);
+
+        mens.mensaje(Page, mensaje);
+
+        if (estado == 1)
+        {
+            CargarSincronizaciones();
+            pnlDetalleSincronizacion.Visible = false;
+        }
     }
-    private void mfActualizarSincronizacion(string id)
-    {
-        //throw new NotImplementedException();
-    }
+    //private void mfActualizarSincronizacion(string id)
+    //{
+    //    //throw new NotImplementedException();
+    //}
     private void mfVerDetalleSincronizacion(string id)
     {
         rlj.ls_idsincroniza = id;
@@ -210,6 +234,7 @@ public partial class contenido_GestionRRHH_GestionSincronizacion : System.Web.UI
         DataSet ds = rlj.mfBuscarMarcasSincronizacion();
         dgMarcasSincronizacion.DataSource = ds;
         dgMarcasSincronizacion.DataBind();
+        this.lblTotalMarcas.Text = ds.Tables[0].Rows.Count.ToString() + " Registro/s";
         lblIdSincronizacion.Text = " N°" + id;
         hdIdSincronizacion.Value = id;
         pnlDetalleSincronizacion.Visible = true;
@@ -224,5 +249,18 @@ public partial class contenido_GestionRRHH_GestionSincronizacion : System.Web.UI
     protected void btnFiltroDet_Click(object sender, EventArgs e)
     {
         mfVerDetalleSincronizacion(hdIdSincronizacion.Value);
+    }
+    protected void btnExportarMarcas_Click(object sender, EventArgs e)
+    {
+        rlj.ls_idsincroniza = hdIdSincronizacion.Value;
+        rlj.ls_iduserreloj = this.txtBusq.Text.Trim();
+        DataSet ds = rlj.mfBuscarMarcasSincronizacion();
+
+        if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+        {
+            mens.mensaje(Page, "No existen marcas para exportar.");
+            return;
+        }
+        excel.Exportar(ds, "Sincronizacion_" + hdIdSincronizacion.Value);
     }
 }

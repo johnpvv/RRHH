@@ -162,7 +162,7 @@ public class ClassReloj
               "WHEN M.TIPO_MARCA=0 THEN 'ENTRADA' " +
               "WHEN M.TIPO_MARCA=1 THEN 'SALIDA' " +
               "ELSE 'Otro' END AS TIPO_MARCA, " +
-              "CASE DATEPART(WEEKDAY,M.F_H_MARCA) " +              
+              "CASE DATEPART(WEEKDAY,M.F_H_MARCA) " +
               "WHEN 1 THEN 'Lunes' " +
               "WHEN 2 THEN 'Martes' " +
               "WHEN 3 THEN 'Miércoles' " +
@@ -685,9 +685,10 @@ public class ClassReloj
                 "S.CANT_INSERT, " +
                 "S.MNS_ERROR, " +
                 "CASE " +
-                "WHEN S.IDESTADO = 1 THEN 'OK' " +
-                "WHEN S.IDESTADO = 3 THEN 'ERROR' " +
-                "ELSE 'CERRADA' END AS ESTADO, " +
+                "WHEN S.IDESTADO = 1 THEN 'CREADA' " +
+                "WHEN S.IDESTADO = 2 THEN 'CERRADA POR USUARIO' " +
+                "WHEN S.IDESTADO = 3 THEN 'ELIMINADA' " +
+                "ELSE 'ERROR' END AS ESTADO, " +
                 "CASE WHEN S.IDESTADO = 1 THEN 1 ELSE 0 END AS ACTUALIZAR, " +
                 "CASE WHEN S.IDESTADO = 1 THEN 1 ELSE 0 END AS CERRAR, " +
                 "CASE WHEN S.IDESTADO = 1 AND NOT EXISTS " +
@@ -773,12 +774,24 @@ public class ClassReloj
     public DataSet mfCerrarSincronizacion()
     {
         DataSet ds;
-        string lsSql = 
+        string lsSql =
             "UPDATE " + modConstantes.gsDbRH + "M_SINCRONIZACION " +
             "SET IDESTADO=2 " +
             "WHERE IDSINCRONIZA=" + ls_idsincroniza + " AND IDESTADO=1; " +
             "SELECT " + ls_idsincroniza + " AS IDSINCRONIZA, " +
             "1 AS IDESTADO, 'Sincronización cerrada correctamente.' AS MENSAJE;";
+
+        con = bd.fnGetConn();
+        ds = bd.Fill(con, lsSql);
+        con.Close();
+        return ds;
+    }
+    public DataSet mfEliminarSincronizacion()
+    {
+        DataSet ds;
+        string lsSql = "EXEC " + modConstantes.gsDbRH + "PU_ELIMINA_SINCRONIZACION " +
+                       "@IDSINCRONIZA=" + ls_idsincroniza + "," +
+                       "@IDUSUARIO=" + ls_iduserweb;
 
         con = bd.fnGetConn();
         ds = bd.Fill(con, lsSql);
@@ -916,7 +929,7 @@ public class ClassReloj
                 "( " +
                     "SELECT TOP 1 UR1.IDUSRRELOJ,UR1.IDUSUARIO " +
                     "FROM " + modConstantes.gsDbRH + "M_USR_RELOJ UR1 " +
-                    "WHERE UR1.IDUSRELOJ=M.CODIGO_EMP_RELOJ " +
+                    "WHERE UR1.IDUSRELOJ=M.CODIGO_EMP_RELOJ AND UR1.IDESTADO <> 3" +
                     "ORDER BY CASE WHEN UR1.IDUSUARIO IS NOT NULL THEN 0 ELSE 1 END,UR1.IDUSRRELOJ DESC " +
                 ") UR " +
                 "LEFT JOIN " + modConstantes.gsDbRH + "M_USUARIOS U " +

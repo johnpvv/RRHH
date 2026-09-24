@@ -11,8 +11,6 @@ using System.Web.UI.WebControls;
 public partial class contenido_Administracion_GestUniOperativa : System.Web.UI.Page
 {
     Mensaje mens = new Mensaje();
-
-    ClassArticulos art = new ClassArticulos();
     ClassUnidOperativa cu = new ClassUnidOperativa();
     protected void Page_Load(object sender, EventArgs e)
     {
