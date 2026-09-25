@@ -93,6 +93,13 @@ public class ClassExcelExportar
                 WorkbookStylesPart stylesPart = workbookPart.AddNewPart<WorkbookStylesPart>();
 
                 stylesPart.Stylesheet = new Stylesheet(
+                    new NumberingFormats(
+                        new NumberingFormat
+                        {
+                            NumberFormatId = 164,
+                            FormatCode = "dd-mm-yyyy hh:mm:ss"
+                        }
+                    ),
                     new Fonts(
                         new Font(),
                         new Font(new Bold())
@@ -101,11 +108,20 @@ public class ClassExcelExportar
                         new Fill(new PatternFill { PatternType = PatternValues.None }),
                         new Fill(new PatternFill { PatternType = PatternValues.Gray125 })
                     ),
-                    new Borders(new Border()),
-                    new CellStyleFormats(new CellFormat()),
+                    new Borders(
+                        new Border()
+                    ),
+                    new CellStyleFormats(
+                        new CellFormat()
+                    ),
                     new CellFormats(
                         new CellFormat(),
-                        new CellFormat { FontId = 1 }
+                        new CellFormat { FontId = 1 },
+                        new CellFormat
+                        {
+                            NumberFormatId = 164,
+                            ApplyNumberFormat = true
+                        }
                     )
                 );
                 stylesPart.Stylesheet.Save();
@@ -191,15 +207,28 @@ public class ClassExcelExportar
             };
         }
 
+        //if (valor is DateTime)
+        //{
+        //    DateTime fecha = (DateTime)valor;
+
+        //    return new Cell
+        //    {
+        //        DataType = CellValues.InlineString,
+        //        InlineString = new InlineString(
+        //            new Text(fecha.ToString("dd-MM-yyyy HH:mm:ss"))
+        //        )
+        //    };
+        //}
         if (valor is DateTime)
         {
             DateTime fecha = (DateTime)valor;
 
             return new Cell
             {
-                DataType = CellValues.InlineString,
-                InlineString = new InlineString(
-                    new Text(fecha.ToString("dd-MM-yyyy HH:mm:ss"))
+                DataType = CellValues.Number,
+                StyleIndex = 2,
+                CellValue = new CellValue(
+                    fecha.ToOADate().ToString(CultureInfo.InvariantCulture)
                 )
             };
         }
@@ -228,7 +257,6 @@ public class ClassExcelExportar
     private static void Descargar(MemoryStream ms, string nombreArchivo)
     {
         HttpResponse response = HttpContext.Current.Response;
-
         response.Clear();
         response.ClearHeaders();
         response.ClearContent();

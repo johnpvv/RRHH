@@ -692,7 +692,7 @@ public class ClassReloj
                 "CASE WHEN S.IDESTADO = 1 THEN 1 ELSE 0 END AS ACTUALIZAR, " +
                 "CASE WHEN S.IDESTADO = 1 THEN 1 ELSE 0 END AS CERRAR, " +
                 "CASE WHEN S.IDESTADO = 1 AND NOT EXISTS " +
-                "(SELECT 1 FROM " + modConstantes.gsDbRH + "M_MARCACIONES M WHERE M.IDSINCRONIZA = S.IDSINCRONIZA AND ISNULL(M.IDESTADO,1) = 2) " +
+                "(SELECT 1 FROM " + modConstantes.gsDbRH + "M_MARCACIONES M WHERE M.IDSINCRONIZA = S.IDSINCRONIZA AND ISNULL(M.IDESTADO,1) <> 1) " +
                 "THEN 1 ELSE 0 END AS ELIMINAR, " +
                 "S.IDUSUARIO " +
                 "FROM " + modConstantes.gsDbRH + "M_SINCRONIZACION S " +
@@ -712,8 +712,10 @@ public class ClassReloj
         DataSet ds;
         string lsWhere = "";
 
-        if (ls_iduserreloj != "")
-            lsWhere += " AND (M.CODIGO_EMP_RELOJ = '" + ls_iduserreloj + "' OR U.RUT = '" + ls_iduserreloj + "') ";
+        if (ls_descrip != "")
+            lsWhere += " AND (M.CODIGO_EMP_RELOJ = '" + ls_descrip + "' " +
+                "OR CAST(U.RUT AS VARCHAR(20)) = '" + ls_descrip + "'" +
+                "OR (U.NOMBRE + ' ' + ISNULL(U.AP_PATERNO,'') + ' ' + ISNULL(U.AP_MATERNO,'')) LIKE '%" + ls_descrip + "%') ";
 
         lsSql = "SELECT " +
                 "M.IDMARCACION, " +
@@ -1136,7 +1138,7 @@ public class ClassReloj
             " " + ls_tipo + ",GETDATE(),2,'" +
             " " + ls_obs.Replace("'", "''") + "'," +
             " " + ls_idreloj + "," +
-            " 1," +
+            " 2," +
             " GETDATE()," +
             " " + ls_iduserweb + ")";
         con = bd.fnGetConn();

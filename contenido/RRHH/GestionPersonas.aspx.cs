@@ -84,7 +84,8 @@ public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
                             this.TxtPaterno.Text = aoDs.Tables[0].Rows[0]["AP_PATERNO"].ToString();
                             this.TxtMaterno.Text = aoDs.Tables[0].Rows[0]["AP_MATERNO"].ToString();
                             this.TxtDire.Text = aoDs.Tables[0].Rows[0]["DIRECCION"].ToString();
-                            this.txtFechaNacimiento.Text = aoDs.Tables[0].Rows[0]["FECHA_NACIMIENTO"].ToString();
+                            if (aoDs.Tables[0].Rows[0]["FECHA_NACIMIENTO"] != DBNull.Value)
+                                this.txtFechaNacimiento.Text = Convert.ToDateTime(aoDs.Tables[0].Rows[0]["FECHA_NACIMIENTO"]).ToString("yyyy-MM-dd");
                             this.ddlEstadoCivil.SelectedValue = aoDs.Tables[0].Rows[0]["EST_CIVIL"].ToString();
                             this.ddlSexo.SelectedValue= aoDs.Tables[0].Rows[0]["SEXO"].ToString();
                             this.TFono1.Text = aoDs.Tables[0].Rows[0]["FONO1"].ToString();
@@ -268,7 +269,7 @@ public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
         per.ls_nomb_soc = modFunciones.mfLimpiaString(this.TxtNombreSocial.Text);
         per.ls_pat = modFunciones.mfLimpiaString(this.TxtPaterno.Text);
         per.ls_mat = modFunciones.mfLimpiaString(this.TxtMaterno.Text);
-        per.ls_fnac = this.txtFechaNacimiento.Text;
+        per.ls_fnac = Convert.ToDateTime(this.txtFechaNacimiento.Text).ToString("dd/MM/yyyy"); 
         per.ls_sexo = this.ddlSexo.SelectedValue;
         per.ls_estciv = this.ddlEstadoCivil.SelectedValue;
         per.ls_dir = modFunciones.mfLimpiaString(this.TxtDire.Text);
@@ -321,7 +322,7 @@ public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
         return true;
     }
 
-    protected void ImgBtnBack_Click(object sender, ImageClickEventArgs e)
+    protected void btnVolver_Click(object sender, EventArgs e)
     {
 
         if (Session["cadena"] == null)

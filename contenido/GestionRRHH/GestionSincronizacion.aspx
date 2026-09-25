@@ -183,68 +183,63 @@
                         </div>
                     </div>
                     <div class="bloque">
-                        <asp:UpdatePanel ID="upd1" runat="server">
-                            <ContentTemplate>
-                                <asp:Panel ID="pnlDetalleSincronizacion" runat="server" Visible="false">
-                                    <div class="bloque">
-                                        <div class="titulo-seccion">
-                                            Marcas de la sincronización                                
+                        <asp:Panel ID="pnlDetalleSincronizacion" runat="server" Visible="false">
+                            <div class="bloque">
+                                <div class="titulo-seccion">
+                                    Marcas de la sincronización                                
                             <asp:Label ID="lblIdSincronizacion" runat="server">
                             </asp:Label>
-                                        </div>
-                                        <div class="filtros-grid">
-                                            <div class="campo">
-                                                <label>Código Trabajador:</label>
-                                                <asp:TextBox ID="txtBusq" runat="server" CssClass="form-control">
-                                                </asp:TextBox>
-                                            </div>
-                                            <div class="campo">
-                                                <label>&nbsp;</label>
-                                                <asp:Button ID="btnFiltroDet" runat="server"
-                                                    Text="Buscar"
-                                                    CssClass="BotonPortalVerde"
-                                                    OnClick="btnFiltroDet_Click"
-                                                    OnClientClick="mostrarSpinner();" />
-                                            </div>
+                                </div>
+                                <asp:Panel ID="pnlBusqueda" runat="server" DefaultButton="btnFiltroDet">
+                                    <div class="filtros-grid">
+                                        <div class="campo">
+                                            <label>Código, RUT o Nombre Trabajador:</label>
+                                            <asp:TextBox ID="txtBusq" runat="server" CssClass="form-control">
+                                            </asp:TextBox>
                                         </div>
                                         <div class="campo">
-                                            <asp:HiddenField ID="hdIdSincronizacion" runat="server" />
-                                            <asp:GridView ID="dgMarcasSincronizacion" runat="server"
-                                                AutoGenerateColumns="False"
-                                                GridLines="None"
-                                                EmptyDataText="No existen Sincronizaciones con los filtros aplicados."
-                                                EmptyDataRowStyle-CssClass="bloque-titulo"
-                                                CssClass="grid-reloj"
-                                                AllowPaging="True"
-                                                PageSize="50"
-                                                OnPageIndexChanging="dgMarcasSincronizacion_PageIndexChanging">
-                                                <Columns>
-                                                    <asp:BoundField DataField="CODIGO_EMP_RELOJ" HeaderText="Cód. Trab. Reloj" />
-                                                    <asp:BoundField DataField="NOMBRE" HeaderText="Nombre RR.HH." />
-                                                    <asp:BoundField DataField="RELOJ" HeaderText="Nombre Reloj" />
-                                                    <asp:BoundField DataField="F_H_MARCA" HeaderText="Fecha" DataFormatString="{0:dd/MM/yyyy}" ItemStyle-Font-Bold="true" />
-                                                    <asp:BoundField DataField="F_H_MARCA" HeaderText="Hora" DataFormatString="{0:HH:mm:ss}" />
-                                                    <asp:BoundField DataField="TIPO_MARCA" HeaderText="Tipo" ItemStyle-Font-Bold="true" />
-                                                    <asp:BoundField DataField="F_H_CARGA" HeaderText="Fecha Carga" DataFormatString="{0:dd/MM/yyyy HH:mm:ss}" />
-                                                    <asp:BoundField DataField="OBSERVACIONES" HeaderText="Observaciones" />
-                                                </Columns>
-                                                <PagerStyle CssClass="GridPager" HorizontalAlign="Center" />
-                                            </asp:GridView>
-                                            <asp:Label ID="lblTotalMarcas" runat="server" CssClass="contador-grid" Text="0 registro(s)">&nbsp;</asp:Label>
-                                        </div>
-                                        <div class="botones-form">
-                                            <asp:Button ID="btnExportarMarcas"
-                                                runat="server"
-                                                Text="Exportar Excel"
+                                            <label>&nbsp;</label>
+                                            <asp:Button ID="btnFiltroDet" runat="server"
+                                                Text="Buscar"
                                                 CssClass="BotonPortalVerde"
-                                                OnClick="btnExportarMarcas_Click"/>
+                                                OnClick="btnFiltroDet_Click"
+                                                OnClientClick="mostrarSpinner();" />
                                         </div>
+                                    </div>
                                 </asp:Panel>
-                            </ContentTemplate>
-                            <Triggers>
-                                <asp:PostBackTrigger ControlID="btnExportarMarcas" />
-                            </Triggers>
-                        </asp:UpdatePanel>
+                                <div class="campo">
+                                    <asp:HiddenField ID="hdIdSincronizacion" runat="server" />
+                                    <asp:GridView ID="dgMarcasSincronizacion" runat="server"
+                                        AutoGenerateColumns="False"
+                                        GridLines="None"
+                                        EmptyDataText="No existen Sincronizaciones con los filtros aplicados."
+                                        EmptyDataRowStyle-CssClass="bloque-titulo"
+                                        CssClass="grid-reloj"
+                                        AllowPaging="True"
+                                        PageSize="50"
+                                        OnPageIndexChanging="dgMarcasSincronizacion_PageIndexChanging">
+                                        <Columns>
+                                            <asp:BoundField DataField="CODIGO_EMP_RELOJ" HeaderText="Cód. Trab. Reloj" />
+                                            <asp:BoundField DataField="NOMBRE" HeaderText="Nombre RR.HH." />
+                                            <asp:BoundField DataField="RELOJ" HeaderText="Nombre Reloj" />
+                                            <asp:BoundField DataField="F_H_MARCA" HeaderText="Fecha" DataFormatString="{0:dd/MM/yyyy}" ItemStyle-Font-Bold="true" />
+                                            <asp:BoundField DataField="F_H_MARCA" HeaderText="Hora" DataFormatString="{0:HH:mm:ss}" />
+                                            <asp:BoundField DataField="TIPO_MARCA" HeaderText="Tipo" ItemStyle-Font-Bold="true" />
+                                            <asp:BoundField DataField="F_H_CARGA" HeaderText="Fecha Carga" DataFormatString="{0:dd/MM/yyyy HH:mm:ss}" />
+                                            <asp:BoundField DataField="OBSERVACIONES" HeaderText="Observaciones" />
+                                        </Columns>
+                                        <PagerStyle CssClass="GridPager" HorizontalAlign="Center" />
+                                    </asp:GridView>
+                                    <asp:Label ID="lblTotalMarcas" runat="server" CssClass="contador-grid" Text="0 registro(s)">&nbsp;</asp:Label>
+                                </div>
+                                <div class="botones-form">
+                                    <asp:Button ID="btnExportarMarcas"
+                                        runat="server"
+                                        Text="Exportar Excel"
+                                        CssClass="BotonPortalVerde"
+                                        OnClick="btnExportarMarcas_Click" />
+                                </div>
+                        </asp:Panel>
                     </div>
                 </ContentTemplate>
             </ajaxToolkit:TabPanel>

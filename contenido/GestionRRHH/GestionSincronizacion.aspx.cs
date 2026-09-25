@@ -21,7 +21,7 @@ public partial class contenido_GestionRRHH_GestionSincronizacion : System.Web.UI
             CargarAnios();
             CargarCentrosAdmin();
             InicializarRelojAdmin();
-            CargarSincronizaciones();            
+            CargarSincronizaciones();
         }
     }
     private void CargarMeses()
@@ -230,7 +230,7 @@ public partial class contenido_GestionRRHH_GestionSincronizacion : System.Web.UI
     private void mfVerDetalleSincronizacion(string id)
     {
         rlj.ls_idsincroniza = id;
-        rlj.ls_iduserreloj = this.txtBusq.Text.Trim();
+        rlj.ls_descrip = this.txtBusq.Text.Trim();
         DataSet ds = rlj.mfBuscarMarcasSincronizacion();
         dgMarcasSincronizacion.DataSource = ds;
         dgMarcasSincronizacion.DataBind();
@@ -253,14 +253,15 @@ public partial class contenido_GestionRRHH_GestionSincronizacion : System.Web.UI
     protected void btnExportarMarcas_Click(object sender, EventArgs e)
     {
         rlj.ls_idsincroniza = hdIdSincronizacion.Value;
-        rlj.ls_iduserreloj = this.txtBusq.Text.Trim();
+        rlj.ls_descrip = this.txtBusq.Text.Trim();
         DataSet ds = rlj.mfBuscarMarcasSincronizacion();
-
+       
         if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
         {
             mens.mensaje(Page, "No existen marcas para exportar.");
             return;
         }
+        
         excel.Exportar(ds, "Sincronizacion_" + hdIdSincronizacion.Value);
     }
 }
