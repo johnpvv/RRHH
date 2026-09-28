@@ -286,8 +286,6 @@ public partial class contenido_SysAdmin_GestionUsuarios : System.Web.UI.Page
         {
             mens.mensaje(Page, "Registro ingresado con Exito.. ");
         }
-
-
     }
 
     private void mfCambiarEstadoUsuario()

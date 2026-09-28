@@ -12,6 +12,7 @@ public partial class contenido_RRHH_VistaMarcacionesTrab : System.Web.UI.Page
     ClassTrabajadores usr = new ClassTrabajadores();
     ClassTurnos tur = new ClassTurnos();
     ClassFeriado fer = new ClassFeriado();
+    Mensaje mens = new Mensaje();
     private HashSet<DateTime> feriados = new HashSet<DateTime>();
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -134,6 +135,26 @@ public partial class contenido_RRHH_VistaMarcacionesTrab : System.Web.UI.Page
     }
     protected void btnExportar_Click(object sender, EventArgs e)
     {
+        ClassExcelExportar excel = new ClassExcelExportar();
+        DataSet ds;
+        usr.ls_rut = Session["rut"].ToString();
+        rlj.ls_iduser = usr.mfDevuelveID();//en caso de homologar con otro id desde los relojes u otros        
+        rlj.ls_mes = ddlMes.SelectedValue;
+        rlj.ls_anio = ddlAnio.SelectedValue;
+        if (ddlVistaMarcas.SelectedValue == "1")
+        {
+            ds = rlj.mfBuscarMarcasReloj();
+        }
+        else
+        {
+            ds = rlj.mfBuscarMarcasRelojAgrupadas();
+        }
 
+        if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+        {
+            mens.mensaje(Page, "No existen datos para exportar.");
+            return;
+        }
+        excel.Exportar(ds, "Listado_Marcas_" + ddlMes.SelectedValue + "_" + Session["rut"].ToString());
     }
 }

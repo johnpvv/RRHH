@@ -9,7 +9,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
+public partial class contenido_Administracion_GestionPersonas : System.Web.UI.Page
 {
     Mensaje mens = new Mensaje();
     ClassTrabajadores per = new ClassTrabajadores();
@@ -33,7 +33,6 @@ public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
                 mfExistePersona();
             }
         }
-
         if (!IsPostBack)
         {
             try
@@ -41,16 +40,13 @@ public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
                 // Captura Datos
                 Session.Add("lsIdentificador", Request.QueryString["key"].ToString());
                 this.hdIdentificador.Value = Request.QueryString["key"].ToString();
-
-
                 //lsGrabar = modfunc.fnValidaUsrApp("BTN_CHK_PAC", gUsr, asCodSistema);
                 //if (lsGrabar != "M" && lsGrabar != "L") { this.chkLimpiar.Enabled = false; }
-
                 LlenarPrevision();
                 LlenarRegion();
                 LlenarComuna();
                 LlenarEstCivil();
-
+                LlenarCentros();
                 if (this.hdIdentificador.Value == "0")
                 {
                     Session.Add("lbNvo", true);
@@ -58,6 +54,7 @@ public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
                     this.TxtRut.Enabled = true;
                     this.TxtDv.Enabled = true;
                     this.btn_habilitar.Enabled = false;
+                    this.btn_ReinicioClv.Enabled = false;
                     this.TxtRut.Focus();
                 }
                 else
@@ -87,34 +84,33 @@ public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
                             if (aoDs.Tables[0].Rows[0]["FECHA_NACIMIENTO"] != DBNull.Value)
                                 this.txtFechaNacimiento.Text = Convert.ToDateTime(aoDs.Tables[0].Rows[0]["FECHA_NACIMIENTO"]).ToString("yyyy-MM-dd");
                             this.ddlEstadoCivil.SelectedValue = aoDs.Tables[0].Rows[0]["EST_CIVIL"].ToString();
-                            this.ddlSexo.SelectedValue= aoDs.Tables[0].Rows[0]["SEXO"].ToString();
+                            this.ddlSexo.SelectedValue = aoDs.Tables[0].Rows[0]["SEXO"].ToString();
                             this.TFono1.Text = aoDs.Tables[0].Rows[0]["FONO1"].ToString();
                             this.TFono2.Text = aoDs.Tables[0].Rows[0]["FONO2"].ToString();
                             this.TObsFono1.Text = aoDs.Tables[0].Rows[0]["OBS_FONO1"].ToString();
                             this.TObsFono2.Text = aoDs.Tables[0].Rows[0]["OBS_FONO2"].ToString();
                             this.TMail.Text = aoDs.Tables[0].Rows[0]["EMAIL"].ToString();
-                            // this.TMail0.Text = aoDs.Tables[0].Rows[0]["MAIL2_CONT"].ToString();
-
+                            this.ddlCentro.SelectedValue = aoDs.Tables[0].Rows[0]["IDCENTRO"].ToString();//coduniop
                             this.ddlPrevision.SelectedValue = aoDs.Tables[0].Rows[0]["IDPREVISION"].ToString();
                             this.ddlRegion.SelectedValue = aoDs.Tables[0].Rows[0]["IDREGION"].ToString();
                             this.ddlComuna.SelectedValue = aoDs.Tables[0].Rows[0]["IDCOMUNA"].ToString();
                             this.observacion.Text = aoDs.Tables[0].Rows[0]["OBSERVACION"].ToString();
-                            if (aoDs.Tables[0].Rows[0]["IDESTADO"].ToString() == "1")
+                            this.hdIdEstado.Value = aoDs.Tables[0].Rows[0]["IDESTADO"].ToString();
+                            if (this.hdIdEstado.Value == "1")
                             {
                                 this.lbEstado.Text = "VIGENTE";
                                 this.btn_habilitar.Text = "Deshabilitar";
                             }
+                            else if (this.hdIdEstado.Value == "2")
+                            {
+                                this.lbEstado.Text = "EDITADO";
+                                this.btn_habilitar.Text = "Deshabilitar";
+                            }
                             else
                             {
-                                this.lbEstado.Text = "REVISAR ESTADO";
+                                this.lbEstado.Text = "NO VIGENTE";
                             }
-
-                            //this.ddlPrevision.SelectedValue = per.mfIdPrevisionPaciente(this.hdIdentificador.Value);
-                            //this.ddlRegion.SelectedValue = per.mfIdRegionPaciente(this.hdIdentificador.Value);
-                            //this.ddlComuna.SelectedValue = per.mfIdComunaPaciente(this.hdIdentificador.Value);
-
                             this.LbTitulo.Text = aoDs.Tables[0].Rows[0]["RUT"].ToString() + "-" + aoDs.Tables[0].Rows[0]["DV"].ToString();
-
                         }
                     }
 
@@ -191,8 +187,6 @@ public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
         item.Text = "Seleccione Estado";
         item.Value = "0";
         this.ddlEstadoCivil.Items.Insert(0, item);
-
-
     }
     private void LlenarPrevision()
     {
@@ -208,6 +202,21 @@ public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
         item.Text = "Seleccione Unidad";
         item.Value = "0";
         this.ddlPrevision.Items.Insert(0, item);
+    }
+    private void LlenarCentros()
+    {
+        DataSet dat = new DataSet();
+        dat = cu.mfListaUnidad(Session["serv"].ToString());
+
+        this.ddlCentro.DataTextField = "DESCRIPCION";
+        this.ddlCentro.DataValueField = "CODUNIOP";
+        this.ddlCentro.DataSource = dat;
+        this.ddlCentro.DataBind();
+
+        System.Web.UI.WebControls.ListItem item = new ListItem();
+        item.Text = "Seleccione Unidad";
+        item.Value = "0";
+        this.ddlCentro.Items.Insert(0, item);
     }
 
 
@@ -234,10 +243,8 @@ public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
 
     private void mfAgregar()
     {
-
         //Validaciones
         if (!ValidarCampos()) { return; }
-
 
         //Revisar si existe RUT
         if (nuevo)
@@ -269,7 +276,7 @@ public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
         per.ls_nomb_soc = modFunciones.mfLimpiaString(this.TxtNombreSocial.Text);
         per.ls_pat = modFunciones.mfLimpiaString(this.TxtPaterno.Text);
         per.ls_mat = modFunciones.mfLimpiaString(this.TxtMaterno.Text);
-        per.ls_fnac = Convert.ToDateTime(this.txtFechaNacimiento.Text).ToString("dd/MM/yyyy"); 
+        per.ls_fnac = Convert.ToDateTime(this.txtFechaNacimiento.Text).ToString("dd/MM/yyyy");
         per.ls_sexo = this.ddlSexo.SelectedValue;
         per.ls_estciv = this.ddlEstadoCivil.SelectedValue;
         per.ls_dir = modFunciones.mfLimpiaString(this.TxtDire.Text);
@@ -283,6 +290,7 @@ public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
         per.ls_obs = modFunciones.mfLimpiaString(this.observacion.Text);
         per.ls_mail = this.TMail.Text;
         per.ls_iduser = Session["user"].ToString();
+        per.ls_centro = this.ddlCentro.SelectedItem.Value;
         string lsRet = "";
         lsRet = per.CrearUsuario(nuevo);
 
@@ -301,7 +309,11 @@ public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
 
     public bool ValidarCampos()
     {
-
+        if (string.IsNullOrWhiteSpace(this.TxtRut.Text))
+        {
+            mens.mensaje(Page, "Debe Escribir un RUT Válido");
+            return false;
+        }
         if (this.ddlPrevision.SelectedIndex == 0)
         {
             mens.mensaje(Page, "Debe seleccionar Prevision");
@@ -319,6 +331,25 @@ public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
             mens.mensaje(Page, "Debe seleccionar Comuna");
             return false;
         }
+        if (string.IsNullOrWhiteSpace(this.txtFechaNacimiento.Text))
+        {
+            mens.mensaje(Page, "Debe ingresar la fecha de nacimiento...");
+            return false;
+        }
+
+        DateTime fechaNacimiento;
+
+        if (!DateTime.TryParseExact(this.txtFechaNacimiento.Text, "yyyy-MM-dd",
+            CultureInfo.InvariantCulture, DateTimeStyles.None, out fechaNacimiento))
+        {
+            mens.mensaje(Page, "La fecha de nacimiento no es válida...");
+            return false;
+        }
+        if (fechaNacimiento > DateTime.Today)
+        {
+            mens.mensaje(Page, "La fecha de nacimiento no puede ser futura...");
+            return false;
+        }
         return true;
     }
 
@@ -327,51 +358,41 @@ public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
 
         if (Session["cadena"] == null)
         {
-            Response.Redirect("~/contenido/RRHH/ListaPersonas.aspx?id=0");
+            Response.Redirect("~/contenido/Administracion/ListaPersonas.aspx?id=1");
         }
         else
         {
-            Response.Redirect("~/contenido/RRHH/ListaPersonas.aspx?id=0" + Session["cadena"].ToString());
+            Response.Redirect("~/contenido/Administracion/ListaPersonas.aspx?id=0" + Session["cadena"].ToString());
         }
     }
-
-
-
-
-    //A integrar lo siguiente ???
 
     protected void btn_habilitar_Click(object sender, EventArgs e)
     {
         try
         {
-            string confirmValue = Request.Form["confirm_value"];
-            modFunciones fun = new modFunciones();
-            confirmValue = fun.ConfirmValor(confirmValue);
-
-            if (confirmValue == "Yes")
-            {
-                CambiarEstadoPaciente();
-            }
+            CambiarEstadoPersona();
         }
-        catch
+        catch (Exception ex)
         {
             Response.Redirect("~/contenido/frmerrgen.aspx");
         }
     }
 
-
-
-    private void CambiarEstadoPaciente()
+    private void CambiarEstadoPersona()
     {
         string asEstado = "2";
 
-        if (this.lbEstado.Text == "VIGENTE") asEstado = "3";
+        if (this.hdIdEstado.Value == "1" || this.hdIdEstado.Value == "2")
+            asEstado = "3";
 
-        //string lsRet = per.UpdateEstado(Session["lsIdentificador"].ToString(), asEstado);
-        //string lsRet = per.UpdateEstado(this.hdIdentificador.Value, asEstado);
+        per.ls_rut = this.hdIdentificador.Value;
+        string id = per.mfDevuelveID();
+        per.ls_iduser = id;
+        per.ls_idestado = asEstado;
+        string lsRet = per.mfUpdateEstado();
 
-        //if (lsRet != "")
-        //    mens.mensaje(Page, "Error: Problemas al Ingresar el Registro.");
+        if (lsRet != "")
+            mens.mensaje(Page, "Error: Problemas al cambiar el estado...");
         else
         {
             if (asEstado == "3")
@@ -381,15 +402,57 @@ public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
             }
             else
             {
-                this.lbEstado.Text = "VIGENTE";
+                this.lbEstado.Text = "EDITADO";
                 this.btn_habilitar.Text = "Deshabilitar";
             }
-            mens.mensaje(Page, "Registro ingresado con Exito.. ");
+            mens.mensaje(Page, "Estado Actualizado con Exito...");
         }
     }
+    protected void btn_ReinicioClv_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            mfReIniciarUsuario();
+        }
+        catch
+        {
+            Response.Redirect("~/contenido/frmerrgen.aspx");
+        }
+    }
+    private void mfReIniciarUsuario()
+    {
+        per.ls_rut = this.hdIdentificador.Value;
+        string id = per.mfDevuelveID();
+        per.ls_iduser = id;
+        string lsRet = per.mfReIniciarClave();
 
-
-    //Validador de rut------------------------------------------
+        if (lsRet != "")
+            mens.mensaje(Page, "Error: Problemas al Reiniciar la Clave...");
+        else
+        {
+            mens.mensaje(Page, "Clave Reiniciada con Exito...");
+        }
+    }
+    private void mfExistePersona()
+    {
+        if (this.TxtRut.Text == "")
+        {
+            mens.mensaje(Page, "Debe Escribir un RUT Válido");
+            return;
+        }
+        per.ls_rut = this.TxtRut.Text;
+        if (Convert.ToInt32(per.mfExistePersona()) > 0)
+        {
+            mens.mensaje(Page, "RUT ya tiene cuenta asociada.. ");
+            this.TxtRut.Text = "";
+        }
+        else
+        {
+            this.TxtDv.Text = Digito(Convert.ToInt32(this.TxtRut.Text));
+        }
+    }
+    #endregion
+    #region Validador de rut
     public static bool ValidaRut(string rut, string dv)
     {
         return ValidaRut(rut + "-" + dv);
@@ -412,8 +475,6 @@ public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
         }
         return true;
     }
-
-
     public static string Digito(int rut)
     {
         int suma = 0;
@@ -440,20 +501,5 @@ public partial class contenido_RRHH_GestionPersonas : System.Web.UI.Page
             return suma.ToString();
         }
     }
-
-    private void mfExistePersona()
-    {
-        per.ls_rut = this.TxtRut.Text;
-        if (Convert.ToInt32(per.mfExistePersona()) > 0)
-        {
-            mens.mensaje(Page, "RUT ya tiene cuenta asociada.. ");
-            this.TxtRut.Text = "";
-        }
-        else
-        {
-            this.TxtDv.Text = Digito(Convert.ToInt32(this.TxtRut.Text));
-        }
-    }
-
     #endregion
 }

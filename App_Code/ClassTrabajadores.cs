@@ -39,60 +39,73 @@ public class ClassTrabajadores
     public string ls_fnac { get; set; }
     public string ls_sexo { get; set; }
     public string ls_estciv { get; set; }
+    public string ls_idestado { get; set; }
+    public string ls_centro { get; set; }
 
     public DataSet mfBuscarPersonas()
     {
-        string lsSql = "";
-        string lsWhe = "";
+        string lsSql;
+        string lsWhere = "";
         DataSet ds;
 
-        if (ls_nomb != "")
+        if (ls_elim == "3")
         {
-            lsWhe += " AND P.NOMBRE LIKE '%" + ls_nomb.Trim() + "%'";
+            lsWhere += " AND IDESTADO = " + ls_elim + " ";
+        }
+        else
+        {
+            lsWhere = " AND IDESTADO <> 3 ";
         }
 
-        if (ls_pat != "")
+        if (!string.IsNullOrWhiteSpace(ls_rut))
         {
-            lsWhe += " AND P.AP_PATERNO LIKE '%" + ls_pat.Trim() + "%'";
+            lsWhere += " AND RUT = " + ls_rut.Trim().Replace("'", "'' ");
         }
 
-        if (ls_mat != "")
+        if (!string.IsNullOrWhiteSpace(ls_nomb))
         {
-            lsWhe += " AND P.AP_MATERNO LIKE '%" + ls_mat.Trim() + "%'";
+            lsWhere +=
+                " AND (NOMBRE LIKE '%" +
+                ls_nomb.Trim().Replace("'", "''") +
+                "%') ";
         }
-
-        if (ls_rut != "")
+        if (!string.IsNullOrWhiteSpace(ls_pat))
         {
-            lsWhe += " AND P.RUT = " + ls_rut;
+            lsWhere +=
+                " AND (AP_PATERNO LIKE '%" +
+                ls_pat.Trim().Replace("'", "''") +
+                "%') ";
         }
-        //falta agregar estado
+        if (!string.IsNullOrWhiteSpace(ls_mat))
+        {
+            lsWhere +=
+                " AND (AP_MATERNO LIKE '%" +
+                ls_mat.Trim().Replace("'", "''") +
+                "%') ";
+        }
         lsSql =
             "SELECT " +
-            "   P.IDUSUARIO, " +
-            "   P.RUT, " +
-            "   P.DV, " +
-            "   P.NOMBRE, " +
-            "   ISNULL(P.NOMBRE_SOCIAL,'') NOMBRE_SOCIAL, " +
-            "   P.AP_PATERNO, " +
-            "   ISNULL(P.AP_MATERNO,'') AP_MATERNO, " +
-            "   P.DIRECCION, " +
-            "   P.IDREGION, " +
-            "   P.IDCOMUNA, " +
-            "   P.IDPREVISION, " +
-            "   P.FONO1, " +
-            "   P.FONO2, " +
-            "   P.EMAIL, " +
-            "   P.IDESTADO, " +
-            "   P.F_H_CREA " +
-            "FROM " + modConstantes.gsDbRH + "M_USUARIOS P " +
-            "WHERE P.RUT > 0 " +
-            lsWhe + " " +
-            "ORDER BY P.AP_PATERNO, P.AP_MATERNO, P.NOMBRE";
-
-        con = bd.fnGetConnRH();
+            "RUT, " +
+            "DV, " +
+            "CONVERT(VARCHAR,RUT) + '-' + DV as RUT_C, " +
+            "IDUSUARIO, " +
+            "NOMBRE, " +
+            "ISNULL(AP_PATERNO,'') as AP_PATERNO, " +
+            "ISNULL(AP_MATERNO,'') as AP_MATERNO, " +
+            "CASE WHEN IDESTADO = 1 THEN 'VIGENTE' " +
+            "WHEN IDESTADO = 2 THEN 'MODIFICADO' " +
+            "ELSE 'ELIMINADO' END ESTADO," +
+            "DIRECCION, " +
+            "FONO1, " +
+            "FONO2, " +
+            "EMAIL " +
+            "FROM " + modConstantes.gsDbRH + "M_USUARIOS " +
+            "WHERE 1=1 " +
+            lsWhere +
+            "ORDER BY AP_PATERNO, AP_MATERNO, NOMBRE";
+        con = bd.fnGetConn();
         ds = bd.Fill(con, lsSql);
         con.Close();
-
         return ds;
     }
     public DataSet ConsultarID()
@@ -125,7 +138,8 @@ public class ClassTrabajadores
             "P.EMAIL, " +
             "P.IDESTADO, " +
             "P.F_H_CREA, " +
-            "UOP.DESCRIPCION AS CENTRO, " +
+            "UOP.DESCRIPCION AS CENTRO," +
+            "ISNULL(P.CODUNIOP,0) as IDCENTRO, " +
             "P.OBSERVACION " +
             "FROM " + modConstantes.gsDbRH + "M_USUARIOS P " +
             "LEFT JOIN " + modConstantes.gsDbRH + "M_UNIDAD_OPERATIVA UOP ON UOP.CODUNIOP = P.CODUNIOP " +
@@ -186,7 +200,11 @@ public class ClassTrabajadores
                     "OBSERVACION,  " +
                     "IDUSERCREA,  " +
                     "F_H_MOD, " +
-                    "Direccion) " +
+                    "Direccion," +
+                    "IDESTADO," +
+                    "PASSWD, " +
+                    "ID_INST," +
+                    "CODUNIOP) " +
 
             "VALUES ( " + ls_rut + ", " +
                     "'" + ls_dv + "', " +
@@ -208,7 +226,11 @@ public class ClassTrabajadores
                     "'" + ls_obs + "', " +
                     " " + ls_iduser + ", " +
                     "NULL, " +
-                    "'" + ls_dir + "')";
+                    "'" + ls_dir + "', " +
+                    " 1, " +
+                    " '" + modFunciones.Encriptar("1234") + "'," +
+                    "1," +
+                    ls_centro+")";
         }
         else
         {
@@ -233,7 +255,9 @@ public class ClassTrabajadores
                     "OBSERVACION	=  '" + ls_obs + "', " +
                     "Direccion	=  '" + ls_dir + "', " +
                     "IDUSERMOD	=  " + ls_iduser + ", " +
-                    "F_H_MOD   =   GETDATE() " +
+                    "F_H_MOD   =   GETDATE()," +
+                    "IDESTADO   = 2," +
+                    "CODUNIOP = " + ls_centro +" "+
                     "WHERE RUT = " + ls_rut;
         }
         con = bd.fnGetConnRH();
@@ -383,7 +407,14 @@ public class ClassTrabajadores
         string lsWhere = "";
         DataSet ds;
 
-        lsWhere = " WHERE IDESTADO = 1 ";
+        if (ls_elim == "3")
+        {
+            lsWhere += " AND IDESTADO = " + ls_elim + " ";
+        }
+        else
+        {
+            lsWhere = " AND IDESTADO <> 3 ";
+        }
 
         if (!string.IsNullOrWhiteSpace(ls_rut))
         {
@@ -414,8 +445,16 @@ public class ClassTrabajadores
             "CONVERT(VARCHAR,RUT) + '-' + DV as RUT_C, " +
             "NOMBRE + ' ' + " +
             "ISNULL(AP_PATERNO,'') + ' ' + " +
-            "ISNULL(AP_MATERNO,'') as NOMBRE " +
+            "ISNULL(AP_MATERNO,'') as NOMBRE, " +
+            "CASE WHEN IDESTADO = 1 THEN 'VIGENTE' " +
+            "WHEN IDESTADO = 2 THEN 'MODIFICADO' " +
+            "ELSE 'ELIMINADO' END ESTADO," +
+            "DIRECCION, " +
+            "FONO1, " +
+            "FONO2, " +
+            "EMAIL " +
             "FROM " + modConstantes.gsDbRH + "M_USUARIOS " +
+            "WHERE 1=1 " +
             lsWhere +
             "ORDER BY AP_PATERNO, AP_MATERNO, NOMBRE";
         con = bd.fnGetConn();
@@ -478,5 +517,27 @@ public class ClassTrabajadores
         con.Close();
 
         return ds;
+    }
+    public string mfReIniciarClave()
+    {
+        string lsRet = "";
+        string lsSql = "";
+        con = bd.fnGetConn();
+        lsSql = "update " + modConstantes.gsDbRH + "m_usuarios set PASSWD = 'MQAyADMANAA=', new_passwd = 0 " +
+                "where idusuario = " + ls_iduser;
+        lsRet = bd.EjecutarComando(con, lsSql);
+        con.Close();
+        return lsRet;
+    }
+    public string mfUpdateEstado()
+    {
+        string lsRet = "";
+        string lsSql = "";
+        con = bd.fnGetConn();
+        lsSql = "update " + modConstantes.gsDbAB + "m_usuarios set idestado = " + ls_idestado + " " +
+                "where idusuario = " + ls_iduser;
+        lsRet = bd.EjecutarComando(con, lsSql);
+        con.Close();
+        return lsRet;
     }
 }

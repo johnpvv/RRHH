@@ -57,7 +57,7 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
                 feriados.Add(fechaVal.Date);
         }
     }
-    protected void btnVolver_Click(object sender, EventArgs e)//revisar
+    protected void btnVolver_Click(object sender, EventArgs e)
     {
         Response.Redirect("~/contenido/frmblksiab.aspx");
     }

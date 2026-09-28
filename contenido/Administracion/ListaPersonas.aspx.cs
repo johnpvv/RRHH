@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Data;
 
-public partial class contenido_RRHH_ListaPersonas : System.Web.UI.Page
+public partial class contenido_Administracion_ListaPersonas : System.Web.UI.Page
 {
     ClassModSys objModSys = new ClassModSys();
     ClassTrabajadores per = new ClassTrabajadores();
@@ -47,7 +47,6 @@ public partial class contenido_RRHH_ListaPersonas : System.Web.UI.Page
                     this.TxtNombre.Text = Request.QueryString["TxtNombre"].ToString();
                     this.TxtRut.Text = Request.QueryString["TxtRut"].ToString();
                     this.bchkEli.Checked = Convert.ToBoolean(Request.QueryString["bchkEli"].ToString());
-
                     mfBuscar();
                 }
                 else
@@ -75,20 +74,14 @@ public partial class contenido_RRHH_ListaPersonas : System.Web.UI.Page
     }
 
     // Funciones y Procedimientos
-
     private void mfBuscar()
     {
-
         DataSet ds;
-
-        per.ls_rut = this.TxtRut.Text;        
-        per.ls_nomb= this.TxtNombre.Text.Trim().Replace(" ", "");
-        per.ls_pat = this.TxtPaterno.Text.Trim().Replace(" ", "");
-        per.ls_mat = this.TxtMaterno.Text.Trim().Replace(" ", "");
-
-
+        per.ls_rut = this.TxtRut.Text;
+        per.ls_nomb = this.TxtNombre.Text.Trim();
+        per.ls_pat = this.TxtPaterno.Text.Trim();
+        per.ls_mat = this.TxtMaterno.Text.Trim();
         if (this.bchkEli.Checked) per.ls_elim = "3"; else per.ls_elim = "1";
-
         ds = per.mfBuscarPersonas();
 
         if (ds != null && ds.Tables.Count > 0)
@@ -106,10 +99,9 @@ public partial class contenido_RRHH_ListaPersonas : System.Web.UI.Page
                     _sortExpression = ViewState["SortExpression"].ToString();
                     dv.Sort = string.Concat(_sortExpression, " ", _sortDirection);
                 }
-
                 this.dgData.DataSource = dv;
                 this.dgData.DataBind();
-                this.dgData.Caption = "Listado Usuarios";
+                this.lblTotal.Text = ds.Tables[0].Rows.Count.ToString() + " Registro/s";
             }
             else
             {
@@ -125,18 +117,14 @@ public partial class contenido_RRHH_ListaPersonas : System.Web.UI.Page
             this.dgData.DataBind();
         }
     }
-
-
     protected void dgData_SelectedIndexChanged(object sender, EventArgs e)
     {
         string cadena = string.Empty;
-
         stcadena = "";
         stcadena = stcadena + "&TxtNombre=" + TxtNombre.Text + "&bchkEli=" + bchkEli.Checked;
         stcadena = stcadena + "&TxtRut=" + TxtRut.Text;
-
         cadena = modFunciones.Encriptar(stcadena);
-        Response.Redirect("~/contenido/RRHH/GestionPersonas.aspx?key=" + dgData.DataKeys[dgData.SelectedIndex].Values[0].ToString() + "&cadena=" + cadena);
+        Response.Redirect("~/contenido/Administracion/GestionPersonas.aspx?key=" + dgData.DataKeys[dgData.SelectedIndex].Values[0].ToString() + "&cadena=" + cadena);
     }
 
     protected void dgData_RowDataBound(object sender, GridViewRowEventArgs e)
@@ -154,7 +142,6 @@ public partial class contenido_RRHH_ListaPersonas : System.Web.UI.Page
     private string _sortExpression;
     protected void dgData_Sorting(object sender, GridViewSortEventArgs e)
     {
-
         if (ViewState["SortDirection"] == null || ViewState["SortExpression"].ToString() != e.SortExpression)
         {
             ViewState["SortDirection"] = "ASC";
@@ -168,21 +155,40 @@ public partial class contenido_RRHH_ListaPersonas : System.Web.UI.Page
         {
             ViewState["SortDirection"] = "ASC";
         }
-
         ViewState["SortExpression"] = e.SortExpression;
-
         mfBuscar();
     }
 
     protected void btnNuevo_Click(object sender, EventArgs e)
     {
-        Response.Redirect("~/contenido/RRHH/GestionPersonas.aspx?key=0");
+        Response.Redirect("~/contenido/Administracion/GestionPersonas.aspx?key=0");
     }
-
-
+    
     protected void dgData_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
         dgData.PageIndex = e.NewPageIndex;
         mfBuscar();
+    }
+    protected void btnVolver_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("~/contenido/frmblksiab.aspx");
+    }
+    protected void btnExportarExcel_Click(object sender, EventArgs e)
+    {
+        ClassExcelExportar excel = new ClassExcelExportar();
+        per.ls_rut = this.TxtRut.Text;
+        per.ls_nomb = this.TxtNombre.Text.Trim();
+        per.ls_pat = this.TxtPaterno.Text.Trim();
+        per.ls_mat = this.TxtMaterno.Text.Trim();
+        if (this.bchkEli.Checked) per.ls_elim = "3"; else per.ls_elim = "1";
+        DataSet ds = per.mfBuscarPersonas();
+
+        if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+        {
+            mens.mensaje(Page, "No existen datos para exportar.");
+            return;
+        }
+
+        excel.Exportar(ds, "Listado_Usuarios_RRHH");
     }
 }
