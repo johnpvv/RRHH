@@ -357,7 +357,7 @@ public class ClassRoles
         //' Recupera Roles asociados.
 
         lsSql =
-          "select a.idrolapp , a.idapp , a.permiso , ltrim(rtrim(b.descripcion)) as descripcion " +
+          "select a.idrolapp , a.idapp , a.permiso , ltrim(rtrim(b.descripcion)) as descripcion, b.codigo " +
           "from m_rolapp a " +
           "inner join tg_apps b " +
           "on a.idapp = b.idapp and " +
@@ -385,7 +385,7 @@ public class ClassRoles
         //' Recupera Roles asociados.
 
         lsSql =
-          "select a.idrolapp , a.idapp , a.permiso , ltrim(rtrim(b.descripcion)) as descripcion " +
+          "select a.idrolapp , a.idapp , a.permiso , ltrim(rtrim(b.descripcion)) as descripcion, b.codigo " +
           "from m_rolapp a " +
           "inner join tg_apps b " +
           "on a.idapp = b.idapp and " +
@@ -415,7 +415,7 @@ public class ClassRoles
 
 
         lsSql =
-          "select idapp , ltrim(rtrim(descripcion)) as descripcion " +
+          "select idapp , ltrim(rtrim(descripcion)) as descripcion, codigo " +
           "from tg_apps " +
           "where idestado <> 3 " + lsNoT + " and " +
           " id_inst = " + asHosp + " " +

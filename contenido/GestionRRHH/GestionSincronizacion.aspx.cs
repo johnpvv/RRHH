@@ -250,6 +250,7 @@ public partial class contenido_GestionRRHH_GestionSincronizacion : System.Web.UI
     {
         mfVerDetalleSincronizacion(hdIdSincronizacion.Value);
     }
+    #region Exportar Excel
     protected void btnExportarMarcas_Click(object sender, EventArgs e)
     {
         rlj.ls_idsincroniza = hdIdSincronizacion.Value;
@@ -264,4 +265,5 @@ public partial class contenido_GestionRRHH_GestionSincronizacion : System.Web.UI
         
         excel.Exportar(ds, "Sincronizacion_" + hdIdSincronizacion.Value);
     }
+    #endregion
 }

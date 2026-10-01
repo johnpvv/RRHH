@@ -15,13 +15,14 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
     ClassHorarios hor = new ClassHorarios();
     ClassReloj rlj = new ClassReloj();
     ClassFeriado fer = new ClassFeriado();
+    ClassExcelExportar excel = new ClassExcelExportar();
     private HashSet<DateTime> feriados = new HashSet<DateTime>();
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)
         {
             CargarMeses();
-            CargarAnios();            
+            CargarAnios();
         }
     }
     private void CargarMeses()
@@ -70,6 +71,7 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
     {
         CargarTrabajadoresMarcas();
     }
+    #region cargar Marcas total
     private void CargarTrabajadoresMarcas()
     {
         rlj.ls_mes = this.ddlMes.SelectedValue;
@@ -134,6 +136,7 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
         dgTrabajadores.PageIndex = e.NewPageIndex;
         CargarTrabajadoresMarcas();
     }
+    #endregion
 
     #region grid detalle por trabajador
     private void CargarCentrosMarca()
@@ -211,13 +214,13 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
             else
                 revisar++;
         }
-        
+
         lblResumenMarcas.Text =
             "<span>Resumen Marcas: OK: " + ok + ",</span> &nbsp; " +
             "<span>Repetidas: " + (entradaRep + salidaRep) + ",</span> &nbsp; " +
             "<span>Faltantes: " + faltantes + ",</span> &nbsp; " +
             "<span>Para Revisar: " + revisar + ",</span> &nbsp;" +
-            "<span>Total: " + (ok + revisar + faltantes + entradaRep + salidaRep) + "</span>";        
+            "<span>Total: " + (ok + revisar + faltantes + entradaRep + salidaRep) + "</span>";
     }
     protected void dgMarcas_RowDataBound(object sender, GridViewRowEventArgs e)
     {
@@ -452,6 +455,47 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
                 break;
             }
         }
+    }
+    #endregion
+
+    #region Exportar Excel
+    protected void btnExportarTrab_Click(object sender, EventArgs e)
+    {
+        rlj.ls_mes = this.ddlMes.SelectedValue;
+        rlj.ls_anio = this.ddlAnio.SelectedValue;
+        rlj.ls_nombre = this.txtBuscarTrab.Text.Trim();
+        DataSet ds = rlj.mfBuscarTrabajadoresMarcas();
+        if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+        {
+            mens.mensaje(Page, "No existen datos para exportar.");
+            return;
+        }
+        excel.Exportar(ds, "Trabajadores_marcacion_Gral");
+    }
+
+
+    protected void btnExportarMarcas_Click(object sender, EventArgs e)
+    {
+        string idSeleccion = dgTrabajadores.SelectedDataKey.Values["ID_SELECCION"].ToString();
+        rlj.ls_mes = ddlMes.SelectedValue;
+        rlj.ls_anio = ddlAnio.SelectedValue;
+        rlj.ls_iduser = "";
+        rlj.ls_iduserreloj = "";
+        if (idSeleccion.StartsWith("U:"))
+        {
+            rlj.ls_iduser = idSeleccion.Substring(2);
+        }
+        else if (idSeleccion.StartsWith("R:"))
+        {
+            rlj.ls_iduserreloj = idSeleccion.Substring(2);
+        }
+        DataSet ds = rlj.mfBuscarMarcasTrabajador();
+        if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+        {
+            mens.mensaje(Page, "No existen datos para exportar.");
+            return;
+        }
+        excel.Exportar(ds, "Trabajadores_marcacion_Gral");
     }
     #endregion
 }

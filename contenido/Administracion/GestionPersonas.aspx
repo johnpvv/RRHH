@@ -33,10 +33,11 @@
             <ajaxToolkit:TabPanel runat="server" ID="TabPanel1">
                 <HeaderTemplate>Información Personal</HeaderTemplate>
                 <ContentTemplate>
-                    <div class="bloque">
-                        <div class="titulo-seccion">Información Básica</div>                       
+                    <div class="formulario-persona">
+                        <div class="bloque">
+                            <div class="titulo-seccion">Información Básica</div>
                         </div>
-                        <div class="filtros-grid">
+                        <div class="filtros-form">
                             <div class="campo">
                                 <label>RUT:</label>
                                 <div style="display: flex; align-items: center; gap: 6px;">
@@ -44,32 +45,32 @@
                                         CssClass="form-control"
                                         MaxLength="9"
                                         onblur="IsInteger(this);ExisteRut();"
-                                        Required="true" Width="120px"></asp:TextBox>
+                                        Required="true" BackColor="LightSkyBlue"></asp:TextBox>
                                     <span>-</span>
                                     <asp:TextBox ID="TxtDv" runat="server"
                                         CssClass="form-control"
                                         MaxLength="1"
-                                        Required="true"
+                                        Required="true" BackColor="LightSkyBlue"
                                         Style="max-width: 50px;"></asp:TextBox>
                                 </div>
-                            </div>                            
-                            <div class="campo">
-                                <label>Estado:</label>
-                                <asp:TextBox ID="lbEstado" runat="server"
-                                    CssClass="form-control"
-                                    Font-Bold="True"
-                                    Text="Nuevo" Width="150px"
-                                    Enabled="false">
-                                </asp:TextBox>
-                            </div>
                         </div>
-                        <div class="filtros-grid">
+                        <div class="campo">
+                            <label>Estado:</label>
+                            <asp:TextBox ID="lbEstado" runat="server"
+                                CssClass="form-control"
+                                Font-Bold="True"
+                                Text="Nuevo"
+                                Enabled="false" BackColor="#ffffcc">
+                            </asp:TextBox>
+                        </div>
+                        </div>
+                        <div class="filtros-form">
                             <div class="campo">
                                 <label>Nombres:</label>
                                 <asp:TextBox ID="TxtNombre" runat="server"
                                     CssClass="form-control"
                                     MaxLength="80"
-                                    Required="true" Width="300px"></asp:TextBox>
+                                    Required="true"></asp:TextBox>
                             </div>
                             <div class="campo">
                                 <label>Nombre Social:</label>
@@ -92,7 +93,7 @@
                                     Required="true"></asp:TextBox>
                             </div>
                         </div>
-                        <div class="filtros-grid">
+                        <div class="filtros-form">
                             <div class="campo">
                                 <label>Fecha Nacimiento:</label>
                                 <asp:TextBox ID="txtFechaNacimiento" runat="server"
@@ -101,7 +102,7 @@
                             <div class="campo">
                                 <label>Sexo:</label>
                                 <asp:DropDownList ID="ddlSexo" runat="server"
-                                    CssClass="form-control" Width="200px">
+                                    CssClass="form-control">
                                     <asp:ListItem>Seleccione</asp:ListItem>
                                     <asp:ListItem Value="M">Masculino</asp:ListItem>
                                     <asp:ListItem Value="F">Femenino</asp:ListItem>
@@ -111,13 +112,13 @@
                             <div class="campo">
                                 <label>Estado Civil:</label>
                                 <asp:DropDownList ID="ddlEstadoCivil" runat="server"
-                                    CssClass="form-control" Width="300px">
+                                    CssClass="form-control">
                                 </asp:DropDownList>
                             </div>
                             <div class="campo">
                                 <label>Previsión:</label>
                                 <asp:DropDownList ID="ddlPrevision" runat="server"
-                                    CssClass="form-control" Width="300px">
+                                    CssClass="form-control">
                                 </asp:DropDownList>
                                 <ajaxToolkit:ListSearchExtender ID="ListSearchExtender2"
                                     runat="server"
@@ -128,12 +129,12 @@
                                     BehaviorID="_content_ListSearchExtender2" />
                             </div>
                         </div>
-                        <div class="filtros-grid">
-                            <div class="campo" style="grid-column: span 2;">
+                        <div class="filtros-form">
+                            <div class="campo">
                                 <label>Dirección:</label>
                                 <asp:TextBox ID="TxtDire" runat="server"
                                     CssClass="form-control"
-                                    Required="true" Width="400px"></asp:TextBox>
+                                    Required="true"></asp:TextBox>
                             </div>
                             <div class="campo">
                                 <label>Región:</label>
@@ -164,8 +165,8 @@
                                     BehaviorID="_content_ListSearchExtender3" />
                             </div>
                         </div>
-                        <div class="filtros-grid">
-                            <div class="campo">
+                        <div class="filtros-form">
+                            <div class="campo" style="grid-column: span 2;">
                                 <label>Centro:</label>
                                 <asp:DropDownList ID="ddlCentro" runat="server"
                                     CssClass="form-control" Required="true">
@@ -182,10 +183,10 @@
                                 <label>E-Mail:</label>
                                 <asp:TextBox ID="TMail" runat="server"
                                     CssClass="form-control"
-                                    MaxLength="100" Width="400px" Required="true"></asp:TextBox>
+                                    MaxLength="100" Required="true"></asp:TextBox>
                             </div>
                         </div>
-                        <div class="filtros-grid">
+                        <div class="filtros-form">
                             <div class="campo">
                                 <label>Fono 1 (+56):</label>
                                 <asp:TextBox ID="TFono1" runat="server"
@@ -194,10 +195,10 @@
                                     onblur="IsInteger(this)"></asp:TextBox>
                             </div>
                             <div class="campo">
-                                <label>Observación 1:</label>
+                                <label>Observación Fono 1:</label>
                                 <asp:TextBox ID="TObsFono1" runat="server"
                                     CssClass="form-control"
-                                    MaxLength="100" Width="250px"></asp:TextBox>
+                                    MaxLength="100"></asp:TextBox>
                             </div>
                             <div class="campo">
                                 <label>Fono 2 (+56):</label>
@@ -207,20 +208,20 @@
                                     onblur="IsInteger(this)"></asp:TextBox>
                             </div>
                             <div class="campo">
-                                <label>Observación 2:</label>
+                                <label>Observación Fono 2:</label>
                                 <asp:TextBox ID="TObsFono2" runat="server"
                                     CssClass="form-control"
-                                    MaxLength="100" Width="250px"></asp:TextBox>
+                                    MaxLength="100"></asp:TextBox>
                             </div>
                         </div>
-                        <div class="botones-form" style="grid-column: span 2;">
+                        <div class="botones-form">
                             <div class="campo">
                                 <label>Observaciones:</label>
                                 <asp:TextBox ID="observacion" runat="server"
                                     CssClass="form-control"
                                     TextMode="MultiLine"
                                     MaxLength="500"
-                                    Style="height: 80px; width: 500px;"></asp:TextBox>
+                                    Style="height: 80px; width: 800px;"></asp:TextBox>
                             </div>
                         </div>
                         <div class="botones-form">

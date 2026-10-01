@@ -72,6 +72,13 @@
                         OnClientClick="mostrarSpinner();" />
                 </div>
                 <div class="campo">
+                    <asp:Button ID="btnExportarTrab"
+                        runat="server"
+                        Text="Exportar Excel"
+                        CssClass="BotonPortalVerde"
+                        OnClick="btnExportarTrab_Click" />
+                </div>
+                <div class="campo">
                     <label>&nbsp;</label>
                     <asp:Button ID="btnVolver"
                         runat="server"
@@ -202,6 +209,11 @@
                     OnClick="btnNuevaMarca_Click"
                     Width="200px"
                     OnClientClick="guardarScroll();" />
+                <asp:Button ID="btnExportarMarcas"
+                    runat="server"
+                    Text="Exportar Excel"
+                    CssClass="BotonPortalVerde"
+                    OnClick="btnExportarMarcas_Click" />
             </div>
             <div class="filtros-grid">
                 <asp:Label ID="lblTotalMarcas" runat="server" CssClass="contador-grid" Text="0 registro(s)">

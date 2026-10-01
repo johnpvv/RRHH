@@ -976,3 +976,15 @@
     background: #fff3cd !important;
     box-shadow: inset 4px 0 #ffc107
 }
+
+.formulario-persona {
+    width: calc(100% - 5px);
+    max-width: 1480px;
+    margin: 5px auto;
+}
+.filtros-form {
+    display: grid;
+    grid-template-columns: repeat(4, 3fr);
+    padding-top:20px;
+    gap: 20px 20px;
+}

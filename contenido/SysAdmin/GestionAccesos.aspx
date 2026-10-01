@@ -75,7 +75,6 @@
                                 <asp:TextBox ID="TNombreRol" runat="server" MaxLength="80"
                                     CssClass="form-control" Width="280px" />
                             </div>
-
                             <div class="campo">
                                 <label>Tipo de Búsqueda:</label>
                                 <asp:RadioButtonList ID="rbTipo" runat="server" CssClass="TextoCheck"
@@ -84,7 +83,6 @@
                                     <asp:ListItem Value="M">Asociados</asp:ListItem>
                                 </asp:RadioButtonList>
                             </div>
-
                             <div class="campo">
                                 <label>&nbsp;</label>
                                 <asp:Button ID="btn_Buscar" runat="server" Text="Buscar"

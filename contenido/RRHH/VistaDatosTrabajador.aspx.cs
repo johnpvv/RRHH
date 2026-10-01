@@ -81,7 +81,7 @@ public partial class contenido_RRHH_VistaDatosTrabajador : System.Web.UI.Page
                     //}
                     //lblJefatura.Text = dr["JEFATURA"].ToString();
                     // Estado
-                    if (dr["IDESTADO"].ToString() == "1")
+                    if (dr["IDESTADO"].ToString() == "1" || dr["IDESTADO"].ToString() == "2")
                     {
                         lbEstado.Text = "VIGENTE";
                     }
