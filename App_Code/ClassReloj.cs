@@ -275,13 +275,10 @@ public class ClassReloj
               "UOP.DESCRIPCION AS CENTRO, " +
               "CASE WHEN ISNULL(M.IDUSERMOD,0)>0 THEN 'MARCA EDITADA' ELSE 'MARCA ORIGINAL' END AS ESTADO_MARCA " +
               "FROM " + modConstantes.gsDbRH + "M_MARCACIONES M " +
-              "INNER JOIN " + modConstantes.gsDbRH + "M_USR_RELOJ UR " +
-              "ON UR.IDUSRELOJ=M.CODIGO_EMP_RELOJ " +
+              "INNER JOIN " + modConstantes.gsDbRH + "M_USR_RELOJ UR ON UR.IDUSRELOJ=M.CODIGO_EMP_RELOJ " +
               "AND UR.IDUSUARIO=" + ls_iduser + " " +
-              "INNER JOIN " + modConstantes.gsDbRH + "M_RELOJES RE " +
-              "ON RE.IDRELOJ=M.IDRELOJ " +
-              "INNER JOIN " + modConstantes.gsDbRH + "M_UNIDAD_OPERATIVA UOP " +
-              "ON UOP.CODUNIOP=RE.CODUNIOP " +
+              "INNER JOIN " + modConstantes.gsDbRH + "M_RELOJES RE ON RE.IDRELOJ=M.IDRELOJ " +
+              "INNER JOIN " + modConstantes.gsDbRH + "M_UNIDAD_OPERATIVA UOP ON UOP.CODUNIOP=RE.CODUNIOP " +
               "WHERE ISNULL(M.IDESTADO,1)<>3 " + lsWhe +
               "), " +
               "ENTRADAS AS ( " +
@@ -309,9 +306,10 @@ public class ClassReloj
               "CAST(ISNULL(E.[YEAR],S.[YEAR]) AS VARCHAR(4)) AS FECHA, " +
               "ISNULL(E.NRO_MARCA,S.NRO_MARCA) AS NRO_MARCA, " +
               "E.F_H_MARCA AS ENTRADA, " +
-              "S.F_H_MARCA AS SALIDA, " +
-              "ISNULL(E.CENTRO,S.CENTRO) AS CENTRO, " +
+              "ISNULL(E.CENTRO,'') AS CENTRO_ENT, " +
               "E.ESTADO_MARCA AS ESTADO_ENTRADA, " +
+              "S.F_H_MARCA AS SALIDA, " +              
+              "ISNULL(S.CENTRO,'') AS CENTRO_SAL, " +              
               "S.ESTADO_MARCA AS ESTADO_SALIDA " +
               "FROM ENTRADAS E " +
               "FULL OUTER JOIN SALIDAS S " +
@@ -327,7 +325,6 @@ public class ClassReloj
         con = bd.fnGetConn();
         ds = bd.Fill(con, lsSql);
         con.Close();
-
         return ds;
     }
 
@@ -800,109 +797,23 @@ public class ClassReloj
         con.Close();
         return ds;
     }
+
+    public DataSet mfActualizarSincronizacion()
+    {
+        DataSet ds;
+        string lsSql;
+
+        lsSql = "EXEC PU_ACTUALIZA_SINCRONIZA_MARCAS " +
+                "@IDSINCRONIZA=" + ls_idsincroniza + "," +
+                "@IDUSUARIO=" + ls_iduserweb;
+
+        con = bd.fnGetConn();
+        ds = bd.Fill(con, lsSql);
+        con.Close();
+        return ds;
+    }
     #endregion
-    #region Marcas Reloj Edicion
-    //public DataSet mfBuscarTrabajadoresMarcas()
-    //{
-    //    string lsSql;
-    //    DataSet ds;
-    //    lsSql =
-    //        "DECLARE @FECHA_INICIO DATE = DATEFROMPARTS(" + ls_anio + "," + ls_mes + ",1); " +
-    //        "DECLARE @FECHA_FIN DATE = DATEADD(MONTH,1,@FECHA_INICIO); " +
-    //        "DECLARE @BUSQUEDA VARCHAR(100) = '" + ls_nombre.Replace("'", "''") + "'; " +
-    //        ";WITH MARCAS AS " +
-    //        "( " +
-    //            "SELECT DISTINCT " +
-    //                "M.IDMARCACION, " +
-    //                "M.CODIGO_EMP_RELOJ, " +
-    //                "M.IDRELOJ, " +
-    //                "UR.IDUSRELOJ, " +
-    //                "M.F_H_MARCA, " +
-    //                "UR.IDUSUARIO, " +
-    //                "U.RUT, " +
-    //                "U.DV, " +
-    //                "CONVERT(VARCHAR, U.RUT) + '-' + U.DV as RUT_C, " +
-    //                "U.NOMBRE, " +
-    //                "U.AP_PATERNO, " +
-    //                "U.AP_MATERNO, " +
-    //                "CASE " +
-    //                    "WHEN UR.IDUSRRELOJ IS NULL THEN 'SIN EQUIVALENCIA' " +
-    //                    "WHEN U.IDUSUARIO IS NULL THEN 'PENDIENTE RRHH' " +
-    //                    "ELSE 'REGISTRADO RRHH' " +
-    //                "END AS ESTADO_RRHH " +
-    //            "FROM " + modConstantes.gsDbRH + "M_MARCACIONES M " +
-    //            //"LEFT JOIN " + modConstantes.gsDbRH + "M_USR_RELOJ UR ON UR.IDUSRELOJ = M.CODIGO_EMP_RELOJ AND UR.IDRELOJ = M.IDRELOJ " +
-    //            "LEFT JOIN " + modConstantes.gsDbRH + "M_USR_RELOJ UR ON UR.IDUSRELOJ = M.CODIGO_EMP_RELOJ " +
-    //            "LEFT JOIN " + modConstantes.gsDbRH + "M_USUARIOS U ON U.IDUSUARIO = UR.IDUSUARIO " +
-    //            "WHERE M.F_H_MARCA >= @FECHA_INICIO AND M.F_H_MARCA < @FECHA_FIN  AND ISNULL(M.IDESTADO,1) <> 3" +
-    //            "AND " +
-    //                "(@BUSQUEDA = '' " +
-    //                "OR CAST(U.RUT AS VARCHAR(20)) LIKE '%' + @BUSQUEDA + '%' " +
-    //                "OR U.NOMBRE LIKE '%' + @BUSQUEDA + '%' " +
-    //                "OR U.AP_PATERNO LIKE '%' + @BUSQUEDA + '%' " +
-    //                "OR U.AP_MATERNO LIKE '%' + @BUSQUEDA + '%' " +
-    //                "OR M.CODIGO_EMP_RELOJ LIKE '%' + @BUSQUEDA + '%') " +
-    //        ") " +
-    //        "SELECT " +
-    //            "CASE " +
-    //                "WHEN IDUSUARIO IS NULL " +
-    //                "THEN 'R:' + MAX(CODIGO_EMP_RELOJ) " +
-    //            "ELSE " +
-    //                "'U:' + CAST(IDUSUARIO AS VARCHAR(20)) " +
-    //            "END AS ID_SELECCION, " +
-    //            "IDUSUARIO," +
-    //            //"IDUSRELOJ, " +
-    //            "CASE " +
-    //                "WHEN IDUSUARIO IS NULL THEN MAX(CODIGO_EMP_RELOJ) " +
-    //                "ELSE NULL END AS CODIGO_EMP_RELOJ, " +
-    //            "MAX(RUT) AS RUT, " +
-    //            "MAX(DV) AS DV, " +
-    //            "RUT_C," +
-    //            "CASE " +
-    //                "WHEN IDUSUARIO IS NULL " +
-    //                    "THEN 'Pendiente de identificación' " +
-    //                "ELSE " +
-    //                    "LTRIM(RTRIM( " +
-    //                        "MAX(ISNULL(NOMBRE,'')) + ' ' + " +
-    //                        "MAX(ISNULL(AP_PATERNO,'')) + ' ' + " +
-    //                        "MAX(ISNULL(AP_MATERNO,'')) " +
-    //                    ")) " +
-    //            "END AS NOMBRE, " +
-    //            "0 AS CANT_PROBLEMAS, " +
-    //            "COUNT(*) AS CANT_MARCAS, " +
-    //            "COUNT(DISTINCT CAST(F_H_MARCA AS DATE)) AS CANT_DIAS, " +
-    //            "COUNT(DISTINCT IDRELOJ) AS CANT_RELOJES, " +
-    //            "CASE " +
-    //                "WHEN SUM(CASE " +
-    //                    "WHEN ESTADO_RRHH = 'SIN EQUIVALENCIA' " +
-    //                    "THEN 1 ELSE 0 END) > 0 " +
-    //                    "THEN 'SIN EQUIVALENCIA' " +
-    //                "WHEN SUM(CASE " +
-    //                    "WHEN ESTADO_RRHH = 'PENDIENTE RRHH' " +
-    //                    "THEN 1 ELSE 0 END) > 0 " +
-    //                    "THEN 'PENDIENTE RRHH' ELSE 'REGISTRADO RRHH' " +
-    //            "END AS ESTADO_RRHH " +
-    //        //"MAX(IDRELOJ) AS IDRELOJ " +
-    //        "FROM MARCAS " +
-    //        "GROUP BY " +
-    //            "IDUSUARIO," +
-    //            //"IDUSRELOJ, " +
-    //            "RUT_C, " +
-    //            "CASE " +
-    //                "WHEN IDUSUARIO IS NULL THEN CODIGO_EMP_RELOJ " +
-    //                "ELSE NULL " +
-    //            "END " +
-    //        "ORDER BY " +
-    //            "CASE " +
-    //                "WHEN IDUSUARIO IS NULL THEN 0 " +
-    //                "ELSE 1 " +
-    //            "END, " +
-    //            "NOMBRE ";
-    //    con = bd.fnGetConn();
-    //    ds = bd.Fill(con, lsSql);
-    //    con.Close();
-    //    return ds;
-    //}
+    #region Marcas Reloj Edicion    
     public DataSet mfBuscarTrabajadoresMarcas()
     {
         string lsSql;
@@ -984,7 +895,7 @@ public class ClassReloj
             "SELECT " +
                 "M.TRABAJADOR_KEY ID_SELECCION, " +
                 "MAX(M.IDUSUARIO) IDUSUARIO, " +
-                "CASE WHEN MAX(M.IDUSUARIO) IS NULL THEN MAX(M.CODIGO_EMP_RELOJ) ELSE NULL END CODIGO_EMP_RELOJ, " +
+                "CASE WHEN MAX(M.IDUSUARIO) IS NULL THEN MAX(M.CODIGO_EMP_RELOJ) ELSE MAX(M.CODIGO_EMP_RELOJ) END CODIGO_EMP_RELOJ, " +
                 "MAX(M.RUT) RUT, " +
                 "MAX(M.DV) DV, " +
                 "MAX(M.RUT_C) RUT_C, " +
@@ -1021,8 +932,17 @@ public class ClassReloj
         if (ls_iduser != "")
         {
             lsSql +=
-                "SELECT M.IDMARCACION,CAST(M.F_H_MARCA AS DATE) FECHA,CONVERT(VARCHAR(8),M.F_H_MARCA,108) HORA," +
-                "M.CODIGO_EMP_RELOJ,M.IDRELOJ,UOP.DESCRIPCION CENTRO,M.F_H_MARCA,M.TIPO_MARCA, " +
+                "SELECT M.IDMARCACION, CAST(M.F_H_MARCA AS DATE) FECHA, CONVERT(VARCHAR(8),M.F_H_MARCA,108) HORA, " +
+                "CASE DATEPART(WEEKDAY, M.F_H_MARCA) " +
+                "WHEN 1 THEN 'Lunes' " +
+                "WHEN 2 THEN 'Martes' " +
+                "WHEN 3 THEN 'Miércoles' " +
+                "WHEN 4 THEN 'Jueves' " +
+                "WHEN 5 THEN 'Viernes' " +
+                "WHEN 6 THEN 'Sábado' " +
+                "WHEN 7 THEN 'Domingo' " +
+                "END AS DIA, " +
+                "M.CODIGO_EMP_RELOJ, M.IDRELOJ, UOP.DESCRIPCION CENTRO, M.F_H_MARCA, M.TIPO_MARCA, " +
                 "CASE WHEN M.TIPO_MARCA=0 THEN 'ENTRADA' " +
                 "WHEN M.TIPO_MARCA=1 THEN 'SALIDA' " +
                 "ELSE 'OTRO' END TIPO_MARCA_DESC, " +
@@ -1052,6 +972,15 @@ public class ClassReloj
         {
             lsSql +=
                 "SELECT M.IDMARCACION,CAST(M.F_H_MARCA AS DATE) FECHA,CONVERT(VARCHAR(8),M.F_H_MARCA,108) HORA, " +
+                "CASE DATEPART(WEEKDAY, M.F_H_MARCA) " +
+                "WHEN 1 THEN 'Lunes' " +
+                "WHEN 2 THEN 'Martes' " +
+                "WHEN 3 THEN 'Miércoles' " +
+                "WHEN 4 THEN 'Jueves' " +
+                "WHEN 5 THEN 'Viernes' " +
+                "WHEN 6 THEN 'Sábado' " +
+                "WHEN 7 THEN 'Domingo' " +
+                "END AS DIA, " +
                 "M.CODIGO_EMP_RELOJ,M.IDRELOJ,UOP.DESCRIPCION CENTRO,M.F_H_MARCA,M.TIPO_MARCA, " +
                 "CASE WHEN M.TIPO_MARCA=0 THEN 'ENTRADA' WHEN M.TIPO_MARCA=1 THEN 'SALIDA' ELSE 'OTRO' END TIPO_MARCA_DESC, " +
                 "M.TIPO_CARGA,M.OBSERVACIONES, " +

@@ -156,14 +156,14 @@
                                                 Visible='<%# Convert.ToInt32(Eval("ELIMINAR")) == 1 %>'
                                                 OnClientClick="return confirm('¿Está seguro de eliminar esta sincronización?');" />
                                             &nbsp;
-                                            <%--<asp:ImageButton ID="btnActualizar" runat="server"
+                                            <asp:ImageButton ID="btnActualizar" runat="server"
                                                 ImageUrl="~/imagenes/refresh.png"
                                                 CommandName="ACTUALIZAR"
                                                 CommandArgument='<%# Container.DataItemIndex %>'
                                                 ToolTip="Actualizar Sincronización"
                                                 Visible='<%# Convert.ToInt32(Eval("ACTUALIZAR")) == 1 %>'
                                                 OnClientClick="mostrarSpinner();" />
-                                            &nbsp;--%>
+                                            &nbsp;
                                             <asp:ImageButton ID="btnCerrar" runat="server"
                                                 ImageUrl="~/imagenes/lock.png"
                                                 CommandName="CERRAR"
@@ -172,7 +172,7 @@
                                                 Visible='<%# Convert.ToInt32(Eval("CERRAR")) == 1 %>'
                                                 OnClientClick="return confirm('¿Está seguro de cerrar este periodo? Una vez cerrado no podrá actualizar ni eliminar la sincronización.');" />
                                         </ItemTemplate>
-                                        <ItemStyle Width="120px" HorizontalAlign="Left" />
+                                        <ItemStyle Width="150px" HorizontalAlign="Left" />
                                     </asp:TemplateField>
                                 </Columns>
                             </asp:GridView>

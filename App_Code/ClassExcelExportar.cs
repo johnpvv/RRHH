@@ -16,7 +16,7 @@ public class ClassExcelExportar
 {
     public ClassExcelExportar()
     {
-        //Agregar aquí la lógica del constructor
+        //constructor
     }
 
     public void Exportar(DataSet ds, string nombreArchivo)
@@ -27,60 +27,6 @@ public class ClassExcelExportar
         Exportar(ds.Tables[0], nombreArchivo);
     }
 
-    //public void Exportar(DataTable dt, string nombreArchivo)
-    //{
-    //    if (dt == null || dt.Columns.Count == 0)
-    //        return;
-
-    //    using (MemoryStream ms = new MemoryStream())
-    //    {
-    //        using (SpreadsheetDocument document = SpreadsheetDocument.Create(ms, SpreadsheetDocumentType.Workbook))
-    //        {
-    //            WorkbookPart workbookPart = document.AddWorkbookPart();
-    //            workbookPart.Workbook = new Workbook();
-    //            WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
-    //            SheetData sheetData = new SheetData();
-    //            worksheetPart.Worksheet = new Worksheet(sheetData);
-    //            Sheets sheets = workbookPart.Workbook.AppendChild(new Sheets());
-    //            Sheet sheet = new Sheet
-    //            {
-    //                Name = "Datos",
-    //                SheetId = 1,
-    //                Id = workbookPart.GetIdOfPart(worksheetPart)
-    //            };
-
-    //            sheets.Append(sheet);
-
-    //            // Encabezados
-    //            Row headerRow = new Row();
-    //            foreach (DataColumn column in dt.Columns)
-    //            {
-    //                Cell cell = new Cell
-    //                {
-    //                    DataType = CellValues.InlineString,InlineString = new InlineString(new Text(column.ColumnName))
-    //                };
-
-    //                headerRow.Append(cell);
-    //            }
-    //            sheetData.Append(headerRow);
-
-    //            // Datos
-    //            foreach (DataRow row in dt.Rows)
-    //            {
-    //                Row dataRow = new Row();
-    //                foreach (DataColumn column in dt.Columns)
-    //                {
-    //                    object valor = row[column];
-    //                    Cell cell = CrearCelda(valor);
-    //                    dataRow.Append(cell);
-    //                }
-    //                sheetData.Append(dataRow);
-    //            }
-    //            workbookPart.Workbook.Save();
-    //        }
-    //        Descargar(ms, nombreArchivo);
-    //    }
-    //}
     public static void Exportar(DataTable dt, string nombreArchivo)
     {
         if (dt == null || dt.Columns.Count == 0) return;
@@ -98,6 +44,16 @@ public class ClassExcelExportar
                         {
                             NumberFormatId = 164,
                             FormatCode = "dd-mm-yyyy hh:mm:ss"
+                        },
+                        new NumberingFormat
+                        {
+                            NumberFormatId = 165,
+                            FormatCode = "dd-mm-yyyy"
+                        },
+                        new NumberingFormat
+                        {
+                            NumberFormatId = 166,
+                            FormatCode = "hh:mm:ss"
                         }
                     ),
                     new Fonts(
@@ -121,7 +77,17 @@ public class ClassExcelExportar
                         {
                             NumberFormatId = 164,
                             ApplyNumberFormat = true
-                        }
+                        }, // fecha y hora
+                        new CellFormat
+                        {
+                            NumberFormatId = 165,
+                            ApplyNumberFormat = true
+                        }, // 3 solo fecha
+                        new CellFormat
+                        {
+                            NumberFormatId = 166,
+                            ApplyNumberFormat = true
+                        } // 4 solo hora
                     )
                 );
                 stylesPart.Stylesheet.Save();
@@ -131,7 +97,7 @@ public class ClassExcelExportar
                 Sheets sheets = workbookPart.Workbook.AppendChild(new Sheets());
                 Sheet sheet = new Sheet
                 {
-                    Name = "Datos",
+                    Name = "Hoja1",
                     SheetId = 1,
                     Id = workbookPart.GetIdOfPart(worksheetPart)
                 };
@@ -151,9 +117,7 @@ public class ClassExcelExportar
                     {
                         DataType = CellValues.InlineString,
                         StyleIndex = 1,
-                        InlineString = new InlineString(
-                            new Text(dt.Columns[i].ColumnName)
-                        )
+                        InlineString = new InlineString(new Text(dt.Columns[i].ColumnName))
                     };
 
                     headerRow.Append(cell);
@@ -190,7 +154,6 @@ public class ClassExcelExportar
                 }
 
                 worksheetPart.Worksheet.InsertAt(columns, 0);
-
                 workbookPart.Workbook.Save();
             }
             Descargar(ms, nombreArchivo);
@@ -206,19 +169,6 @@ public class ClassExcelExportar
                 InlineString = new InlineString(new Text(""))
             };
         }
-
-        //if (valor is DateTime)
-        //{
-        //    DateTime fecha = (DateTime)valor;
-
-        //    return new Cell
-        //    {
-        //        DataType = CellValues.InlineString,
-        //        InlineString = new InlineString(
-        //            new Text(fecha.ToString("dd-MM-yyyy HH:mm:ss"))
-        //        )
-        //    };
-        //}
         if (valor is DateTime)
         {
             DateTime fecha = (DateTime)valor;
@@ -227,9 +177,7 @@ public class ClassExcelExportar
             {
                 DataType = CellValues.Number,
                 StyleIndex = 2,
-                CellValue = new CellValue(
-                    fecha.ToOADate().ToString(CultureInfo.InvariantCulture)
-                )
+                CellValue = new CellValue(fecha.ToOADate().ToString(CultureInfo.InvariantCulture))
             };
         }
 
@@ -239,9 +187,7 @@ public class ClassExcelExportar
             return new Cell
             {
                 DataType = CellValues.Number,
-                CellValue = new CellValue(
-                    Convert.ToString(valor, CultureInfo.InvariantCulture)
-                )
+                CellValue = new CellValue(Convert.ToString(valor, CultureInfo.InvariantCulture))
             };
         }
 
@@ -253,7 +199,6 @@ public class ClassExcelExportar
             )
         };
     }
-
     private static void Descargar(MemoryStream ms, string nombreArchivo)
     {
         HttpResponse response = HttpContext.Current.Response;

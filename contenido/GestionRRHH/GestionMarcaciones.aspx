@@ -164,6 +164,7 @@
                     <Columns>
                         <asp:BoundField DataField="IDMARCACION" HeaderText="Id" ItemStyle-Font-Size="0px" ItemStyle-Width="0px" HeaderStyle-Font-Size="0px" />
                         <asp:BoundField DataField="IDRELOJ" HeaderText="Idreloj" ItemStyle-Font-Size="0px" ItemStyle-Width="0px" HeaderStyle-Font-Size="0px" />
+                        <asp:BoundField DataField="DIA" HeaderText="Día" ItemStyle-Font-Bold="true" ItemStyle-Width="50px" />
                         <asp:BoundField DataField="F_H_MARCA" HeaderText="Fecha Marca" DataFormatString="{0:dd/MM/yyyy}" ItemStyle-Font-Bold="true" />
                         <asp:BoundField DataField="F_H_MARCA" HeaderText="Hora Marca" DataFormatString="{0:HH:mm:ss}" />
                         <asp:BoundField DataField="TIPO_MARCA_DESC" HeaderText="Tipo" ItemStyle-Font-Bold="true" />

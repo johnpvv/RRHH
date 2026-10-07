@@ -25,6 +25,7 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
             CargarAnios();
         }
     }
+    #region General
     private void CargarMeses()
     {
         DataSet ds = tur.mfGenerarMeses();
@@ -71,6 +72,8 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
     {
         CargarTrabajadoresMarcas();
     }
+    #endregion
+
     #region cargar Marcas total
     private void CargarTrabajadoresMarcas()
     {

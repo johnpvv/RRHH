@@ -71,7 +71,7 @@
                     <asp:TemplateField HeaderText="Hora Marca" ItemStyle-CssClass="textoGridBoldLeft" HeaderStyle-Width="130px">
                         <ItemTemplate>
                             <span class='estado-marca-trabajador <%# Eval("ESTADO_MARCA") %>'
-                                title='<%# Eval("ESTADO_MARCA") %>'>&nbsp;</span>                            
+                                title='<%# Eval("ESTADO_MARCA") %>'>&nbsp;</span>
                             <%# Eval("F_H_MARCA","{0:HH:mm:ss}") %>
                             <%# Eval("ESTADO_MARCA").ToString()=="MARCA EDITADA" ? "*":"" %>
                         </ItemTemplate>
@@ -107,22 +107,22 @@
                         <ItemTemplate>
                             <span class='estado-marca-trabajador <%# Eval("ESTADO_ENTRADA") %>'
                                 title='<%# Eval("ESTADO_ENTRADA") %>'>&nbsp;
-                            </span>                            
+                            </span>
                             <%# Eval("ENTRADA","{0:HH:mm:ss}") %>
                             <%# Eval("ESTADO_ENTRADA").ToString()=="MARCA EDITADA" ? "*" : "" %>
                         </ItemTemplate>
                     </asp:TemplateField>
+                    <asp:BoundField DataField="CENTRO_ENT" HeaderText="Centro Entrada" ItemStyle-CssClass="textoGridLeft" />
                     <asp:TemplateField HeaderText="Hora Salida" ItemStyle-CssClass="textoGridBoldLeft" HeaderStyle-Width="130px">
                         <ItemTemplate>
                             <span class='estado-marca-trabajador <%# Eval("ESTADO_SALIDA") %>'
                                 title='<%# Eval("ESTADO_SALIDA") %>'>&nbsp;                                
-                            </span>                            
+                            </span>
                             <%# Eval("SALIDA","{0:HH:mm:ss}") %>
                             <%# Eval("ESTADO_SALIDA").ToString()=="MARCA EDITADA" ? "*":"" %>
                         </ItemTemplate>
                     </asp:TemplateField>
-                    <asp:BoundField DataField="CENTRO"
-                        HeaderText="CENTRO" ItemStyle-CssClass="textoGridLeft" />
+                    <asp:BoundField DataField="CENTRO_SAL" HeaderText="Centro Salida" ItemStyle-CssClass="textoGridLeft" />
                 </Columns>
                 <HeaderStyle CssClass="GridGralHeader" />
                 <RowStyle CssClass="GridGralRow" />
@@ -130,29 +130,23 @@
             </asp:GridView>
         </div>
         <br />
-        <table style="width: 100%; margin-bottom: 10px;">
-            <tr>
-                <td align="center">
-                    <asp:Button ID="btnExportar"
-                        runat="server"
-                        Text="Exportar Excel"
-                        CssClass="BotonPortalVerde"
-                        OnClick="btnExportar_Click" />
-                    &nbsp;
-                    <asp:Button ID="btnImprimir"
-                        runat="server"
-                        Text="Imprimir Marcas"
-                        CssClass="BotonPortalAmarillo"
-                        OnClientClick="imprimirGrid(); return false;" />
-                    &nbsp;
-                    <asp:Button ID="btnVolver"
-                        runat="server"
-                        Text="Volver"
-                        CssClass="BotonPortalGris"
-                        OnClick="btnVolver_Click" />
-                </td>
-            </tr>
-        </table>
+        <div class="botones-form">
+            <asp:Button ID="btnExportar"
+                runat="server"
+                Text="Exportar Excel"
+                CssClass="BotonPortalVerde"
+                OnClick="btnExportar_Click" />
+            <asp:Button ID="btnImprimir"
+                runat="server"
+                Text="Imprimir Marcas"
+                CssClass="BotonPortalAmarillo"
+                OnClientClick="imprimirGrid(); return false;" />
+            <asp:Button ID="btnVolver"
+                runat="server"
+                Text="Volver"
+                CssClass="BotonPortalGris"
+                OnClick="btnVolver_Click" />
+        </div>
         <div id="spinnerCarga" class="spinner-overlay" style="display: none;">
             <div class="spinner"></div>
             <div class="spinner-text">

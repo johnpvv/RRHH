@@ -24,6 +24,7 @@ public partial class contenido_GestionRRHH_GestionSincronizacion : System.Web.UI
             CargarSincronizaciones();
         }
     }
+    #region General
     private void CargarMeses()
     {
         DataSet ds = tur.mfGenerarMeses();
@@ -49,6 +50,11 @@ public partial class contenido_GestionRRHH_GestionSincronizacion : System.Web.UI
     {
         Response.Redirect("~/contenido/frmblksiab.aspx");
     }
+    protected void btnFiltroDet_Click(object sender, EventArgs e)
+    {
+        mfVerDetalleSincronizacion(hdIdSincronizacion.Value);
+    }
+    #endregion
 
     #region Crear SIncronizacion
     private void CargarCentrosAdmin()
@@ -184,8 +190,8 @@ public partial class contenido_GestionRRHH_GestionSincronizacion : System.Web.UI
         else if (e.CommandName == "CERRAR")
             mfCerrarSincronizacion(id);
 
-        //else if (e.CommandName == "ACTUALIZAR")//por ahora desactivado, si en un futuro se evalua se puede hacer.
-        //    mfActualizarSincronizacion(id);
+        else if (e.CommandName == "ACTUALIZAR")//cambio segun Walter 06/10/2026
+            mfActualizarSincronizacion(id);
     }
     private void mfCerrarSincronizacion(string id)
     {
@@ -198,7 +204,6 @@ public partial class contenido_GestionRRHH_GestionSincronizacion : System.Web.UI
             CargarSincronizaciones();
         }
     }
-
     private void mfEliminarSincronizacion(string id)
     {
         rlj.ls_idsincroniza = id;
@@ -223,10 +228,28 @@ public partial class contenido_GestionRRHH_GestionSincronizacion : System.Web.UI
             pnlDetalleSincronizacion.Visible = false;
         }
     }
-    //private void mfActualizarSincronizacion(string id)
-    //{
-    //    //throw new NotImplementedException();
-    //}
+    private void mfActualizarSincronizacion(string id)
+    {
+        try
+        {
+            rlj.ls_idsincroniza = id;
+            rlj.ls_iduserweb = Session["user"].ToString();
+            DataSet ds = rlj.mfActualizarSincronizacion();
+            if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+            {
+                mens.mensaje(Page, "No se obtuvo respuesta al actualizar la sincronización.");
+                return;
+            }
+            string mensaje = ds.Tables[0].Rows[0]["MENSAJE"].ToString();
+            mens.mensaje(Page, mensaje);
+            CargarSincronizaciones();
+            pnlDetalleSincronizacion.Visible = false;
+        }
+        catch (Exception ex)
+        {
+            mens.mensaje(Page, "Error al actualizar la sincronización: " + ex.Message);
+        }
+    }
     private void mfVerDetalleSincronizacion(string id)
     {
         rlj.ls_idsincroniza = id;
@@ -246,10 +269,6 @@ public partial class contenido_GestionRRHH_GestionSincronizacion : System.Web.UI
     }
     #endregion
 
-    protected void btnFiltroDet_Click(object sender, EventArgs e)
-    {
-        mfVerDetalleSincronizacion(hdIdSincronizacion.Value);
-    }
     #region Exportar Excel
     protected void btnExportarMarcas_Click(object sender, EventArgs e)
     {

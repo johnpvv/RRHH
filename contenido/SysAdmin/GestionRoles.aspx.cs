@@ -52,14 +52,11 @@ public partial class contenido_SysAdmin_GestionRoles : System.Web.UI.Page
     private void mfNvo()
     {
         // Inicializar Formularios
-        //ddlProfesor.SelectedValue = "1";
         TNombre.Text = "";
         TCodigo.Text = "";
         TObser.Text = "";
-        // Profesionales
         this.gdArt.DataSource = null;
         this.gdArt.DataBind();
-        // Temas
         this.gbArtSer.DataSource = null;
         this.gbArtSer.DataBind();
     }
@@ -79,7 +76,6 @@ public partial class contenido_SysAdmin_GestionRoles : System.Web.UI.Page
         try
         {
             mfNvo();
-            // Nuevo
             Session.Add("lsIdentificador", 0);
             Session.Add("lbNvo", true);
         }
