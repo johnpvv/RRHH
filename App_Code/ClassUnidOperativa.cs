@@ -590,109 +590,101 @@ public class ClassUnidOperativa
         con.Close();
         return lsRet;
     }
-    //// DMS
-    public int Eli_Rest_UnidadOperativa(ClassUnidOperativa OP)
+    //public int Eli_Rest_UnidadOperativa(ClassUnidOperativa OP)
+    //{
+    //    int valor = 0;
+    //    string nulo = "";
+    //    int cero = 0, uno = 1;
+    //    decimal zero = 0;
+    //    try
+    //    {
+    //        con2.Open();
+    //        SqlCommand comando = con2.CreateCommand();
+    //        comando.CommandText = "dbo.spEliRestUnidadOperativa";
+    //        comando.CommandType = CommandType.StoredProcedure;
+    //        SqlParameter par = null;
+    //        par = comando.Parameters.Add("@IdUnidadOperativa", SqlDbType.Int);
+    //        if (OP.IdUnidadOperativa.ToString() != "" && OP.IdUnidadOperativa != 0)
+    //        {
+    //            par.Value = Convert.ToInt32(OP.IdUnidadOperativa);
+    //        }
+    //        else
+    //        {
+    //            par.Value = uno;
+    //        }
+    //        par = comando.Parameters.Add("@IdEstado", SqlDbType.Int);
+    //        if (OP.IdEstado.ToString() != "" && OP.IdEstado != 0)
+    //        {
+    //            par.Value = Convert.ToInt32(OP.IdEstado);
+    //        }
+    //        else
+    //        {
+    //            par.Value = uno;
+    //        }
+    //        SqlDataReader lector = comando.ExecuteReader();
+    //        con2.Close();
+    //        return 1;
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        string error = ex.Message;
+    //        con2.Close();
+    //        return 0;
+    //    }
+    //    finally
+    //    {
+    //        con2.Close();
+    //    }
+    //}
+    public bool Eli_Rest_UnidadOperativa()
     {
-        int valor = 0;
-        string nulo = "";
-        int cero = 0, uno = 1;
-        decimal zero = 0;
+        string lsSql =
+            "UPDATE " + modConstantes.gsDbRH + "M_UNIDAD_OPERATIVA " +
+            "SET IDESTADO = " + IdEstado + " " +
+            "WHERE CODUNIOP = " + IdUnidadOperativa;
         try
         {
-            con2.Open();
-            SqlCommand comando = con2.CreateCommand();
-            comando.CommandText = "dbo.spEliRestUnidadOperativa";
-            comando.CommandType = CommandType.StoredProcedure;
-            SqlParameter par = null;
-            par = comando.Parameters.Add("@IdUnidadOperativa", SqlDbType.Int);
-            if (OP.IdUnidadOperativa.ToString() != "" && OP.IdUnidadOperativa != 0)
-            {
-                par.Value = Convert.ToInt32(OP.IdUnidadOperativa);
-            }
-            else
-            {
-                par.Value = uno;
-            }
-            par = comando.Parameters.Add("@IdEstado", SqlDbType.Int);
-            if (OP.IdEstado.ToString() != "" && OP.IdEstado != 0)
-            {
-                par.Value = Convert.ToInt32(OP.IdEstado);
-            }
-            else
-            {
-                par.Value = uno;
-            }
-            SqlDataReader lector = comando.ExecuteReader();
-            con2.Close();
-            return 1;
+            con = bd.fnGetConn();
+            bd.Fill(con, lsSql);
+            con.Close();
+            return true;
         }
-        catch (Exception ex)
+        catch
         {
-            string error = ex.Message;
-            con2.Close();
-            return 0;
-        }
-        finally
-        {
-            con2.Close();
+            if (con != null) con.Close();
+            return false;
         }
     }
     public DataTable busca_uni_op(ClassUnidOperativa OP)
     {
         DataTable dtResultado = new DataTable();
-        string nulo = "";
-        int cero = 0;
-        DateTime fecha_nula = Convert.ToDateTime("1/1/1900");
+
         try
         {
             con2.Open();
             SqlCommand comando = con2.CreateCommand();
             comando.CommandText = "dbo.spBuscaUnidadOperativa";
             comando.CommandType = CommandType.StoredProcedure;
-            SqlParameter par = null;
-            par = comando.Parameters.Add("@IdEstado", SqlDbType.Int);
-            if (OP.IdEstado.ToString() != "" && OP.IdEstado != 0)
-            {
-                par.Value = Convert.ToInt32(OP.IdEstado);
-            }
-            else
-            {
-                par.Value = cero;
-            }
-            par = comando.Parameters.Add("@UnidadSuperior", SqlDbType.VarChar, 5);
-            if (OP.UnidadSuperior != "" && OP.UnidadSuperior != null)
-            {
-                par.Value = OP.UnidadSuperior;
-            }
-            else
-            {
-                par.Value = nulo;
-            }
-            par = comando.Parameters.Add("@NombreUnidad", SqlDbType.VarChar, 100);
-            if (OP.NombreUnidad != "" && OP.NombreUnidad != null)
-            {
-                par.Value = OP.NombreUnidad;
-            }
-            else
-            {
-                par.Value = nulo;
-            }
+            comando.Parameters.Add("@IdEstado", SqlDbType.Int).Value = OP.IdEstado;
+            comando.Parameters.Add("@UnidadSuperior", SqlDbType.VarChar, 5).Value = string.IsNullOrEmpty(OP.UnidadSuperior) ? "" : OP.UnidadSuperior;
+            comando.Parameters.Add("@NombreUnidad", SqlDbType.VarChar, 100).Value = string.IsNullOrEmpty(OP.NombreUnidad) ? "" : OP.NombreUnidad;
             IDataReader dr = comando.ExecuteReader();
             dtResultado.Load(dr);
-            con2.Close();
+            dr.Close();
             return dtResultado;
         }
         catch (SqlException ex)
         {
             string error = ex.Message;
-            con2.Close();
             return dtResultado;
         }
         finally
         {
-            con2.Close();
+            if (con2.State == ConnectionState.Open)
+                con2.Close();
         }
     }
+
     public int InsertUnidadOperativa(ClassUnidOperativa OP)
     {
         int valor = 0;

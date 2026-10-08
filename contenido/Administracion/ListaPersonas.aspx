@@ -19,104 +19,8 @@
     <link href="../../css/EstiloRRHH.css" rel="stylesheet" />
 </head>
 <body>
-    <%--<form id="form1" runat="server">
-        <asp:ScriptManager ID="ToolkitScriptManager1" runat="server" EnableScriptGlobalization="True">
-        </asp:ScriptManager>
-        <table border="0" style="width: 69%">
-            <tr>
-                <td class="TextoLeft">
-                    <label>
-                        Gestión Personas --&gt;</label></td>
-                <td></td>
-            </tr>
-        </table>
-        <table width="90%" border="0" class="table table-hover table-bordered">
-            <tr>
-                <td>
-                    <asp:Button ID="btn_Buscar" Height="35px" CssClass="labelBlue" runat="server" OnClick="btn_Buscar_Click" OnClientClick="Buscar();" Text="Buscar" Width="120px" />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <asp:Button ID="btnNuevo" Height="35px" class="success" runat="server" OnClick="btnNuevo_Click" Text="Nuevo" Width="120px" />
-                </td>
-            </tr>
-            <tr>
-                <td class="auto-style3">
-                    <table border="0" style="width: 932px">
-                        <tr>
-                            <td class="auto-style4">Nombre:</td>
-                            <td class="auto-style5">
-                                <p>
-                                    <asp:TextBox ID="TxtNombre" runat="server" placeholder="Nombre" onkeypress="KeyEnter(event)" Height="20px" MaxLength="80" Width="162px"></asp:TextBox>
-                                    <asp:TextBox ID="TxtPaterno" runat="server" placeholder="Paterno" onkeypress="KeyEnter(event)" Height="20px" MaxLength="80" Width="189px"></asp:TextBox>
-                                    <asp:TextBox ID="TxtMaterno" runat="server" placeholder="Materno" onkeypress="KeyEnter(event)" Height="20px" MaxLength="80" Width="210px"></asp:TextBox>
-                                </p>
-                            </td>
-
-                        </tr>
-                        <tr>
-                            <td class="auto-style2">Rut:</td>
-                            <td class="TextoLeft">
-                                <asp:TextBox ID="TxtRut" runat="server" onkeypress="KeyEnter(event)" MaxLength="9" Height="20" onblur="IsInteger(this);"></asp:TextBox>&nbsp;&nbsp;&nbsp;&nbsp;
-                                <asp:CheckBox ID="bchkEli" runat="server" Text="Eliminado" ToolTip="Eliminado" />
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        </table>
-        <hr style="width: 100%" />
-        <asp:GridView ID="dgData" runat="server"
-            AutoGenerateColumns="False" DataKeyNames="rut"
-            GridLines="None" OnSelectedIndexChanged="dgData_SelectedIndexChanged"
-            OnRowDataBound="dgData_RowDataBound"
-            Width="100%" OnSorting="dgData_Sorting"
-            AllowPaging="True"
-            OnPageIndexChanging="dgData_PageIndexChanging"
-            Style="margin-right: 0px;" AllowSorting="True"
-            class="table table-hover table-bordered">
-            <Columns>
-                <asp:BoundField DataField="rut" HeaderText="Rut" SortExpression="rut">
-                    <HeaderStyle CssClass="Titulo2" />
-                    <ItemStyle Width="70px" CssClass="TextoCenter" Height="25px" />
-                </asp:BoundField>
-                <asp:BoundField DataField="nombre" HeaderText="Nombre" SortExpression="nombre">
-                    <HeaderStyle CssClass="Titulo2" />
-                    <ItemStyle Width="70px" CssClass="TextoCenter" />
-                </asp:BoundField>
-                <asp:BoundField DataField="ap_paterno" HeaderText="Paterno" SortExpression="paterno">
-                    <HeaderStyle CssClass="Titulo2" />
-                    <ItemStyle Width="70px" CssClass="TextoCenter" />
-                </asp:BoundField>
-                <asp:BoundField DataField="ap_materno" HeaderText="Materno" SortExpression="materno">
-                    <HeaderStyle CssClass="Titulo2" />
-                    <ItemStyle Width="70px" CssClass="TextoCenter" />
-                </asp:BoundField>
-                <asp:BoundField DataField="direccion" HeaderText="Direccion" SortExpression="direccion">
-                    <HeaderStyle CssClass="Titulo2" />
-                    <ItemStyle Width="70px" CssClass="TextoCenter" />
-                </asp:BoundField>
-                <asp:CommandField ShowSelectButton="true" ButtonType="Link" Visible="false" SelectText="Enroll" />
-            </Columns>
-        </asp:GridView>
-        <br />
-        <br />
-        <div id="divCargando" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.3); z-index: 9999;">
-
-            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 300px; height: 180px; background: white; border-radius: 10px; text-align: center; padding-top: 30px; box-shadow: 0 0 15px #666;">
-
-                <img src="../../imagenes/ajax-loader.gif" style="width: 120px; height: 120px;" alt="Cargando..." />
-                <br />
-                <br />
-                <span style="font-size: 16px; font-weight: bold;">Buscando...
-
-                </span>
-
-            </div>
-        </div>
-    </form>--%>
-
     <form id="form1" runat="server">
         <asp:ScriptManager ID="ToolkitScriptManager1" runat="server" EnableScriptGlobalization="True" />
-
         <div class="bloque">
             <div class="titulo-seccion">Gestión Personas</div>
             <div class="filtros-grid">
@@ -218,6 +122,7 @@
                             </ItemTemplate>
                         </asp:TemplateField>
                     </Columns>
+                    <PagerStyle CssClass="GridPager" HorizontalAlign="Center" />
                 </asp:GridView>
             </div>
             <div class="filtros-grid">

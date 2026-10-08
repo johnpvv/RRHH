@@ -5,7 +5,6 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-
 public partial class contenido_Administracion_ListaPersonas : System.Web.UI.Page
 {
     ClassModSys objModSys = new ClassModSys();
@@ -19,29 +18,22 @@ public partial class contenido_Administracion_ListaPersonas : System.Web.UI.Page
         modFunciones modfunc = new modFunciones();
         string gUsr;
         string asCodSistema;
-
-
         if (Request.Params["__EVENTTARGET"] == "KeyEnterPostBack")
         {
             mfBuscar();
         }
-
         if (!IsPostBack)
         {
             try
             {
                 gUsr = Session["user"].ToString();
                 asCodSistema = Session["codHosp"].ToString();
-
                 lsPer = modfunc.fnValidaUsrApp("MANT_USUARIO", gUsr, asCodSistema);
-
                 if (lsPer != "M" && lsPer != "L")
                 {
                     Response.Redirect("~/contenido/frmerrgen.aspx");
                 }
-
                 id = Request.QueryString["id"].ToString();
-
                 if (id == "0")
                 {
                     this.TxtNombre.Text = Request.QueryString["TxtNombre"].ToString();
@@ -60,7 +52,6 @@ public partial class contenido_Administracion_ListaPersonas : System.Web.UI.Page
             }
         }
     }
-
     protected void btn_Buscar_Click(object sender, EventArgs e)
     {
         try
@@ -72,7 +63,6 @@ public partial class contenido_Administracion_ListaPersonas : System.Web.UI.Page
             Response.Redirect("~/contenido/frmerrgen.aspx");
         }
     }
-
     // Funciones y Procedimientos
     private void mfBuscar()
     {
@@ -83,7 +73,6 @@ public partial class contenido_Administracion_ListaPersonas : System.Web.UI.Page
         per.ls_mat = this.TxtMaterno.Text.Trim();
         if (this.bchkEli.Checked) per.ls_elim = "3"; else per.ls_elim = "1";
         ds = per.mfBuscarPersonas();
-
         if (ds != null && ds.Tables.Count > 0)
         {
             if (ds.Tables[0].Rows.Count > 0)
@@ -93,7 +82,6 @@ public partial class contenido_Administracion_ListaPersonas : System.Web.UI.Page
                 {
                     _sortDirection = ViewState["SortDirection"].ToString();
                 }
-
                 if (ViewState["SortExpression"] != null)
                 {
                     _sortExpression = ViewState["SortExpression"].ToString();
@@ -126,7 +114,6 @@ public partial class contenido_Administracion_ListaPersonas : System.Web.UI.Page
         cadena = modFunciones.Encriptar(stcadena);
         Response.Redirect("~/contenido/Administracion/GestionPersonas.aspx?key=" + dgData.DataKeys[dgData.SelectedIndex].Values[0].ToString() + "&cadena=" + cadena);
     }
-
     protected void dgData_RowDataBound(object sender, GridViewRowEventArgs e)
     {
         if (e.Row.RowType == DataControlRowType.DataRow)
@@ -137,7 +124,6 @@ public partial class contenido_Administracion_ListaPersonas : System.Web.UI.Page
             e.Row.Attributes.Add("ondblclick", String.Format("javascript:__doPostBack('dgData','Select${0}')", e.Row.RowIndex));
         }
     }
-
     private string _sortDirection;
     private string _sortExpression;
     protected void dgData_Sorting(object sender, GridViewSortEventArgs e)
@@ -158,12 +144,10 @@ public partial class contenido_Administracion_ListaPersonas : System.Web.UI.Page
         ViewState["SortExpression"] = e.SortExpression;
         mfBuscar();
     }
-
     protected void btnNuevo_Click(object sender, EventArgs e)
     {
         Response.Redirect("~/contenido/Administracion/GestionPersonas.aspx?key=0");
     }
-    
     protected void dgData_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
         dgData.PageIndex = e.NewPageIndex;
@@ -182,13 +166,11 @@ public partial class contenido_Administracion_ListaPersonas : System.Web.UI.Page
         per.ls_mat = this.TxtMaterno.Text.Trim();
         if (this.bchkEli.Checked) per.ls_elim = "3"; else per.ls_elim = "1";
         DataSet ds = per.mfBuscarPersonas();
-
         if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
         {
             mens.mensaje(Page, "No existen datos para exportar.");
             return;
         }
-
         excel.Exportar(ds, "Listado_Usuarios_RRHH");
     }
 }

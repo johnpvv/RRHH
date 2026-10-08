@@ -27,7 +27,7 @@ public class ClassExcelExportar
         Exportar(ds.Tables[0], nombreArchivo);
     }
 
-    public static void Exportar(DataTable dt, string nombreArchivo)
+    public void Exportar(DataTable dt, string nombreArchivo)
     {
         if (dt == null || dt.Columns.Count == 0) return;
         using (MemoryStream ms = new MemoryStream())
