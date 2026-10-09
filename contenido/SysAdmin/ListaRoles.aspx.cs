@@ -26,6 +26,7 @@ public partial class contenido_SysAdmin_ListaRoles : System.Web.UI.Page
                 {
                     Response.Redirect("~/contenido/frmerrgen.aspx");
                 }
+                mfBuscar();
             }
             catch
             {

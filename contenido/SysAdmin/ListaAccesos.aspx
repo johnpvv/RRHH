@@ -39,7 +39,7 @@
                         Text="Buscar"
                         CssClass="BotonPortalAzul"
                         OnClick="btn_Buscar_Click" />
-                    </div>
+                </div>
                 <div class="campo">
                     <asp:Button ID="btnNuevo"
                         runat="server"
@@ -68,27 +68,11 @@
                 EmptyDataText="No existen accesos registrados."
                 EmptyDataRowStyle-CssClass="textoEmpty">
                 <Columns>
-                    <asp:BoundField
-                        DataField="idapp"
-                        HeaderText="Id"
-                        Visible="False"
-                        ReadOnly="True" />
-                    <asp:BoundField
-                        DataField="codigo"
-                        HeaderText="Código"
-                        SortExpression="codigo"/>
-                    <asp:BoundField
-                        DataField="descripcion"
-                        HeaderText="Descripción"
-                        SortExpression="descripcion" />
-                    <asp:BoundField
-                        DataField="num_usr"
-                        HeaderText="Usuarios"
-                        SortExpression="num_usr" />
-                    <asp:BoundField
-                        DataField="num_rol"
-                        HeaderText="Roles"
-                        SortExpression="num_rol" />
+                    <asp:BoundField DataField="idapp" HeaderText="Id" Visible="False" ReadOnly="True" />
+                    <asp:BoundField DataField="codigo" HeaderText="Código" SortExpression="codigo" />
+                    <asp:BoundField DataField="descripcion" HeaderText="Descripción" SortExpression="descripcion" />
+                    <asp:BoundField DataField="num_usr" HeaderText="Usuarios" SortExpression="num_usr" />
+                    <asp:BoundField DataField="num_rol" HeaderText="Roles" SortExpression="num_rol" />
                     <asp:TemplateField HeaderText="Acción">
                         <ItemTemplate>
                             <asp:ImageButton ID="btnAbrir"

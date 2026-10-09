@@ -44,6 +44,7 @@ public class ClassReloj
     public string ls_obs { get; set; }
     public string ls_idestado { get; set; }
 
+    #region marcas y listar
     public DataSet mfBuscarMarcaciones()//metodo inicial, no considerar
     {
         string lsSql;
@@ -308,8 +309,8 @@ public class ClassReloj
               "E.F_H_MARCA AS ENTRADA, " +
               "ISNULL(E.CENTRO,'') AS CENTRO_ENT, " +
               "E.ESTADO_MARCA AS ESTADO_ENTRADA, " +
-              "S.F_H_MARCA AS SALIDA, " +              
-              "ISNULL(S.CENTRO,'') AS CENTRO_SAL, " +              
+              "S.F_H_MARCA AS SALIDA, " +
+              "ISNULL(S.CENTRO,'') AS CENTRO_SAL, " +
               "S.ESTADO_MARCA AS ESTADO_SALIDA " +
               "FROM ENTRADAS E " +
               "FULL OUTER JOIN SALIDAS S " +
@@ -327,7 +328,8 @@ public class ClassReloj
         con.Close();
         return ds;
     }
-
+    #endregion
+    #region Relojes y centros
     public DataSet mfBuscarRelojes()
     {
         string lsSql;
@@ -375,47 +377,110 @@ public class ClassReloj
 
         return ds;
     }
+    //public DataSet mfBuscarRelojesCentro()
+    //{
+    //    string lsSql;
+    //    DataSet ds;
 
-    public DataSet mfBuscarTrabajadoresReloj()
+    //    lsSql = "SELECT IDRELOJ, DESCRIPCION, IP, PUERTO, SERIE " +
+    //            "FROM " + modConstantes.gsDbRH + "M_RELOJES " +
+    //            "WHERE CODUNIOP = " + ls_unidad + " " +
+    //            "AND IDESTADO = 1 " +
+    //            "ORDER BY DESCRIPCION";
+
+    //    con = bd.fnGetConn();
+    //    ds = bd.Fill(con, lsSql);
+    //    con.Close();
+    //    return ds;
+    //}
+    public DataSet mfBuscarRelojesCentro()
     {
-        string lsSql;
-        string lsWhere = "";
-        DataSet ds;
+        string lsSql = "SELECT RE.IDRELOJ, CONVERT(VARCHAR(20),RE.IDRELOJ) AS CODIGO, RE.DESCRIPCION, RE.IP, RE.PUERTO, RE.SERIE " +
+                       "FROM " + modConstantes.gsDbRH + "M_RELOJES RE " +
+                       "WHERE RE.CODUNIOP=" + ls_unidad + " AND RE.IDESTADO = 1 " +
+                       (!string.IsNullOrEmpty(ls_idreloj) ?
+                       "AND CONVERT(VARCHAR(20),RE.IDRELOJ) LIKE '%" + ls_idreloj + "%' " : "") +
+                       (!string.IsNullOrEmpty(ls_descrip) ?
+                       "AND RE.DESCRIPCION LIKE '%" + ls_descrip + "%' " : "") +
+                       "ORDER BY RE.DESCRIPCION";
 
-        lsWhere = " WHERE IDESTADO = 1 ";
-
-        // Buscar por código del reloj
-        if (!string.IsNullOrWhiteSpace(ls_codigo))
-        {
-            lsWhere += " AND IDUSERRELOJ LIKE '%" + ls_codigo.Trim().Replace("'", "''") + "%' ";
-        }
-        // Buscar por nombre
-        if (!string.IsNullOrWhiteSpace(ls_nombre))
-        {
-            string nombreBuscar = ls_nombre.Trim().Replace("'", "''");
-            lsWhere += " AND NOMBRE LIKE '%" + nombreBuscar + "%' ";
-        }
-        //buscar por reloj
-        if (!string.IsNullOrWhiteSpace(ls_idreloj))
-        {
-            lsWhere += " AND IDRELOJ = " + ls_idreloj.Trim().Replace("'", "''") + " ";
-        }
-        lsSql =
-            "SELECT " +
-            "IDUSRPEND, " +
-            "IDRELOJ, " +
-            "F_H_CREACION, " +
-            "IDESTADO, " +
-            "IDUSERRELOJ, " +
-            "NOMBRE " +
-            "FROM " + modConstantes.gsDbRH + "M_USER_RELOJ_PENDIENTE " +
-            lsWhere +
-            "ORDER BY NOMBRE";
         con = bd.fnGetConn();
-        ds = bd.Fill(con, lsSql);
+        DataSet ds = bd.Fill(con, lsSql);
         con.Close();
         return ds;
     }
+    public DataSet mfBuscarDatosReloj()
+    {
+        string lsSql;
+        DataSet ds;
+
+        lsSql = "SELECT IDRELOJ, DESCRIPCION, IP, PUERTO, SERIE " +
+                "FROM " + modConstantes.gsDbRH + "M_RELOJES " +
+                "WHERE IDRELOJ = " + ls_idreloj + " " +
+                "AND IDESTADO = 1";
+
+        con = bd.fnGetConn();
+        ds = bd.Fill(con, lsSql);
+        con.Close();
+
+        return ds;
+    }
+    public DataSet mfBuscarRelojesDisponibles()
+    {
+        string lsSql = "SELECT RE.IDRELOJ, CONVERT(VARCHAR(20),RE.IDRELOJ) AS CODIGO, RE.DESCRIPCION, RE.IP, RE.PUERTO, RE.SERIE " +
+                       "FROM " + modConstantes.gsDbRH + "M_RELOJES RE " +
+                       "WHERE RE.IDESTADO=1 AND RE.CODUNIOP IS NULL " +
+                       (!string.IsNullOrEmpty(ls_idreloj) ?
+                       "AND CONVERT(VARCHAR(20),RE.IDRELOJ) LIKE '%" + ls_idreloj + "%' " : "") +
+                       (!string.IsNullOrEmpty(ls_descrip) ?
+                       "AND RE.DESCRIPCION LIKE '%" + ls_descrip + "%' " : "") +
+                       "ORDER BY RE.DESCRIPCION";
+
+        con = bd.fnGetConn();
+        DataSet ds = bd.Fill(con, lsSql);
+        con.Close();
+        return ds;
+    }
+    public string mfAsignarRelojCentro()
+    {
+        string lsSql = "UPDATE " + modConstantes.gsDbRH + "M_RELOJES " +
+                       "SET CODUNIOP=" + ls_unidad + " " +
+                       "WHERE IDRELOJ=" + ls_idreloj + " AND IDESTADO=1 " +
+                       "AND CODUNIOP IS NULL";
+        try
+        {
+            con = bd.fnGetConn();
+            bd.Fill(con, lsSql);
+            con.Close();
+            return "";
+        }
+        catch (Exception ex)
+        {
+            if (con != null) con.Close();
+            return ex.Message;
+        }
+    }
+    public string mfQuitarRelojCentro()
+    {
+        string lsSql = "UPDATE " + modConstantes.gsDbRH + "M_RELOJES " +
+                       "SET CODUNIOP=NULL " +
+                       "WHERE IDRELOJ=" + ls_idreloj + " AND " +
+                       "CODUNIOP=" + ls_unidad;
+        try
+        {
+            con = bd.fnGetConn();
+            bd.Fill(con, lsSql);
+            con.Close();
+            return "";
+        }
+        catch (Exception ex)
+        {
+            if (con != null) con.Close();
+            return ex.Message;
+        }
+    }
+    #endregion
+
     #region Equivalencias
     public DataSet mfBuscaTrabRelojID()
     {
@@ -551,38 +616,6 @@ public class ClassReloj
             return "No fue posible registrar la equivalencia: " + ex.Message;
         }
     }
-    public DataSet mfBuscarRelojesCentro()
-    {
-        string lsSql;
-        DataSet ds;
-
-        lsSql = "SELECT IDRELOJ, DESCRIPCION, IP, PUERTO, SERIE " +
-                "FROM " + modConstantes.gsDbRH + "M_RELOJES " +
-                "WHERE CODUNIOP = " + ls_unidad + " " +
-                "AND IDESTADO = 1 " +
-                "ORDER BY DESCRIPCION";
-
-        con = bd.fnGetConn();
-        ds = bd.Fill(con, lsSql);
-        con.Close();
-        return ds;
-    }
-    public DataSet mfBuscarDatosReloj()
-    {
-        string lsSql;
-        DataSet ds;
-
-        lsSql = "SELECT IDRELOJ, DESCRIPCION, IP, PUERTO, SERIE " +
-                "FROM " + modConstantes.gsDbRH + "M_RELOJES " +
-                "WHERE IDRELOJ = " + ls_idreloj + " " +
-                "AND IDESTADO = 1";
-
-        con = bd.fnGetConn();
-        ds = bd.Fill(con, lsSql);
-        con.Close();
-
-        return ds;
-    }
     public DataSet mfBuscarEquivalencias()
     {
         string lsSql;
@@ -654,6 +687,46 @@ public class ClassReloj
         con.Close();
 
         return lsRes;
+    }
+    public DataSet mfBuscarTrabajadoresReloj()
+    {
+        string lsSql;
+        string lsWhere = "";
+        DataSet ds;
+
+        lsWhere = " WHERE IDESTADO = 1 ";
+
+        // Buscar por código del reloj
+        if (!string.IsNullOrWhiteSpace(ls_codigo))
+        {
+            lsWhere += " AND IDUSERRELOJ LIKE '%" + ls_codigo.Trim().Replace("'", "''") + "%' ";
+        }
+        // Buscar por nombre
+        if (!string.IsNullOrWhiteSpace(ls_nombre))
+        {
+            string nombreBuscar = ls_nombre.Trim().Replace("'", "''");
+            lsWhere += " AND NOMBRE LIKE '%" + nombreBuscar + "%' ";
+        }
+        //buscar por reloj
+        if (!string.IsNullOrWhiteSpace(ls_idreloj))
+        {
+            lsWhere += " AND IDRELOJ = " + ls_idreloj.Trim().Replace("'", "''") + " ";
+        }
+        lsSql =
+            "SELECT " +
+            "IDUSRPEND, " +
+            "IDRELOJ, " +
+            "F_H_CREACION, " +
+            "IDESTADO, " +
+            "IDUSERRELOJ, " +
+            "NOMBRE " +
+            "FROM " + modConstantes.gsDbRH + "M_USER_RELOJ_PENDIENTE " +
+            lsWhere +
+            "ORDER BY NOMBRE";
+        con = bd.fnGetConn();
+        ds = bd.Fill(con, lsSql);
+        con.Close();
+        return ds;
     }
     #endregion
     #region Sincronizacion

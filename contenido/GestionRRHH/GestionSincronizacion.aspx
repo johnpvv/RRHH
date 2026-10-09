@@ -31,13 +31,13 @@
                             <div class="campo">
                                 <label>Centro / Unidad:</label>
                                 <asp:DropDownList ID="ddlCentroSincroniza" runat="server" CssClass="form-control"
-                                    AutoPostBack="true" Width="350px" onchange="mostrarSpinner();"
+                                    AutoPostBack="true" Width="100%" onchange="mostrarSpinner();"
                                     OnSelectedIndexChanged="ddlCentroSincroniza_SelectedIndexChanged">
                                 </asp:DropDownList>
                             </div>
                             <div class="campo">
                                 <label>Reloj:</label>
-                                <asp:DropDownList ID="ddlRelojSincroniza" runat="server" CssClass="form-control" Width="250px">
+                                <asp:DropDownList ID="ddlRelojSincroniza" runat="server" CssClass="form-control" Width="100%">
                                 </asp:DropDownList>
                             </div>
 

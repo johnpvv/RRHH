@@ -685,71 +685,106 @@ public class ClassUnidOperativa
         }
     }
 
-    public int InsertUnidadOperativa(ClassUnidOperativa OP)
+    //public int InsertUnidadOperativa(ClassUnidOperativa OP)
+    //{
+    //    int valor = 0;
+    //    string nulo = "";
+    //    int cero = 0, uno = 1;
+    //    decimal zero = 0;
+    //    try
+    //    {
+    //        con2.Open();
+    //        SqlCommand comando = con2.CreateCommand();
+    //        comando.CommandText = "dbo.spGuardaUniOp";
+    //        comando.CommandType = CommandType.StoredProcedure;
+    //        SqlParameter par = null;
+    //        par = comando.Parameters.Add("@UnidadSuperior", SqlDbType.VarChar, 5);
+    //        if (OP.UnidadSuperior != "" && OP.UnidadSuperior != null)
+    //        {
+    //            par.Value = OP.UnidadSuperior;
+    //        }
+    //        else
+    //        {
+    //            par.Value = nulo;
+    //        }
+    //        par = comando.Parameters.Add("@NombreUnidad", SqlDbType.VarChar, 100);
+    //        if (OP.NombreUnidad != "" && OP.NombreUnidad != null)
+    //        {
+    //            par.Value = OP.NombreUnidad;
+    //        }
+    //        else
+    //        {
+    //            par.Value = nulo;
+    //        }
+    //        par = comando.Parameters.Add("@IdEstado", SqlDbType.Int);
+    //        if (OP.IdEstado.ToString() != "" && OP.IdEstado != 0)
+    //        {
+    //            par.Value = Convert.ToInt32(OP.IdEstado);
+    //        }
+    //        else
+    //        {
+    //            par.Value = uno;
+    //        }
+    //        SqlDataReader lector = comando.ExecuteReader();
+    //        con2.Close();
+    //        return 1;
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        string error = ex.Message;
+    //        con2.Close();
+    //        return 0;
+    //    }
+    //    finally
+    //    {
+    //        con2.Close();
+    //    }
+    //}
+    public string InsertarUnidad(string codSup, string descripcion, string asExti, out string idUnidad)
     {
-        int valor = 0;
-        string nulo = "";
-        int cero = 0, uno = 1;
-        decimal zero = 0;
+        idUnidad = "0";
+        string lsSql =
+            "INSERT INTO " + modConstantes.gsDbAB + "M_UNIDAD_OPERATIVA " +
+            "(IDSUP_UNIDAD,DESCRIPCION,IDESTADO,EXTIENDE) " +
+            "VALUES (" + (string.IsNullOrWhiteSpace(codSup) ? "NULL" : "'" + codSup.Replace("'", "''") + "'") + ",'" +
+                       descripcion.Replace("'", "''").ToUpper() + "',1," + asExti + "); " +
+                       "SELECT CAST(SCOPE_IDENTITY() AS INT) AS CODUNIOP;";
         try
         {
-            con2.Open();
-            SqlCommand comando = con2.CreateCommand();
-            comando.CommandText = "dbo.spGuardaUniOp";
-            comando.CommandType = CommandType.StoredProcedure;
-            SqlParameter par = null;
-            par = comando.Parameters.Add("@UnidadSuperior", SqlDbType.VarChar, 5);
-            if (OP.UnidadSuperior != "" && OP.UnidadSuperior != null)
+            con = bd.fnGetConn();
+            DataSet ds = bd.Fill(con, lsSql);
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
             {
-                par.Value = OP.UnidadSuperior;
+                idUnidad = ds.Tables[0].Rows[0]["CODUNIOP"].ToString();
+                return "";
             }
-            else
-            {
-                par.Value = nulo;
-            }
-            par = comando.Parameters.Add("@NombreUnidad", SqlDbType.VarChar, 100);
-            if (OP.NombreUnidad != "" && OP.NombreUnidad != null)
-            {
-                par.Value = OP.NombreUnidad;
-            }
-            else
-            {
-                par.Value = nulo;
-            }
-            par = comando.Parameters.Add("@IdEstado", SqlDbType.Int);
-            if (OP.IdEstado.ToString() != "" && OP.IdEstado != 0)
-            {
-                par.Value = Convert.ToInt32(OP.IdEstado);
-            }
-            else
-            {
-                par.Value = uno;
-            }
-            SqlDataReader lector = comando.ExecuteReader();
-            con2.Close();
-            return 1;
+            return "No se pudo obtener el código del centro creado.";
         }
         catch (Exception ex)
         {
-            string error = ex.Message;
-            con2.Close();
-            return 0;
+            return ex.Message;
         }
         finally
         {
-            con2.Close();
+            if (con != null) con.Close();
         }
     }
     public string ModificarUnidad(string cod, string codSup, string descripcion, string asExti)
     {
-        string lsRet = "";
-        string lsSql = "";
+        string lsSql = 
+            "UPDATE " + modConstantes.gsDbAB + "M_UNIDAD_OPERATIVA " +
+            "SET DESCRIPCION='" + descripcion.Replace("'", "''") + "', " +                       
+            "IDSUP_UNIDAD=" + (string.IsNullOrWhiteSpace(codSup) ? "NULL" : "'" + codSup.Replace("'", "''") + "'") + ", " +
+            "EXTIENDE=" + asExti + " " +
+            "WHERE CODUNIOP=" + cod;
         con = bd.fnGetConn();
-        lsSql = "UPDATE " + modConstantes.gsDbAB + "M_UNIDAD_OPERATIVA set DESCRIPCION = '" + descripcion + "', " +
-            " EXTIENDE = " + asExti + " " +
-                "WHERE CODUNIOP = " + cod;
-        lsRet = bd.EjecutarComando(con, lsSql);
-        con.Close();
-        return lsRet;
+        try
+        {
+            return bd.EjecutarComando(con, lsSql);
+        }
+        finally
+        {
+            if (con != null) con.Close();
+        }
     }
 }

@@ -26,6 +26,7 @@ public partial class contenido_SysAdmin_ListaAccesos : System.Web.UI.Page
                 {
                     Response.Redirect("~/contenido/frmerrgen.aspx");
                 }
+                mfBuscar();
             }
             catch
             {
@@ -85,7 +86,6 @@ public partial class contenido_SysAdmin_ListaAccesos : System.Web.UI.Page
                 }
                 this.dgData.DataSource = dv;
                 this.dgData.DataBind();
-                //this.dgData.Caption = "Listado Protocolos";
             }
             else
             {

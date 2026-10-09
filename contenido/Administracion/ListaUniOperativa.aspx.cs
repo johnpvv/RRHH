@@ -61,7 +61,7 @@ public partial class contenido_Administracion_ListaUniOperativa : System.Web.UI.
         if (e.Row.RowType == DataControlRowType.DataRow)
         {
             //add css to GridViewrow based on rowState
-            e.Row.CssClass = e.Row.RowState.ToString();            
+            e.Row.CssClass = e.Row.RowState.ToString();
         }
     }
     protected void dgData_PageIndexChanging(object sender, GridViewPageEventArgs e)
@@ -69,41 +69,26 @@ public partial class contenido_Administracion_ListaUniOperativa : System.Web.UI.
         dgData.PageIndex = e.NewPageIndex;
         mfBuscar();
     }
-    //protected void ElimClasif(object sender, EventArgs e)
-    //{
-    //    if (edicion == true) { return; }
-    //    try
-    //    {
-    //        if (Session["lsGrabar"].ToString() == "NO")
-    //        {
-    //            mens.mensaje(Page, "NO esta autorizado para eliminar..");
-    //        }
-    //        else
-    //        {
-    //            ImageButton boton = (ImageButton)sender;
-    //            GridViewRow row = (GridViewRow)boton.NamingContainer;
-    //            string cid = row.Cells[0].Text;
-    //            if (cid != "" && cid != null)
-    //            {
-    //                UniOp.IdUnidadOperativa = Convert.ToInt32(cid);
-    //            }
-    //            UniOp.IdEstado = 3;
-    //            int retorno = 0;
-    //            retorno = UniOp.Eli_Rest_UnidadOperativa(UniOp);
-    //            if (retorno == 0)
-    //                mens.mensaje(Page, "Error: Problemas al Eliminar Centro..");
-    //            else
-    //            {
-    //                mfBuscar();
-    //                mens.mensaje(Page, "Eliminado Exitosamente.");
-    //            }
-    //        }
-    //    }
-    //    catch
-    //    {
-    //        Response.Redirect("~/contenido/frmerrgen.aspx");
-    //    }
-    //}
+    private string _sortDirection;
+    private string _sortExpression;
+    protected void dgData_Sorting(object sender, GridViewSortEventArgs e)
+    {
+        if (ViewState["SortDirection"] == null || ViewState["SortExpression"].ToString() != e.SortExpression)
+        {
+            ViewState["SortDirection"] = "ASC";
+            dgData.PageIndex = 0;
+        }
+        else if (ViewState["SortDirection"].ToString() == "ASC")
+        {
+            ViewState["SortDirection"] = "DESC";
+        }
+        else if (ViewState["SortDirection"].ToString() == "DESC")
+        {
+            ViewState["SortDirection"] = "ASC";
+        }
+        ViewState["SortExpression"] = e.SortExpression;
+        mfBuscar();
+    }
     protected void ElimClasif(object sender, EventArgs e)
     {
         if (edicion) return;
@@ -162,40 +147,6 @@ public partial class contenido_Administracion_ListaUniOperativa : System.Web.UI.
             Response.Redirect("~/contenido/frmerrgen.aspx");
         }
     }
-    //protected void ImBtIngresar_Click(object sender, ImageClickEventArgs e)
-    //{
-    //    try
-    //    {
-    //        mfAgregar();
-    //    }
-    //    catch
-    //    {
-    //        Response.Redirect("~/contenido/frmerrgen.aspx");
-    //    }
-    //}
-    //private void mfAgregar()//revisar si se elimina o traslada a gestion unidad
-    //{
-    //    if (this.TServicio.Text == "") { mens.mensaje(Page, "Debe de Ingresar Descripcion de Unidad Operativa.. "); return; }
-    //    if (this.TID.Text == "") { mens.mensaje(Page, "Debe de Ingresar Unidad Superior.. "); return; }
-    //    if (Convert.ToInt32(UniOp.mfExisteId(this.TID.Text)) == 0)
-    //    {
-    //        mens.mensaje(Page, "No existe Unidad Superior, favor verifique.. "); return;
-    //    }
-    //    if (Convert.ToInt32(UniOp.mfExisteUOP(this.TServicio.Text)) > 0) { mens.mensaje(Page, "Debe de Ingresar Nombre Unidad Operativa Única.. "); return; }
-    //    UniOp.UnidadSuperior = TID.Text.ToUpper();
-    //    UniOp.NombreUnidad = TServicio.Text.ToUpper();
-    //    UniOp.IdEstado = 1;
-    //    int retorno = 0;
-    //    retorno = UniOp.InsertUnidadOperativa(UniOp);
-    //    if (retorno == 0)
-    //        mens.mensaje(Page, "Error: Problemas al Ingresar el Registro.");
-    //    else
-    //    {
-    //        this.TServicio.Text = "";
-    //        this.TID.Text = "";
-    //        mfBuscar();
-    //    }
-    //}
     protected void btn_Buscar_Click(object sender, EventArgs e)
     {
         try
@@ -216,61 +167,28 @@ public partial class contenido_Administracion_ListaUniOperativa : System.Web.UI.
         uni = UniOp.busca_uni_op(UniOp);
         if (uni != null && uni.Rows.Count > 0)
         {
-            if (uni.Rows.Count > 0)
+            DataView dv = uni.DefaultView;
+            if (ViewState["SortDirection"] != null)
             {
-                this.dgData.DataSource = uni;
-                this.dgData.DataBind();
-                this.lblTotal.Text = uni.Rows.Count.ToString() + " Registro/s";
+                _sortDirection = ViewState["SortDirection"].ToString();
             }
-            else
+            if (ViewState["SortExpression"] != null)
             {
-                this.dgData.DataSource = null;
-                this.dgData.DataBind();
+                _sortExpression = ViewState["SortExpression"].ToString();
+                dv.Sort = string.Concat(_sortExpression, " ", _sortDirection);
             }
+            this.dgData.DataSource = dv;
+            this.dgData.DataBind();
+            this.lblTotal.Text = uni.Rows.Count.ToString() + " Registro/s";
         }
         else
         {
             this.dgData.DataSource = null;
             this.dgData.DataBind();
+            this.lblTotal.Text = "0 Registro/s";
         }
     }
 
-
-    //protected void dgData_RowUpdating(object sender, GridViewUpdateEventArgs e)
-    //{
-    //    //Validar
-    //    int CODUNIOP = (int)e.Keys["CODUNIOP"];
-    //    string IDSUP_UNIDAD = (string)e.NewValues["IDSUP_UNIDAD"];
-    //    string DESCRIPCION = (string)e.NewValues["DESCRIPCION"];
-    //    if (IDSUP_UNIDAD == "") { mens.mensaje(Page, "Debe ingresar Unidad Superior.. "); return; }
-    //    if (DESCRIPCION == "") { mens.mensaje(Page, "Debe ingresar Decripcion de Unidad Operativa.. "); return; }
-    //    if (Convert.ToInt32(UniOp.mfExisteId(IDSUP_UNIDAD)) == 0)
-    //    {
-    //        mens.mensaje(Page, "No existe Unidad Superior, favor verifique.. "); return;
-    //    }
-    //    //ACTUALIZAR
-    //    UniOp.UnidadSuperior = IDSUP_UNIDAD;
-    //    UniOp.NombreUnidad = DESCRIPCION.ToUpper();
-    //    UniOp.IdEstado = 1;
-    //    string sal = UniOp.ModificarUnidad(CODUNIOP.ToString(),
-    //                                            IDSUP_UNIDAD,
-    //                                            DESCRIPCION,
-    //                                            "0");
-    //    if (sal != "")
-    //    {
-    //        //infoColor(LblProceso, System.Drawing.Color.OrangeRed, "ERROR AL ACTUALIZAR ARTICULO: " + salida);
-    //        mens.mensaje(Page, "ERROR AL ACTUALIZAR REGISTRO !!. Error: " + sal); return;
-    //        dgData.EditIndex = -1;
-    //        return;
-    //    }
-    //    dgData.EditIndex = -1;
-    //    mfBuscar();
-    //    //infoColor(LblProceso, System.Drawing.Color.Green, "REGISTRO ACTUALIZADO EXITOSAMENTE !! ");
-    //    mens.mensaje(Page, "REGISTRO ACTUALIZADO EXITOSAMENTE !! "); return;
-    //    GridViewRow gvrEdit = dgData.Rows[e.RowIndex];
-    //    gvrEdit.BackColor = System.Drawing.Color.LightPink;
-    //    edicion = false;
-    //}
     protected void btnNuevo_Click(object sender, EventArgs e)
     {
         Response.Redirect("~/contenido/Administracion/GestUniOperativa.aspx?key=0");
@@ -287,7 +205,7 @@ public partial class contenido_Administracion_ListaUniOperativa : System.Web.UI.
         UniOp.UnidadSuperior = TID.Text;
         UniOp.NombreUnidad = TServicio.Text;
         dt = UniOp.busca_uni_op(UniOp);
-        
+
         if (dt == null || dt.Rows.Count == 0)
         {
             mens.mensaje(Page, "No existen datos para exportar.");

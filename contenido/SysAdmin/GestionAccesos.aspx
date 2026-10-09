@@ -47,19 +47,30 @@
                             </div>
                         </div>
                         <div class="botones-form">
-                            <asp:Button ID="BtnAgregar" runat="server" Text="Agregar"
-                                OnClick="BtnAgregar_Click" CssClass="BotonPortalAzul"
+                            <asp:Button ID="BtnAgregar" runat="server"
+                                Text="Agregar"
+                                OnClick="BtnAgregar_Click"
+                                CssClass="BotonPortalAzul"
                                 OnClientClick="if (!confirm('¿Desea Agregar el Acceso..?')) return false; mostrarSpinner();" />
-                            <asp:Button ID="btnNuevo" runat="server" Text="Nuevo"
-                                OnClick="btnNuevo_Click" CssClass="BotonPortalAmarillo" />
-                            <asp:Button ID="btnEliminar" runat="server" Text="Eliminar"
-                                OnClick="btnEliminar_Click" CssClass="BotonPortalRojo"
+                            <asp:Button ID="btnNuevo" runat="server"
+                                Text="Nuevo"
+                                OnClick="btnNuevo_Click"
+                                CssClass="BotonPortalAmarillo" />
+                            <asp:Button ID="btnEliminar" runat="server"
+                                Text="Eliminar"
+                                OnClick="btnEliminar_Click"
+                                CssClass="BotonPortalRojo"
                                 OnClientClick="if (!confirm('¿Desea Eliminar el Acceso..?')) return false; mostrarSpinner();" />
-                            <asp:Button ID="btnRehabilitar" runat="server" Text="Rehabilitar"
-                                OnClick="btnRehabilitar_Click" CssClass="BotonPortalVerde"
+                            <asp:Button ID="btnRehabilitar" runat="server"
+                                Text="Rehabilitar"
+                                OnClick="btnRehabilitar_Click"
+                                CssClass="BotonPortalVerde"
                                 OnClientClick="if (!confirm('¿Desea guardar los cambios..?')) return false; mostrarSpinner();" />
-                            <asp:Button ID="btnVolver" runat="server" Text="Volver"
-                                CssClass="BotonPortalGris" OnClick="btnVolver_Click" />
+                            <asp:Button ID="btnVolver" runat="server"
+                                Text="Volver"
+                                CssClass="BotonPortalGris"
+                                OnClick="btnVolver_Click"
+                                CausesValidation="false" />
                         </div>
                     </div>
                 </ContentTemplate>
@@ -86,7 +97,7 @@
                             <div class="campo">
                                 <label>&nbsp;</label>
                                 <asp:Button ID="btn_Buscar" runat="server" Text="Buscar"
-                                    OnClick="btn_Buscar_Click" 
+                                    OnClick="btn_Buscar_Click"
                                     OnClientClick="mostrarSpinner();"
                                     CssClass="BotonPortalAzul" />
                             </div>
@@ -184,7 +195,7 @@
                             <div class="campo">
                                 <label>&nbsp;</label>
                                 <asp:Button ID="BtBuscarUser" runat="server" Text="Buscar"
-                                    OnClick="BtBuscarUser_Click" 
+                                    OnClick="BtBuscarUser_Click"
                                     OnClientClick="mostrarSpinner();"
                                     CssClass="BotonPortalAzul" />
                             </div>
@@ -223,9 +234,7 @@
                                     </asp:TemplateField>
                                     <asp:CommandField SelectText="Enroll" ShowSelectButton="True" Visible="False" />
                                 </Columns>
-                                <PagerStyle
-                                    CssClass="GridPager"
-                                    HorizontalAlign="Center" />
+                                <PagerStyle CssClass="GridPager" HorizontalAlign="Center" />
                             </asp:GridView>
                         </div>
                         <div class="asignacion-separador">
@@ -261,9 +270,7 @@
                                     </asp:TemplateField>
                                     <asp:CommandField SelectText="Enroll" ShowSelectButton="True" Visible="False" />
                                 </Columns>
-                                <PagerStyle
-                                    CssClass="GridPager"
-                                    HorizontalAlign="Center" />
+                                <PagerStyle CssClass="GridPager" HorizontalAlign="Center" />
                             </asp:GridView>
                         </div>
                     </div>

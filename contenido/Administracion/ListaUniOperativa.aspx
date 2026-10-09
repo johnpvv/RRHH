@@ -76,16 +76,20 @@
                     AllowPaging="True"
                     OnPageIndexChanging="dgData_PageIndexChanging"
                     OnSelectedIndexChanged="dgData_SelectedIndexChanged"
+                    AllowSorting="True"
+                    OnSorting="dgData_Sorting"
                     PageSize="30">
                     <Columns>
-                        <asp:BoundField DataField="CODUNIOP" HeaderText="ID" ReadOnly="true">
+                        <asp:BoundField DataField="CODUNIOP" HeaderText="ID" ReadOnly="true" SortExpression="CODUNIOP">
                             <ItemStyle Width="70px" />
                         </asp:BoundField>
-                        <asp:BoundField DataField="IDSUP_UNIDAD" HeaderText="ID Superior">
-                            <ItemStyle Width="90px" />
+                        <asp:BoundField DataField="IDSUP_UNIDAD" HeaderText="ID Superior" SortExpression="IDSUP_UNIDAD">
+                            <ItemStyle Width="90px" Font-Bold="true" />
                         </asp:BoundField>
-                        <asp:BoundField DataField="UNIDAD_SUPERIOR" HeaderText="Unidad Superior"></asp:BoundField>
-                        <asp:BoundField DataField="DESCRIPCION" HeaderText="Unidad Operativa"></asp:BoundField>
+                        <asp:BoundField DataField="UNIDAD_SUPERIOR" HeaderText="Unidad Superior" SortExpression="UNIDAD_SUPERIOR">
+                        </asp:BoundField>
+                        <asp:BoundField DataField="DESCRIPCION" HeaderText="Unidad Operativa" SortExpression="DESCRIPCION">
+                        </asp:BoundField>
                         <asp:TemplateField HeaderText="Editar">
                             <ItemTemplate>
                                 <asp:ImageButton ID="btnEditar"
@@ -97,7 +101,7 @@
                                     Height="24px" />
                             </ItemTemplate>
                             <HeaderStyle Width="60px" />
-                            <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" />
+                            <ItemStyle HorizontalAlign="Left" VerticalAlign="Middle" />
                         </asp:TemplateField>
                         <asp:TemplateField HeaderText="Elim.">
                             <ItemTemplate>
@@ -109,7 +113,7 @@
                                     OnClientClick="mostrarSpinner();" />
                             </ItemTemplate>
                             <HeaderStyle Width="60px" />
-                            <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" />
+                            <ItemStyle HorizontalAlign="Left" VerticalAlign="Middle" />
                         </asp:TemplateField>
                         <asp:TemplateField HeaderText="Rehab.">
                             <ItemTemplate>
@@ -121,7 +125,7 @@
                                     OnClientClick="mostrarSpinner();" />
                             </ItemTemplate>
                             <HeaderStyle Width="60px" />
-                            <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" />
+                            <ItemStyle HorizontalAlign="Left" VerticalAlign="Middle" />
                         </asp:TemplateField>
                         <asp:CommandField
                             ShowSelectButton="true" ButtonType="Link" Visible="false" SelectText="Enroll" />

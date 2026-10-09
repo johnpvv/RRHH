@@ -27,11 +27,11 @@
 
     <script language="javascript" type="text/javascript">
         var sessionTimeoutWarning = "330";
-        var sessionTimeout        = "<%= Session.Timeout %>";
-        var timeOnPageLoad        = new Date();
+        var sessionTimeout = "<%= Session.Timeout %>";
+        var timeOnPageLoad = new Date();
 
-        setTimeout('SessionWarning()',        parseInt(sessionTimeoutWarning) * 60 * 1000);
-        setTimeout('RedirectToWelcomePage()', parseInt(sessionTimeout)        * 60 * 1000);
+        setTimeout('SessionWarning()', parseInt(sessionTimeoutWarning) * 60 * 1000);
+        setTimeout('RedirectToWelcomePage()', parseInt(sessionTimeout) * 60 * 1000);
 
         function SessionWarning() {
             var mins = parseInt(sessionTimeout) - parseInt(sessionTimeoutWarning);
@@ -45,22 +45,19 @@
 </head>
 <body class="topbar-body">
     <form id="form1" runat="server">
-
         <div class="topbar-bar">
-
             <%-- ── IZQUIERDA: toggle + logo ── --%>
             <div class="topbar-left">
                 <button id="btnToggleMenu" type="button" runat="server"
-                        class="topbar-toggle is-open"
-                        onclick="fnMenu();"
-                        title="Mostrar / Ocultar menú lateral">
+                    class="topbar-toggle is-open"
+                    onclick="fnMenu();"
+                    title="Mostrar / Ocultar menú lateral">
                     <i class="fas fa-bars"></i>
                 </button>
                 <div class="topbar-logo-wrap">
-                    <img src="../imagenes/user_white.png" alt="Logo" class="topbar-logo-img" />
+                    <img src="../imagenes/logo.jpg" alt="Logo" class="topbar-logo-img" />
                 </div>
             </div>
-
             <%-- ── CENTRO: título del sistema ── --%>
             <div class="topbar-center">
                 <i class="fa-solid fa-users fa-lg"></i>
@@ -69,7 +66,6 @@
 
             <%-- ── DERECHA: usuario + sede + cerrar sesión ── --%>
             <div class="topbar-right">
-
                 <div class="topbar-user-info">
                     <i class="fas fa-user-circle topbar-user-icon"></i>
                     <div class="topbar-user-details">
@@ -79,20 +75,16 @@
                         </span>
                     </div>
                 </div>
-
                 <div runat="server" id="cierra" class="topbar-logout-wrap">
                     <asp:LinkButton ID="cierrasesion" runat="server"
-                                    OnClick="cierrasesion_Click"
-                                    ToolTip="Cerrar Sesión"
-                                    CssClass="topbar-logout-btn">
+                        OnClick="cierrasesion_Click"
+                        ToolTip="Cerrar Sesión"
+                        CssClass="topbar-logout-btn">
                         <i class="fas fa-sign-out-alt"></i><span class="topbar-logout-txt">Salir</span>
                     </asp:LinkButton>
                 </div>
-
             </div>
         </div>
-
     </form>
 </body>
 </html>
-
