@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Data;
 
 public partial class contenido_frmleftsiab : System.Web.UI.Page
 {
@@ -50,8 +50,8 @@ public partial class contenido_frmleftsiab : System.Web.UI.Page
 
                         if (usr.mfEsSalud(Session["user"].ToString()) != "1")
                         {
-                            if(modConstantes.mfConstante("MICRO") == "NO")
-                            { 
+                            if (modConstantes.mfConstante("MICRO") == "NO")
+                            {
                                 TreeView2.Visible = true;
                                 //TreeView5.Visible = false;
                             }
@@ -61,8 +61,6 @@ public partial class contenido_frmleftsiab : System.Web.UI.Page
                                 //TreeView5.Visible = true;
                                 TreeView2.Visible = true;
                             }
-                                
-
                             //TreeView4.Visible = false;
                         }
                         else
@@ -72,9 +70,6 @@ public partial class contenido_frmleftsiab : System.Web.UI.Page
                             //TreeView5.Visible = false;
                             //TreeView4.Visible = true;
                         }
-
-
-
                     }
                 }
                 else
@@ -89,8 +84,6 @@ public partial class contenido_frmleftsiab : System.Web.UI.Page
                 Response.Redirect("~/contenido/frmerrgen.aspx");
             }
         }
-
-
     }
 
     private void buscarNodosUser(TreeNodeCollection nodes, DataSet dataSet)

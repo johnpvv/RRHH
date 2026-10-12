@@ -163,6 +163,16 @@ public class ClassUnidOperativa
         con.Close();
         return aoCod;
     }
+    public DataSet mfBuscarCentros()
+    {
+        string lsSql = "SELECT CODUNIOP, DESCRIPCION FROM " + modConstantes.gsDbRH +
+                       "M_UNIDAD_OPERATIVA ORDER BY DESCRIPCION";
+        DataSet ds;
+        con = bd.fnGetConn();
+        ds = bd.Fill(con, lsSql);
+        con.Close();
+        return ds;
+    }
     public DataSet mfUnidadDDl(string lsIdentificador, string lsIdInst)
     {
         DataSet aoCod;
@@ -590,52 +600,7 @@ public class ClassUnidOperativa
         con.Close();
         return lsRet;
     }
-    //public int Eli_Rest_UnidadOperativa(ClassUnidOperativa OP)
-    //{
-    //    int valor = 0;
-    //    string nulo = "";
-    //    int cero = 0, uno = 1;
-    //    decimal zero = 0;
-    //    try
-    //    {
-    //        con2.Open();
-    //        SqlCommand comando = con2.CreateCommand();
-    //        comando.CommandText = "dbo.spEliRestUnidadOperativa";
-    //        comando.CommandType = CommandType.StoredProcedure;
-    //        SqlParameter par = null;
-    //        par = comando.Parameters.Add("@IdUnidadOperativa", SqlDbType.Int);
-    //        if (OP.IdUnidadOperativa.ToString() != "" && OP.IdUnidadOperativa != 0)
-    //        {
-    //            par.Value = Convert.ToInt32(OP.IdUnidadOperativa);
-    //        }
-    //        else
-    //        {
-    //            par.Value = uno;
-    //        }
-    //        par = comando.Parameters.Add("@IdEstado", SqlDbType.Int);
-    //        if (OP.IdEstado.ToString() != "" && OP.IdEstado != 0)
-    //        {
-    //            par.Value = Convert.ToInt32(OP.IdEstado);
-    //        }
-    //        else
-    //        {
-    //            par.Value = uno;
-    //        }
-    //        SqlDataReader lector = comando.ExecuteReader();
-    //        con2.Close();
-    //        return 1;
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        string error = ex.Message;
-    //        con2.Close();
-    //        return 0;
-    //    }
-    //    finally
-    //    {
-    //        con2.Close();
-    //    }
-    //}
+
     public bool Eli_Rest_UnidadOperativa()
     {
         string lsSql =
@@ -685,69 +650,14 @@ public class ClassUnidOperativa
         }
     }
 
-    //public int InsertUnidadOperativa(ClassUnidOperativa OP)
-    //{
-    //    int valor = 0;
-    //    string nulo = "";
-    //    int cero = 0, uno = 1;
-    //    decimal zero = 0;
-    //    try
-    //    {
-    //        con2.Open();
-    //        SqlCommand comando = con2.CreateCommand();
-    //        comando.CommandText = "dbo.spGuardaUniOp";
-    //        comando.CommandType = CommandType.StoredProcedure;
-    //        SqlParameter par = null;
-    //        par = comando.Parameters.Add("@UnidadSuperior", SqlDbType.VarChar, 5);
-    //        if (OP.UnidadSuperior != "" && OP.UnidadSuperior != null)
-    //        {
-    //            par.Value = OP.UnidadSuperior;
-    //        }
-    //        else
-    //        {
-    //            par.Value = nulo;
-    //        }
-    //        par = comando.Parameters.Add("@NombreUnidad", SqlDbType.VarChar, 100);
-    //        if (OP.NombreUnidad != "" && OP.NombreUnidad != null)
-    //        {
-    //            par.Value = OP.NombreUnidad;
-    //        }
-    //        else
-    //        {
-    //            par.Value = nulo;
-    //        }
-    //        par = comando.Parameters.Add("@IdEstado", SqlDbType.Int);
-    //        if (OP.IdEstado.ToString() != "" && OP.IdEstado != 0)
-    //        {
-    //            par.Value = Convert.ToInt32(OP.IdEstado);
-    //        }
-    //        else
-    //        {
-    //            par.Value = uno;
-    //        }
-    //        SqlDataReader lector = comando.ExecuteReader();
-    //        con2.Close();
-    //        return 1;
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        string error = ex.Message;
-    //        con2.Close();
-    //        return 0;
-    //    }
-    //    finally
-    //    {
-    //        con2.Close();
-    //    }
-    //}
     public string InsertarUnidad(string codSup, string descripcion, string asExti, out string idUnidad)
     {
         idUnidad = "0";
         string lsSql =
             "INSERT INTO " + modConstantes.gsDbAB + "M_UNIDAD_OPERATIVA " +
-            "(IDSUP_UNIDAD,DESCRIPCION,IDESTADO,EXTIENDE) " +
-            "VALUES (" + (string.IsNullOrWhiteSpace(codSup) ? "NULL" : "'" + codSup.Replace("'", "''") + "'") + ",'" +
-                       descripcion.Replace("'", "''").ToUpper() + "',1," + asExti + "); " +
+            "(IDSUP_UNIDAD,DESCRIPCION,IDESTADO,EXTIENDE,ID_INST) " +
+            "VALUES (" + (string.IsNullOrWhiteSpace(codSup) ? "NULL" : "'" + codSup.Replace("'", "''").ToUpper() + "'") + ",'" +
+                       descripcion.Replace("'", "''").ToUpper() + "',1," + asExti + ",1); " +
                        "SELECT CAST(SCOPE_IDENTITY() AS INT) AS CODUNIOP;";
         try
         {
@@ -771,9 +681,9 @@ public class ClassUnidOperativa
     }
     public string ModificarUnidad(string cod, string codSup, string descripcion, string asExti)
     {
-        string lsSql = 
+        string lsSql =
             "UPDATE " + modConstantes.gsDbAB + "M_UNIDAD_OPERATIVA " +
-            "SET DESCRIPCION='" + descripcion.Replace("'", "''") + "', " +                       
+            "SET DESCRIPCION='" + descripcion.Replace("'", "''") + "', " +
             "IDSUP_UNIDAD=" + (string.IsNullOrWhiteSpace(codSup) ? "NULL" : "'" + codSup.Replace("'", "''") + "'") + ", " +
             "EXTIENDE=" + asExti + " " +
             "WHERE CODUNIOP=" + cod;
@@ -785,6 +695,99 @@ public class ClassUnidOperativa
         finally
         {
             if (con != null) con.Close();
+        }
+    }
+    public DataSet mfBuscarCentrosDisp(string idUsuario, string descripcion)
+    {
+        string lsSql =
+            "SELECT U.CODUNIOP, U.DESCRIPCION FROM " + modConstantes.gsDbAB +
+            "M_UNIDAD_OPERATIVA U WHERE U.IDESTADO = 1 " +
+            "AND NOT EXISTS (SELECT 1 FROM " + modConstantes.gsDbAB +
+            "M_USER_UNIDAD UU WHERE UU.IDUSUARIO = " + idUsuario +
+            " AND UU.CODUNIOP = U.CODUNIOP AND ISNULL(UU.IDESTADO,1) <> 3) ";
+
+        if (!string.IsNullOrWhiteSpace(descripcion))
+            lsSql += "AND U.DESCRIPCION LIKE '%" + descripcion.Replace("'", "''") + "%' ";
+
+        lsSql += "ORDER BY U.DESCRIPCION";
+
+        con = bd.fnGetConn();
+        try
+        {
+            return bd.Fill(con, lsSql);
+        }
+        finally
+        {
+            if (con != null)
+                con.Close();
+        }
+    }
+    public DataSet mfBuscarCentrosAsoc(string idUsuario, string descripcion)
+    {
+        string lsSql =
+            "SELECT UU.IDUSERUNID, UU.CODUNIOP, U.DESCRIPCION AS CENTRO " +
+            "FROM " + modConstantes.gsDbAB + "M_USER_UNIDAD UU " +
+            "INNER JOIN " + modConstantes.gsDbAB + "M_UNIDAD_OPERATIVA U " +
+            "ON U.CODUNIOP = UU.CODUNIOP " +
+            "WHERE UU.IDUSUARIO = " + idUsuario +
+            " AND ISNULL(UU.IDESTADO,1) <> 3 ";
+
+        if (!string.IsNullOrWhiteSpace(descripcion))
+            lsSql += "AND U.DESCRIPCION LIKE '%" + descripcion.Replace("'", "''") + "%' ";
+
+        lsSql += "ORDER BY U.DESCRIPCION";
+        con = bd.fnGetConn();
+        try
+        {
+            return bd.Fill(con, lsSql);
+        }
+        finally
+        {
+            if (con != null)
+                con.Close();
+        }
+    }
+    public string mfAsociarCentroUser(string idUsuario, string codUniOp)
+    {
+        string lsSql =
+            "IF EXISTS (SELECT 1 FROM " + modConstantes.gsDbAB +
+            "M_UNIDAD_OPERATIVA WHERE CODUNIOP = " + codUniOp + " AND IDESTADO = 1) " +
+            "AND NOT EXISTS (SELECT 1 FROM " + modConstantes.gsDbAB +
+            "M_USER_UNIDAD WHERE IDUSUARIO = " + idUsuario +
+            " AND CODUNIOP = " + codUniOp + " AND ISNULL(IDESTADO,1) <> 3) " +
+            "INSERT INTO " + modConstantes.gsDbAB +
+            "M_USER_UNIDAD (IDUSUARIO, CODUNIOP, ID_INST, IDESTADO, F_H_CREACION, VALIDA) " +
+            "SELECT " + idUsuario + ", CODUNIOP, ID_INST, 1, GETDATE(), 0 " +
+            "FROM " + modConstantes.gsDbAB +
+            "M_UNIDAD_OPERATIVA WHERE CODUNIOP = " + codUniOp + " AND IDESTADO = 1;";
+        con = bd.fnGetConn();
+        try
+        {
+            return bd.EjecutarComando(con, lsSql);
+        }
+        finally
+        {
+            if (con != null)
+                con.Close();
+        }
+    }
+    public string mfQuitarCentroUsuario(string idUsuario, string idUserUnid)
+    {
+        string lsSql =
+            "UPDATE " + modConstantes.gsDbAB +
+            "M_USER_UNIDAD SET IDESTADO = 3 " +
+            "WHERE IDUSERUNID = " + idUserUnid +
+            " AND IDUSUARIO = " + idUsuario +
+            " AND ISNULL(IDESTADO,1) <> 3";
+        con = bd.fnGetConn();
+        try
+        {
+            return bd.EjecutarComando(con, lsSql);
+        }
+        finally
+        {
+            if (con != null)
+                con.Close();
         }
     }
 }

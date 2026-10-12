@@ -9,7 +9,6 @@
 <head id="Head1" runat="server">
     <meta http-equiv="X-UA-Compatible" content="IE=11; IE=9; IE=8; IE=7; IE=EDGE" />
     <title>RRHH_ListaPersonas</title>
-    <script language="text/javascript" src="~/js/common.js" type="text/javascript"></script>
     <script type="text/javascript">
         function mostrarSpinner() {
             document.getElementById('spinnerCarga').style.display = 'flex';

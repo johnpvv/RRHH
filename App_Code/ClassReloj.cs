@@ -43,6 +43,8 @@ public class ClassReloj
     public string ls_hora { get; set; }
     public string ls_obs { get; set; }
     public string ls_idestado { get; set; }
+    public string ls_estado { get; set; }
+    public string ls_puerto { get; set; }
 
     #region marcas y listar
     public DataSet mfBuscarMarcaciones()//metodo inicial, no considerar
@@ -335,7 +337,6 @@ public class ClassReloj
         string lsSql;
         string lsWhe = "";
         DataSet ds;
-
         if (ls_descrip != "")
         {
             lsWhe += " AND RE.DESCRIPCION LIKE '%" + ls_descrip + "%'";
@@ -375,6 +376,16 @@ public class ClassReloj
         ds = bd.Fill(con, lsSql);
         con.Close();
 
+        return ds;
+    }
+    public DataSet mfBuscarRelojPorId()
+    {
+        string lsSql = "SELECT IDRELOJ, CODUNIOP, DESCRIPCION, IP, PUERTO, SERIE, IDESTADO " +
+                       "FROM " + modConstantes.gsDbRH + "M_RELOJES WHERE IDRELOJ = " + ls_idreloj;
+        DataSet ds;
+        con = bd.fnGetConn();
+        ds = bd.Fill(con, lsSql);
+        con.Close();
         return ds;
     }
     //public DataSet mfBuscarRelojesCentro()
@@ -477,6 +488,55 @@ public class ClassReloj
         {
             if (con != null) con.Close();
             return ex.Message;
+        }
+    }
+    public string mfInsertarReloj(out string idReloj)
+    {
+        idReloj = "0";
+        string lsCentro = string.IsNullOrWhiteSpace(ls_unidad) ? "NULL" : ls_unidad;
+        string lsSql = "INSERT INTO " + modConstantes.gsDbRH +
+                       "M_RELOJES (CODUNIOP, DESCRIPCION, IP, PUERTO, SERIE, IDESTADO, F_H_CREACION) VALUES (" +
+                       lsCentro + ", '" + ls_descrip.Replace("'", "''") + "', '" +
+                       ls_ip.Replace("'", "''") + "', " + ls_puerto + ", " + ls_serie + ", " +
+                       ls_estado + ", GETDATE()); SELECT CAST(SCOPE_IDENTITY() AS INT) AS IDRELOJ;";
+        try
+        {
+            con = bd.fnGetConn();
+            DataSet ds = bd.Fill(con, lsSql);
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                idReloj = ds.Tables[0].Rows[0]["IDRELOJ"].ToString();
+                return "";
+            }
+            return "No se pudo obtener el código del reloj creado.";
+        }
+        catch (Exception ex)
+        {
+            return ex.Message;
+        }
+        finally
+        {
+            if (con != null) con.Close();
+        }
+    }
+    public string mfModificarReloj()
+    {
+        string lsCentro = string.IsNullOrWhiteSpace(ls_unidad) ? "NULL" : ls_unidad;
+        string lsSql = "UPDATE " + modConstantes.gsDbRH + "M_RELOJES SET CODUNIOP = " + lsCentro +
+                       ", DESCRIPCION = '" + ls_descrip.Replace("'", "''") +
+                       "', IP = '" + ls_ip.Replace("'", "''") +
+                       "', PUERTO = " + ls_puerto +
+                       ", SERIE = " + ls_serie +
+                       ", IDESTADO = " + ls_estado +
+                       " WHERE IDRELOJ = " + ls_idreloj;
+        con = bd.fnGetConn();
+        try
+        {
+            return bd.EjecutarComando(con, lsSql);
+        }
+        finally
+        {
+            if (con != null) con.Close();
         }
     }
     #endregion

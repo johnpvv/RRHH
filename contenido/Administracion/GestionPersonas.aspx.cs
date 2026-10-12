@@ -56,6 +56,7 @@ public partial class contenido_Administracion_GestionPersonas : System.Web.UI.Pa
                     this.btn_habilitar.Enabled = false;
                     this.btn_ReinicioClv.Enabled = false;
                     this.TxtRut.Focus();
+                    this.TabPanel2.Enabled = false;
                 }
                 else
                 {
@@ -96,6 +97,7 @@ public partial class contenido_Administracion_GestionPersonas : System.Web.UI.Pa
                             this.ddlComuna.SelectedValue = aoDs.Tables[0].Rows[0]["IDCOMUNA"].ToString();
                             this.observacion.Text = aoDs.Tables[0].Rows[0]["OBSERVACION"].ToString();
                             this.hdIdEstado.Value = aoDs.Tables[0].Rows[0]["IDESTADO"].ToString();
+                            hdIdUsuario.Value = aoDs.Tables[0].Rows[0]["IDUSUARIO"].ToString();
                             if (this.hdIdEstado.Value == "1")
                             {
                                 this.lbEstado.Text = "VIGENTE";
@@ -111,6 +113,7 @@ public partial class contenido_Administracion_GestionPersonas : System.Web.UI.Pa
                                 this.lbEstado.Text = "NO VIGENTE";
                             }
                             this.LbTitulo.Text = aoDs.Tables[0].Rows[0]["RUT"].ToString() + "-" + aoDs.Tables[0].Rows[0]["DV"].ToString();
+                            CargarCentrosUsuario();
                         }
                     }
 
@@ -122,7 +125,7 @@ public partial class contenido_Administracion_GestionPersonas : System.Web.UI.Pa
             }
         }
     }
-
+    #region General
     protected void ddlRegion_SelectedIndexChanged(object sender, EventArgs e)
     {
         DataSet dat = new DataSet();
@@ -138,7 +141,6 @@ public partial class contenido_Administracion_GestionPersonas : System.Web.UI.Pa
         item.Value = "0";
         this.ddlComuna.Items.Insert(0, item);
     }
-
 
     private void LlenarComuna()
     {
@@ -171,7 +173,6 @@ public partial class contenido_Administracion_GestionPersonas : System.Web.UI.Pa
         item.Value = "0";
         this.ddlRegion.Items.Insert(0, item);
     }
-
     private void LlenarEstCivil()
     {
         DataSet dat = new DataSet();
@@ -218,29 +219,13 @@ public partial class contenido_Administracion_GestionPersonas : System.Web.UI.Pa
         item.Value = "0";
         this.ddlCentro.Items.Insert(0, item);
     }
-
-
-    protected void TxtRut_TextChanged(object sender, EventArgs e)
-    {
-
-        string ls_ret;
-        per.ls_rut = TxtRut.Text;
-        ls_ret = per.mfExistePersona();
-
-        if (ls_ret != null && ls_ret != "")
-        {
-            mens.mensaje(Page, "RUT ya existe, por favor verificar");
-        }
-
-    }
+    #endregion
 
     #region Persona
-
     protected void btn_Agregar_Click(object sender, EventArgs e)
     {
         mfAgregar();
     }
-
     private void mfAgregar()
     {
         //Validaciones
@@ -302,11 +287,24 @@ public partial class contenido_Administracion_GestionPersonas : System.Web.UI.Pa
             {
                 this.hdIdentificador.Value = per.ls_rut;
                 LbTitulo.Text = per.ls_rut + "-" + per.ls_dv;
+                this.hdIdUsuario.Value = per.mfDevuelveID();
+                CargarCentrosUsuario();
             }
+            this.TabPanel2.Enabled = true;
             mens.mensaje(Page, "Registro ingresado con Exito.. ");
         }
     }
+    protected void TxtRut_TextChanged(object sender, EventArgs e)
+    {
+        string ls_ret;
+        per.ls_rut = TxtRut.Text;
+        ls_ret = per.mfExistePersona();
 
+        if (ls_ret != null && ls_ret != "")
+        {
+            mens.mensaje(Page, "RUT ya existe, por favor verificar");
+        }
+    }
     public bool ValidarCampos()
     {
         if (string.IsNullOrWhiteSpace(this.TxtRut.Text))
@@ -452,6 +450,96 @@ public partial class contenido_Administracion_GestionPersonas : System.Web.UI.Pa
         }
     }
     #endregion
+
+    #region asignar unidades a user
+    private void CargarCentrosUsuario()
+    {
+        int idUsuario;
+        if (!int.TryParse(hdIdUsuario.Value, out idUsuario) || idUsuario <= 0)
+            return;
+
+        string descripcion = txtBuscarCentro.Text.Trim();
+
+        dgCentrosDisponibles.DataSource = cu.mfBuscarCentrosDisp(idUsuario.ToString(), descripcion);
+        dgCentrosDisponibles.DataBind();
+
+        dgCentrosAsociados.DataSource = cu.mfBuscarCentrosAsoc(idUsuario.ToString(), descripcion);
+        dgCentrosAsociados.DataBind();
+    }
+
+    protected void btnBuscarCentro_Click(object sender, EventArgs e)
+    {
+        int idUsuario;
+        if (!int.TryParse(hdIdUsuario.Value, out idUsuario) || idUsuario <= 0)
+            return;
+
+        string descripcion = txtBuscarCentro.Text.Trim();
+
+        if (rblTipoCentro.SelectedValue == "L")
+        {
+            dgCentrosDisponibles.PageIndex = 0;
+            dgCentrosDisponibles.DataSource = cu.mfBuscarCentrosDisp(idUsuario.ToString(), descripcion);
+            dgCentrosDisponibles.DataBind();
+        }
+        else
+        {
+            dgCentrosAsociados.PageIndex = 0;
+            dgCentrosAsociados.DataSource = cu.mfBuscarCentrosAsoc(idUsuario.ToString(), descripcion);
+            dgCentrosAsociados.DataBind();
+        }
+    }
+
+    protected void AddCentro(object sender, ImageClickEventArgs e)
+    {
+        int idUsuario, codUniOp;
+        ImageButton btn = (ImageButton)sender;
+
+        if (int.TryParse(hdIdUsuario.Value, out idUsuario) && int.TryParse(btn.CommandArgument, out codUniOp))
+        {
+            string resultado = cu.mfAsociarCentroUser(idUsuario.ToString(), codUniOp.ToString());
+
+            if (!string.IsNullOrEmpty(resultado))
+                mens.mensaje(Page, "No fue posible asignar el centro.");
+        }
+
+        dgCentrosDisponibles.PageIndex = 0;
+        dgCentrosAsociados.PageIndex = 0;
+        CargarCentrosUsuario();
+    }
+
+    protected void ElimCentro(object sender, ImageClickEventArgs e)
+    {
+        int idUsuario, idUserUnid;
+        ImageButton btn = (ImageButton)sender;
+
+        if (int.TryParse(hdIdUsuario.Value, out idUsuario) &&
+            int.TryParse(btn.CommandArgument, out idUserUnid))
+        {
+            string resultado = cu.mfQuitarCentroUsuario(idUsuario.ToString(), idUserUnid.ToString());
+
+            if (!string.IsNullOrEmpty(resultado))
+                mens.mensaje(Page, "No fue posible quitar el centro.");
+        }
+
+        dgCentrosDisponibles.PageIndex = 0;
+        dgCentrosAsociados.PageIndex = 0;
+        CargarCentrosUsuario();
+    }
+
+    protected void dgCentrosDisponibles_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    {
+        dgCentrosDisponibles.PageIndex = e.NewPageIndex;
+        CargarCentrosUsuario();
+    }
+
+    protected void dgCentrosAsociados_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    {
+        dgCentrosAsociados.PageIndex = e.NewPageIndex;
+        CargarCentrosUsuario();
+    }
+
+    #endregion
+
     #region Validador de rut
     public static bool ValidaRut(string rut, string dv)
     {

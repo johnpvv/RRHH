@@ -6,13 +6,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
     <title>Gestion Personas</title>
-    <script language="text/javascript" src="../../js/common.js" type="text/javascript"></script>
     <link href="~/css/EstiloRRHH.css" rel="stylesheet" type="text/css" />
+    <script language="text/javascript" src="../../js/common.js" type="text/javascript"></script>
     <script type="text/javascript">
         function ExisteRut() {
             __doPostBack('ExisteRutPostBack', '')
         }
-        function mostrarSpinner() {
+        function mostrarSpinnerForm() {
             var form = document.getElementById('form1');
 
             if (!form.checkValidity())
@@ -20,6 +20,12 @@
 
             document.getElementById('spinnerCarga').style.display = 'flex';
             return true;
+        }
+        function mostrarSpinner() {
+            var spinner = document.getElementById('spinnerCarga');
+            if (spinner) {
+                spinner.style.display = 'flex';
+            }
         }
     </script>
 </head>
@@ -44,7 +50,7 @@
                                     <asp:TextBox ID="TxtRut" runat="server"
                                         CssClass="form-control"
                                         MaxLength="9"
-                                        onblur="IsInteger(this);ExisteRut();"
+                                        onblur="IsInteger(this);ExisteRut();mostrarSpinner();"
                                         Required="true" BackColor="LightSkyBlue"></asp:TextBox>
                                     <span>-</span>
                                     <asp:TextBox ID="TxtDv" runat="server"
@@ -53,16 +59,16 @@
                                         Required="true" BackColor="LightSkyBlue"
                                         Style="max-width: 50px;"></asp:TextBox>
                                 </div>
-                        </div>
-                        <div class="campo">
-                            <label>Estado:</label>
-                            <asp:TextBox ID="lbEstado" runat="server"
-                                CssClass="form-control"
-                                Font-Bold="True"
-                                Text="Nuevo"
-                                Enabled="false" BackColor="#ffffcc">
-                            </asp:TextBox>
-                        </div>
+                            </div>
+                            <div class="campo">
+                                <label>Estado:</label>
+                                <asp:TextBox ID="lbEstado" runat="server"
+                                    CssClass="form-control"
+                                    Font-Bold="True"
+                                    Text="Nuevo"
+                                    Enabled="false" BackColor="#ffffcc">
+                                </asp:TextBox>
+                            </div>
                         </div>
                         <div class="filtros-form">
                             <div class="campo">
@@ -141,7 +147,8 @@
                                 <asp:DropDownList ID="ddlRegion" runat="server"
                                     CssClass="form-control"
                                     OnSelectedIndexChanged="ddlRegion_SelectedIndexChanged"
-                                    AutoPostBack="True">
+                                    AutoPostBack="True"
+                                    onchange="mostrarSpinner();">
                                 </asp:DropDownList>
                                 <ajaxToolkit:ListSearchExtender ID="ListSearchExtender1"
                                     runat="server"
@@ -167,7 +174,7 @@
                         </div>
                         <div class="filtros-form">
                             <div class="campo" style="grid-column: span 2;">
-                                <label>Centro:</label>
+                                <label>Centro Base:</label>
                                 <asp:DropDownList ID="ddlCentro" runat="server"
                                     CssClass="form-control" Required="true">
                                 </asp:DropDownList>
@@ -229,19 +236,19 @@
                                 Text="Grabar"
                                 CssClass="BotonPortalAzul"
                                 OnClick="btn_Agregar_Click"
-                                OnClientClick="if (!confirm('¿Desea realizar la actualización de los datos?')) return false; mostrarSpinner();" />
+                                OnClientClick="if (!confirm('¿Desea realizar la actualización de los datos?')) return false; mostrarSpinnerForm();" />
                             <asp:Button ID="btn_habilitar" runat="server"
                                 Text="Habilitar"
                                 CssClass="BotonPortalAmarillo"
                                 OnClick="btn_habilitar_Click"
-                                OnClientClick="if (!confirm('¿Desea realizar la actualización de los datos?')) return false; mostrarSpinner();" />
+                                OnClientClick="if (!confirm('¿Desea realizar la actualización de los datos?')) return false; mostrarSpinnerForm();" />
                             <asp:Button ID="btn_ReinicioClv"
                                 runat="server"
                                 Text="Reiniciar Clave"
                                 CssClass="BotonPortalVerde"
                                 OnClick="btn_ReinicioClv_Click"
                                 formnovalidate="formnovalidate"
-                                OnClientClick="if (!confirm('¿Desea reiniciar la Clave del usuario?')) return false; mostrarSpinner();" />
+                                OnClientClick="if (!confirm('¿Desea reiniciar la Clave del usuario?')) return false; mostrarSpinnerForm();" />
                             <asp:Button ID="btnVolver"
                                 runat="server"
                                 Text="Volver"
@@ -250,7 +257,105 @@
                                 formnovalidate="formnovalidate" />
                         </div>
                         <asp:HiddenField ID="hdIdentificador" runat="server" />
+                        <asp:HiddenField ID="hdIdUsuario" runat="server" />
                         <asp:HiddenField ID="hdIdEstado" runat="server" />
+                    </div>
+                </ContentTemplate>
+            </ajaxToolkit:TabPanel>
+            <ajaxToolkit:TabPanel ID="TabPanel2" runat="server">
+                <HeaderTemplate>Centros Asociados</HeaderTemplate>
+                <ContentTemplate>
+                    <div class="bloque">
+                        <div class="titulo-seccion">Asignación de Centros</div>
+                        <div class="filtros-grid">
+                            <div class="campo">
+                                <label>Descripción del centro</label>
+                                <asp:TextBox ID="txtBuscarCentro" runat="server" CssClass="form-control"
+                                    MaxLength="100" Width="280px" />
+                            </div>
+                            <div class="campo">
+                                <label>Tipo de búsqueda</label>
+                                <asp:RadioButtonList ID="rblTipoCentro" runat="server"
+                                    CssClass="TextoCheck" RepeatDirection="Horizontal">
+                                    <asp:ListItem Value="L" Selected="True">Disponibles</asp:ListItem>
+                                    <asp:ListItem Value="M">Asociados</asp:ListItem>
+                                </asp:RadioButtonList>
+                            </div>
+                            <div class="botones-form">
+                                <asp:Button ID="btnBuscarCentro" runat="server"
+                                    Text="Buscar"
+                                    CssClass="BotonPortalAzul"
+                                    OnClick="btnBuscarCentro_Click"
+                                    OnClientClick="mostrarSpinner();"
+                                    formnovalidate="formnovalidate" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="asignacion-grid">
+                        <div class="asignacion-columna">
+                            <div class="asignacion-titulo">Centros disponibles</div>
+                            <asp:GridView ID="dgCentrosDisponibles" runat="server"
+                                AutoGenerateColumns="False" GridLines="None" CssClass="grid-reloj"
+                                AllowPaging="True" PageSize="30" DataKeyNames="CODUNIOP"
+                                OnPageIndexChanging="dgCentrosDisponibles_PageIndexChanging"
+                                EmptyDataText="No existen centros disponibles."
+                                EmptyDataRowStyle-CssClass="textoEmpty">
+                                <Columns>
+                                    <asp:BoundField DataField="CODUNIOP" HeaderText="Código">
+                                        <ItemStyle CssClass="TextoCenter" />
+                                    </asp:BoundField>
+                                    <asp:BoundField DataField="DESCRIPCION" HeaderText="Centro">
+                                        <ItemStyle CssClass="TextoLeft" />
+                                    </asp:BoundField>
+                                    <asp:TemplateField HeaderText="Add">
+                                        <ItemTemplate>
+                                            <asp:ImageButton ID="btnAddCentro" runat="server"
+                                                ImageUrl="~/imagenes/check.png"
+                                                OnClick="AddCentro"
+                                                CommandArgument='<%# Eval("CODUNIOP") %>'
+                                                formnovalidate="formnovalidate"
+                                                ToolTip="Agregar centro"
+                                                OnClientClick="mostrarSpinner();" />
+                                        </ItemTemplate>
+                                        <HeaderStyle Width="50px" />
+                                        <ItemStyle Width="50px" HorizontalAlign="Center" VerticalAlign="Middle" />
+                                    </asp:TemplateField>
+                                </Columns>
+                                <PagerStyle CssClass="GridPager" HorizontalAlign="Center" />
+                            </asp:GridView>
+                        </div>
+                        <div class="asignacion-separador"><span>→</span></div>
+                        <div class="asignacion-columna">
+                            <div class="asignacion-titulo">Centros asociados</div>
+                            <asp:GridView ID="dgCentrosAsociados" runat="server"
+                                AutoGenerateColumns="False" GridLines="None" CssClass="grid-reloj"
+                                AllowPaging="True" PageSize="30" DataKeyNames="IDUSERUNID"
+                                OnPageIndexChanging="dgCentrosAsociados_PageIndexChanging"
+                                EmptyDataText="No existen centros asociados."
+                                EmptyDataRowStyle-CssClass="textoEmpty">
+                                <Columns>
+                                    <asp:BoundField DataField="CODUNIOP" HeaderText="Código">
+                                        <ItemStyle CssClass="TextoCenter" />
+                                    </asp:BoundField>
+                                    <asp:BoundField DataField="CENTRO" HeaderText="Centro">
+                                        <ItemStyle CssClass="TextoLeft" />
+                                    </asp:BoundField>
+                                    <asp:TemplateField HeaderText="Elim">
+                                        <ItemTemplate>
+                                            <asp:ImageButton ID="btnElimCentro" runat="server"
+                                                ImageUrl="~/imagenes/close.png" OnClick="ElimCentro"
+                                                CommandArgument='<%# Eval("IDUSERUNID") %>'
+                                                formnovalidate="formnovalidate"
+                                                ToolTip="Quitar centro"
+                                                OnClientClick="return confirm('¿Desea quitar este centro al usuario?'); mostrarSpinner();" />
+                                        </ItemTemplate>
+                                        <HeaderStyle Width="50px" />
+                                        <ItemStyle Width="50px" HorizontalAlign="Center" VerticalAlign="Middle" />
+                                    </asp:TemplateField>
+                                </Columns>
+                                <PagerStyle CssClass="GridPager" HorizontalAlign="Center" />
+                            </asp:GridView>
+                        </div>
                     </div>
                 </ContentTemplate>
             </ajaxToolkit:TabPanel>
