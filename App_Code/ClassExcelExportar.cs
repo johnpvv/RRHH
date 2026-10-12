@@ -8,15 +8,17 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Web;
+using System.Linq;
 
 /// <summary>
 /// Descripción: Permite generar un archivo excel nativo con openxml para exportar datos del sistema, pasando datatable o dataSet
 /// </summary>
 public class ClassExcelExportar
 {
+    public List<string> ColumnasExcluir { get; private set; }
     public ClassExcelExportar()
     {
-        //constructor
+        ColumnasExcluir = new List<string>();
     }
 
     public void Exportar(DataSet ds, string nombreArchivo)
@@ -29,7 +31,18 @@ public class ClassExcelExportar
 
     public void Exportar(DataTable dt, string nombreArchivo)
     {
-        if (dt == null || dt.Columns.Count == 0) return;
+        if (dt == null || dt.Columns.Count == 0)
+            return;
+
+        dt = dt.Copy();
+
+        foreach (string columna in ColumnasExcluir)
+            if (dt.Columns.Contains(columna))
+                dt.Columns.Remove(columna);
+
+        if (dt.Columns.Count == 0)
+            return;
+
         using (MemoryStream ms = new MemoryStream())
         {
             using (SpreadsheetDocument document = SpreadsheetDocument.Create(ms, SpreadsheetDocumentType.Workbook))

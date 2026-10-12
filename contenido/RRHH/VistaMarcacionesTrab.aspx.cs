@@ -133,6 +133,7 @@ public partial class contenido_RRHH_VistaMarcacionesTrab : System.Web.UI.Page
     {
         CargarMarcaciones();
     }
+    #region Exportar
     protected void btnExportar_Click(object sender, EventArgs e)
     {
         ClassExcelExportar excel = new ClassExcelExportar();
@@ -155,6 +156,68 @@ public partial class contenido_RRHH_VistaMarcacionesTrab : System.Web.UI.Page
             mens.mensaje(Page, "No existen datos para exportar.");
             return;
         }
-        excel.Exportar(ds, "Listado_Marcas_" + ddlMes.SelectedValue + "_" + Session["rut"].ToString());
+        excel.ColumnasExcluir.Add("IDMARCARELOJ");
+        excel.ColumnasExcluir.Add("IDRELOJ");
+        excel.ColumnasExcluir.Add("VERIFYMODE");
+        excel.ColumnasExcluir.Add("INOUTMODE");
+        excel.ColumnasExcluir.Add("WORKCODE");
+        excel.ColumnasExcluir.Add("IDESTADO");
+        excel.ColumnasExcluir.Add("NRO_MARCA");
+        excel.ColumnasExcluir.Add("ENROLLNUMBER");
+        excel.ColumnasExcluir.Add("VERIFYMODE");
+        excel.ColumnasExcluir.Add("F_H_CREACION");
+        excel.ColumnasExcluir.Add("TIPO");
+        excel.ColumnasExcluir.Add("IDUSR");
+        excel.Exportar(ds, "Listado_Marcaciones_" + ddlMes.SelectedValue + "_" + Session["rut"].ToString());
     }
+    protected void btnExportarPDF_Click(object sender, EventArgs e)
+    {
+        DataSet ds;
+        ClassPDF pdf = new ClassPDF();
+        usr.ls_rut = Session["rut"].ToString();
+        rlj.ls_iduser = usr.mfDevuelveID();
+        rlj.ls_mes = ddlMes.SelectedValue;
+        rlj.ls_anio = ddlAnio.SelectedValue;
+        if (ddlVistaMarcas.SelectedValue == "1")
+        {
+            ds = rlj.mfBuscarMarcasReloj();
+        }
+        else
+        {
+            ds = rlj.mfBuscarMarcasRelojAgrupadas();
+        }
+
+        //setear variables para informe
+        pdf.Titulo = "Listado de Marcaciones por Trabajador";
+        pdf.Subtitulo = Session["nombre"].ToString() + "\n" + Session["rut"].ToString() + "\nPeriodo: " + ddlMes.SelectedItem + " " + ddlAnio.SelectedValue;
+        pdf.OrientacionHorizontal = false;
+        pdf.MostrarFecha = true;
+        pdf.MostrarNumeracion = true;
+
+        //columnas a excluir
+        pdf.ColumnasExcluir.Add("IDMARCARELOJ");
+        pdf.ColumnasExcluir.Add("IDRELOJ");
+        pdf.ColumnasExcluir.Add("ENROLLNUMBER");
+        pdf.ColumnasExcluir.Add("VERIFYMODE");
+        pdf.ColumnasExcluir.Add("INOUTMODE");
+        pdf.ColumnasExcluir.Add("WORKCODE");
+        pdf.ColumnasExcluir.Add("F_H_CREACION");
+        pdf.ColumnasExcluir.Add("TIPO");
+        pdf.ColumnasExcluir.Add("IDUSR");
+        pdf.ColumnasExcluir.Add("IDESTADO");
+        pdf.ColumnasExcluir.Add("NRO_MARCA");
+
+        //configurar columnas formato fecha hora
+        pdf.ColumnasFechaHora.Add("F_H_MARCA");
+        pdf.ColumnasFechaHora.Add("ENTRADA");
+        pdf.ColumnasFechaHora.Add("SALIDA");
+
+        //configurar ancho columnas
+        pdf.AnchosColumnas.Add("FECHA", 13f);
+        pdf.AnchosColumnas.Add("DIA", 12f);
+
+        //generar nombre archivo y descargar
+        pdf.ExportarDataTable(Response, ds.Tables[0], "Listado_Marcaciones_" + ddlMes.SelectedValue + "_" + Session["rut"].ToString());
+    }
+    #endregion
 }

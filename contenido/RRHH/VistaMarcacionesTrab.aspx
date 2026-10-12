@@ -51,84 +51,82 @@
                 </td>
             </tr>
         </table>
-        <div id="divImpresion">
-            <asp:GridView ID="dgData"
-                runat="server"
-                AutoGenerateColumns="False"
-                Width="100%"
-                CssClass="GridGral"
-                GridLines="None"
-                CellPadding="6"
-                EmptyDataText="Sin Resultados"
-                EmptyDataRowStyle-CssClass="textoEmpty"
-                OnRowDataBound="dgData_RowDataBound">
-                <Columns>
-                    <asp:BoundField DataField="DIA"
-                        HeaderText="Día" ItemStyle-CssClass="textoGrid" />
-                    <asp:BoundField DataField="F_H_MARCA"
-                        HeaderText="Fecha"
-                        DataFormatString="{0:dd/MM/yyyy}" ItemStyle-CssClass="textoGridBold" />
-                    <asp:TemplateField HeaderText="Hora Marca" ItemStyle-CssClass="textoGridBoldLeft" HeaderStyle-Width="130px">
-                        <ItemTemplate>
-                            <span class='estado-marca-trabajador <%# Eval("ESTADO_MARCA") %>'
-                                title='<%# Eval("ESTADO_MARCA") %>'>&nbsp;</span>
-                            <%# Eval("F_H_MARCA","{0:HH:mm:ss}") %>
-                            <%# Eval("ESTADO_MARCA").ToString()=="MARCA EDITADA" ? "*":"" %>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:BoundField DataField="TIPO_MARCA"
-                        HeaderText="Marcación" ItemStyle-CssClass="textoGrid" />
-                    <asp:BoundField DataField="CENTRO"
-                        HeaderText="CENTRO" ItemStyle-CssClass="textoGrid" />
-                </Columns>
-                <HeaderStyle CssClass="GridGralHeader" />
-                <RowStyle CssClass="GridGralRow" />
-                <AlternatingRowStyle CssClass="GridGralAltRow" />
-            </asp:GridView>
-            <asp:GridView ID="dgDataAgrupada"
-                runat="server"
-                AutoGenerateColumns="False"
-                Width="100%"
-                CssClass="GridGral"
-                GridLines="None"
-                CellPadding="6"
-                EmptyDataText="Sin Resultados"
-                EmptyDataRowStyle-CssClass="textoEmpty"
-                OnRowDataBound="dgDataAgrupada_RowDataBound">
-                <Columns>
-                    <asp:BoundField DataField="DIA"
-                        HeaderText="Día" ItemStyle-CssClass="textoGrid" />
-                    <asp:BoundField DataField="FECHA"
-                        HeaderText="Fecha Marcación"
-                        DataFormatString="{0:dd/MM/yyyy}" ItemStyle-CssClass="textoGridBold" />
-                    <asp:BoundField DataField="NRO_MARCA"
-                        HeaderText="N° Marca" ItemStyle-CssClass="textoGrid" />
-                    <asp:TemplateField HeaderText="Hora Entrada" ItemStyle-CssClass="textoGridBoldLeft" HeaderStyle-Width="130px">
-                        <ItemTemplate>
-                            <span class='estado-marca-trabajador <%# Eval("ESTADO_ENTRADA") %>'
-                                title='<%# Eval("ESTADO_ENTRADA") %>'>&nbsp;
-                            </span>
-                            <%# Eval("ENTRADA","{0:HH:mm:ss}") %>
-                            <%# Eval("ESTADO_ENTRADA").ToString()=="MARCA EDITADA" ? "*" : "" %>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:BoundField DataField="CENTRO_ENT" HeaderText="Centro Entrada" ItemStyle-CssClass="textoGridLeft" />
-                    <asp:TemplateField HeaderText="Hora Salida" ItemStyle-CssClass="textoGridBoldLeft" HeaderStyle-Width="130px">
-                        <ItemTemplate>
-                            <span class='estado-marca-trabajador <%# Eval("ESTADO_SALIDA") %>'
-                                title='<%# Eval("ESTADO_SALIDA") %>'>&nbsp;                                
-                            </span>
-                            <%# Eval("SALIDA","{0:HH:mm:ss}") %>
-                            <%# Eval("ESTADO_SALIDA").ToString()=="MARCA EDITADA" ? "*":"" %>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:BoundField DataField="CENTRO_SAL" HeaderText="Centro Salida" ItemStyle-CssClass="textoGridLeft" />
-                </Columns>
-                <HeaderStyle CssClass="GridGralHeader" />
-                <RowStyle CssClass="GridGralRow" />
-                <AlternatingRowStyle CssClass="GridGralAltRow" />
-            </asp:GridView>
-        </div>
+        <asp:GridView ID="dgData"
+            runat="server"
+            AutoGenerateColumns="False"
+            Width="100%"
+            CssClass="GridGral"
+            GridLines="None"
+            CellPadding="6"
+            EmptyDataText="Sin Resultados"
+            EmptyDataRowStyle-CssClass="textoEmpty"
+            OnRowDataBound="dgData_RowDataBound">
+            <Columns>
+                <asp:BoundField DataField="DIA"
+                    HeaderText="Día" ItemStyle-CssClass="textoGrid" />
+                <asp:BoundField DataField="F_H_MARCA"
+                    HeaderText="Fecha"
+                    DataFormatString="{0:dd/MM/yyyy}" ItemStyle-CssClass="textoGridBold" />
+                <asp:TemplateField HeaderText="Hora Marca" ItemStyle-CssClass="textoGridBoldLeft" HeaderStyle-Width="130px">
+                    <ItemTemplate>
+                        <span class='estado-marca-trabajador <%# Eval("ESTADO_MARCA") %>'
+                            title='<%# Eval("ESTADO_MARCA") %>'>&nbsp;</span>
+                        <%# Eval("F_H_MARCA","{0:HH:mm:ss}") %>
+                        <%# Eval("ESTADO_MARCA").ToString()=="MARCA EDITADA" ? "*":"" %>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:BoundField DataField="TIPO_MARCA"
+                    HeaderText="Marcación" ItemStyle-CssClass="textoGrid" />
+                <asp:BoundField DataField="CENTRO"
+                    HeaderText="CENTRO" ItemStyle-CssClass="textoGrid" />
+            </Columns>
+            <HeaderStyle CssClass="GridGralHeader" />
+            <RowStyle CssClass="GridGralRow" />
+            <AlternatingRowStyle CssClass="GridGralAltRow" />
+        </asp:GridView>
+        <asp:GridView ID="dgDataAgrupada"
+            runat="server"
+            AutoGenerateColumns="False"
+            Width="100%"
+            CssClass="GridGral"
+            GridLines="None"
+            CellPadding="6"
+            EmptyDataText="Sin Resultados"
+            EmptyDataRowStyle-CssClass="textoEmpty"
+            OnRowDataBound="dgDataAgrupada_RowDataBound">
+            <Columns>
+                <asp:BoundField DataField="DIA"
+                    HeaderText="Día" ItemStyle-CssClass="textoGrid" />
+                <asp:BoundField DataField="FECHA"
+                    HeaderText="Fecha Marcación"
+                    DataFormatString="{0:dd/MM/yyyy}" ItemStyle-CssClass="textoGridBold" />
+                <asp:BoundField DataField="NRO_MARCA"
+                    HeaderText="N° Marca" ItemStyle-CssClass="textoGrid" />
+                <asp:TemplateField HeaderText="Hora Entrada" ItemStyle-CssClass="textoGridBoldLeft" HeaderStyle-Width="130px">
+                    <ItemTemplate>
+                        <span class='estado-marca-trabajador <%# Eval("ESTADO_ENTRADA") %>'
+                            title='<%# Eval("ESTADO_ENTRADA") %>'>&nbsp;
+                        </span>
+                        <%# Eval("ENTRADA","{0:HH:mm:ss}") %>
+                        <%# Eval("ESTADO_ENTRADA").ToString()=="MARCA EDITADA" ? "*" : "" %>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:BoundField DataField="CENTRO_ENT" HeaderText="Centro Entrada" ItemStyle-CssClass="textoGridLeft" />
+                <asp:TemplateField HeaderText="Hora Salida" ItemStyle-CssClass="textoGridBoldLeft" HeaderStyle-Width="130px">
+                    <ItemTemplate>
+                        <span class='estado-marca-trabajador <%# Eval("ESTADO_SALIDA") %>'
+                            title='<%# Eval("ESTADO_SALIDA") %>'>&nbsp;                                
+                        </span>
+                        <%# Eval("SALIDA","{0:HH:mm:ss}") %>
+                        <%# Eval("ESTADO_SALIDA").ToString()=="MARCA EDITADA" ? "*":"" %>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:BoundField DataField="CENTRO_SAL" HeaderText="Centro Salida" ItemStyle-CssClass="textoGridLeft" />
+            </Columns>
+            <HeaderStyle CssClass="GridGralHeader" />
+            <RowStyle CssClass="GridGralRow" />
+            <AlternatingRowStyle CssClass="GridGralAltRow" />
+        </asp:GridView>
         <br />
         <div class="botones-form">
             <asp:Button ID="btnExportar"
@@ -136,11 +134,11 @@
                 Text="Exportar Excel"
                 CssClass="BotonPortalVerde"
                 OnClick="btnExportar_Click" />
-            <asp:Button ID="btnImprimir"
+            <asp:Button ID="btnImprimirPDF"
                 runat="server"
-                Text="Imprimir Marcas"
+                Text="Generar PDF Marcas"
                 CssClass="BotonPortalAmarillo"
-                OnClientClick="imprimirGrid(); return false;" />
+                OnClick="btnExportarPDF_Click" />
             <asp:Button ID="btnVolver"
                 runat="server"
                 Text="Volver"
@@ -156,54 +154,3 @@
     </form>
 </body>
 </html>
-<script type="text/javascript">
-    function imprimirGrid() {
-
-        var contenido = document.getElementById("divImpresion").innerHTML;
-
-        var nombre = '<%= Session["nombre"] %>';
-        var rut = '<%= Session["rut"] %>';
-        var periodo = '<%= (ddlMes.SelectedItem + " " + ddlAnio.SelectedValue) %>';
-
-        var ventana = window.open('', '_blank', 'width=900,height=700');
-
-        ventana.document.write('<html>');
-        ventana.document.write('<head>');
-        ventana.document.write('<title>Marcaciones Trabajador</title>');
-
-        ventana.document.write('<style>');
-        ventana.document.write('@page { size: A4; margin: 15mm; }');
-        ventana.document.write('body { font-family: Arial; font-size: 12px; }');
-        ventana.document.write('.titulo { text-align: center; font-size: 20px; font-weight: bold; margin-bottom: 20px; }');
-        ventana.document.write('.datos { margin-bottom: 15px; line-height: 22px; }');
-        ventana.document.write('table { width: 100%; border-collapse: collapse; }');
-        ventana.document.write('th, td { border: 1px solid #333; padding: 6px; }');
-        ventana.document.write('th { font-weight: bold; text-align: center; }');
-        ventana.document.write('td { text-align: center; }');
-        ventana.document.write('</style>');
-
-        ventana.document.write('</head>');
-        ventana.document.write('<body>');
-
-        ventana.document.write('<div class="titulo">MARCACIONES DEL TRABAJADOR</div>');
-
-        ventana.document.write('<div class="datos">');
-        ventana.document.write('<b>Funcionario:</b> ' + nombre);
-        ventana.document.write('<br>');
-        ventana.document.write('<b>RUT:</b> ' + rut);
-        ventana.document.write('<br>');
-        ventana.document.write('<b>Periodo:</b> ' + periodo);
-        ventana.document.write('</div>');
-
-        ventana.document.write(contenido);
-
-        ventana.document.write('</body>');
-        ventana.document.write('</html>');
-
-        ventana.document.close();
-        ventana.focus();
-
-        ventana.print();
-        ventana.close();
-    }
-</script>
