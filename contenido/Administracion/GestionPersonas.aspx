@@ -108,8 +108,8 @@
                             <div class="campo">
                                 <label>Sexo:</label>
                                 <asp:DropDownList ID="ddlSexo" runat="server"
-                                    CssClass="form-control">
-                                    <asp:ListItem>Seleccione</asp:ListItem>
+                                    CssClass="form-control" Required="true">
+                                    <asp:ListItem Value="">Seleccione</asp:ListItem>
                                     <asp:ListItem Value="M">Masculino</asp:ListItem>
                                     <asp:ListItem Value="F">Femenino</asp:ListItem>
                                     <asp:ListItem Value="O">Otro</asp:ListItem>
@@ -118,13 +118,13 @@
                             <div class="campo">
                                 <label>Estado Civil:</label>
                                 <asp:DropDownList ID="ddlEstadoCivil" runat="server"
-                                    CssClass="form-control">
+                                    CssClass="form-control" Required="true">
                                 </asp:DropDownList>
                             </div>
                             <div class="campo">
                                 <label>Previsión:</label>
                                 <asp:DropDownList ID="ddlPrevision" runat="server"
-                                    CssClass="form-control">
+                                    CssClass="form-control" Required="true">
                                 </asp:DropDownList>
                                 <ajaxToolkit:ListSearchExtender ID="ListSearchExtender2"
                                     runat="server"

@@ -255,7 +255,7 @@
                                     <asp:BoundField DataField="idusuario" HeaderText="Id" ReadOnly="True">
                                         <ItemStyle CssClass="TextoCenter" />
                                     </asp:BoundField>
-                                    <asp:BoundField DataField="descripcion" HeaderText="descripcion">
+                                    <asp:BoundField DataField="rut" HeaderText="RUN">
                                         <ItemStyle CssClass="TextoCenter" />
                                     </asp:BoundField>
                                     <asp:BoundField DataField="descripcion" HeaderText="descripcion">
@@ -301,7 +301,7 @@
                                     <asp:BoundField DataField="idusrol" HeaderText="Id" ReadOnly="True">
                                         <ItemStyle CssClass="TextoCenter" />
                                     </asp:BoundField>
-                                    <asp:BoundField DataField="descripcion" HeaderText="descripcion">
+                                    <asp:BoundField DataField="rut" HeaderText="RUN">
                                         <ItemStyle CssClass="TextoCenter" />
                                     </asp:BoundField>
                                     <asp:BoundField DataField="descripcion" HeaderText="descripcion">

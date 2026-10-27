@@ -440,18 +440,16 @@ public class ClassRoles
         //' Recupera Roles asociados.
 
         lsSql =
-          "select a.idusrol , a.idusuario ,  ltrim(rtrim(b.nombre)) as descripcion " +
+          "select a.idusrol , a.idusuario , b.nombre + ' ' + isnull(b.ap_paterno,'') + ' ' + isnull(b.ap_materno,'') as descripcion, b.rut " +
           "from m_usrol a " +
           "inner join m_usuarios b " +
           "on a.idusuario = b.idusuario and " +
-          "   b.idestado <> 3 " +
+          "b.idestado <> 3 " +
           "where " +
           "a.idestado <> 3 and " +
           "a.idROL = " + asCodApp + " and " +
           "a.id_inst = " + asHosp + " " +
           "order by b.nombre";
-
-
 
         con = bd.fnGetConn();
         aoDsSel = bd.Fill(con, lsSql);
@@ -462,16 +460,12 @@ public class ClassRoles
 
     public DataSet jaxListaUsuariosDisp(string asHosp, string asNombre, string asRut, string asCodApp)
     {
-
         DataSet aoDsSel;
         string lsSql = "";
 
-
-
         //' Recupera Roles asociados.
-
         lsSql =
-          "select a.idusrol , a.idusuario , ltrim(rtrim(b.nombre)) as descripcion " +
+          "select a.idusrol , a.idusuario , b.nombre + ' ' + isnull(b.ap_paterno,'') + ' ' + isnull(b.ap_materno,'') as descripcion " +
           "from m_usrol a " +
           "inner join m_usuarios b " +
           "on a.idusuario = b.idusuario and " +
@@ -481,18 +475,13 @@ public class ClassRoles
           "a.idROL = " + asCodApp + " and " +
           "a.id_inst = " + asHosp + " " +
           "order by b.nombre";
-
         con = bd.fnGetConn();
         aoDsSel = bd.Fill(con, lsSql);
         con.Close();
 
-
-
         //' Recupera roles disponibles.
         DataSet aoDsDisp;
         String lsNoT = "";
-
-
         foreach (DataRow dr in aoDsSel.Tables[0].Rows)
         {
             lsNoT += dr["idusuario"] + ",";
@@ -502,36 +491,30 @@ public class ClassRoles
 
         string ls_where = "";
 
-        // Si se ingresó Fechas las agrega al WHERE.
+        // Si se ingresó nombre las agrega al WHERE.
         if (asNombre != "")
-            ls_where += " and usr.nombre like '%" + asNombre + "%'  ";
-
-
-        // Si se ingresó Fechas las agrega al WHERE.
+            ls_where += " and usr.nombre like '%" + asNombre + "%' or usr.ap_paterno like '%" + asNombre + "%' or  usr.ap_materno like '%" + asNombre + "%'  ";
+        
+        // Si se ingresó rut las agrega al WHERE.
         if (asRut != "")
             ls_where += " and  usr.rut = " + asRut + "  ";
 
-
         lsSql =
                "select " +
-               "usr.idusuario , " +
-               "ltrim(rtrim(usr.nombre)) as descripcion " +
+               "usr.idusuario , usr.rut, " +
+               "usr.nombre + ' ' + isnull(usr.ap_paterno,'') + ' ' + isnull(usr.ap_materno,'') as descripcion " +
                "from m_usuarios usr " +
                "where usr.idestado <> 3 " + lsNoT + " " +
                "and id_inst = " + asHosp + " " +
                ls_where + " " +
                "order by usr.nombre";
 
-
         con = bd.fnGetConn();
         aoDsDisp = bd.Fill(con, lsSql);
         con.Close();
 
-
         return aoDsDisp;
     }
-
-
 
     public string jaxAgregarAplicacion(string asIdentificador, string asAPP, string asPermiso, string asHosp, string asCodUsuario, string asMachine)
     {

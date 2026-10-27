@@ -451,7 +451,7 @@ public class ClassAccesos
 
         // Si se ingresó nombre las agrega al WHERE.
         if (asNombre != "")
-            ls_where += " and b.nombre like '%" + asNombre + "%'  ";
+            ls_where += " and b.nombre like '%" + asNombre + "%' or b.ap_paterno like '%" + asNombre + "%' or  b.ap_materno like '%" + asNombre + "%'  ";
 
 
         // Si se ingresó rut las agrega al WHERE.
@@ -461,7 +461,7 @@ public class ClassAccesos
         //' Recupera Roles asociados.
 
         lsSql =
-          "select a.idusapp , a.idusuario, b.rut , a.permiso , ltrim(rtrim(b.nombre)) as descripcion " +
+          "select a.idusapp , a.idusuario, b.rut , a.permiso , b.nombre + ' ' + isnull(b.ap_paterno,'') + ' ' + isnull(b.ap_materno,'') as descripcion " +
           "from m_usapp a " +
           "inner join m_usuarios b " +
           "on a.idusuario = b.idusuario and " +
@@ -491,7 +491,7 @@ public class ClassAccesos
         //' Recupera Roles asociados.
 
         lsSql =
-          "select a.idusapp , a.idusuario , a.permiso , ltrim(rtrim(b.nombre)) as descripcion " +
+          "select a.idusapp , a.idusuario , a.permiso , b.nombre + ' ' + isnull(b.ap_paterno,'') + ' ' + isnull(b.ap_materno,'') as descripcion " +
           "from m_usapp a " +
           "inner join m_usuarios b " +
           "on a.idusuario = b.idusuario and " +
@@ -524,18 +524,17 @@ public class ClassAccesos
 
         // Si se ingresó Fechas las agrega al WHERE.
         if (asNombre != "")
-            ls_where += " and usr.nombre like '%" + asNombre + "%'  ";
+            ls_where += " and usr.nombre like '%" + asNombre + "%' or usr.ap_paterno like '%" + asNombre + "%' or  usr.ap_materno like '%" + asNombre + "%'  ";
 
 
         // Si se ingresó Fechas las agrega al WHERE.
         if (asRut != "")
             ls_where += " and  usr.rut = " + asRut + "  ";
 
-
         lsSql =
                "select " +
                "usr.idusuario , usr.rut, " +
-               "ltrim(rtrim(usr.nombre)) as descripcion " +
+               "usr.nombre + ' ' + isnull(usr.ap_paterno,'') + ' ' + isnull(usr.ap_materno,'') as descripcion " +
                "from m_usuarios usr " +
                "where usr.idestado <> 3 " + lsNoT + " " +
                "and id_inst = " + asHosp + " " +

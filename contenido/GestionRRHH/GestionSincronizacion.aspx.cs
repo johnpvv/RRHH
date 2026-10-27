@@ -21,7 +21,8 @@ public partial class contenido_GestionRRHH_GestionSincronizacion : System.Web.UI
             CargarAnios();
             CargarCentrosAdmin();
             InicializarRelojAdmin();
-            CargarSincronizaciones();
+            //CargarSincronizaciones();
+            InicializarRelojDetSinc();
         }
     }
     #region General
@@ -57,44 +58,6 @@ public partial class contenido_GestionRRHH_GestionSincronizacion : System.Web.UI
     #endregion
 
     #region Crear SIncronizacion
-    private void CargarCentrosAdmin()
-    {
-        usr.ls_iduser = Session["user"].ToString();
-        DataSet ds = usr.mfBuscarCentrosAdmin();
-
-        ddlCentroSincroniza.Items.Clear();
-        ddlCentroSincroniza.Items.Add(new ListItem("-- Seleccione centro / unidad --", "0"));
-
-        if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
-            return;
-
-        ddlCentroSincroniza.DataSource = ds;
-        ddlCentroSincroniza.DataTextField = "DESCRIPCION";
-        ddlCentroSincroniza.DataValueField = "CODUNIOP";
-        ddlCentroSincroniza.DataBind();
-
-        ddlCentroSincroniza.Items.Insert(0, new ListItem("-- Seleccione centro / unidad --", "0"));
-    }
-    private void InicializarRelojAdmin()
-    {
-        ddlRelojSincroniza.Items.Clear();
-        ddlRelojSincroniza.Items.Add(new ListItem("-- Seleccione reloj --", "0"));
-    }
-    protected void ddlCentroSincroniza_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        CargarRelojesSincroniza();
-    }
-    private void CargarRelojesSincroniza()
-    {
-        rlj.ls_unidad = ddlCentroSincroniza.SelectedValue;
-
-        ddlRelojSincroniza.DataSource = rlj.mfBuscarRelojesCentro();
-        ddlRelojSincroniza.DataTextField = "DESCRIPCION";
-        ddlRelojSincroniza.DataValueField = "IDRELOJ";
-        ddlRelojSincroniza.DataBind();
-
-        ddlRelojSincroniza.Items.Insert(0, new ListItem("-- Seleccione --", "0"));
-    }
     protected void btnSincronizar_Click(object sender, EventArgs e)
     {
         DateTime dtInicio;
@@ -145,6 +108,9 @@ public partial class contenido_GestionRRHH_GestionSincronizacion : System.Web.UI
                 {
                     mens.mensaje(Page, "Sincronización realizada correctamente. ");
                     this.lblSincr.Text = "<img src='../../../imagenes/check.png'/> Leídas: " + dr["CANT_LEIDA"].ToString() + " | Insertadas: " + dr["CANT_INSERT"].ToString() + " | Obs: " + dr["MENSAJE"].ToString();
+                    this.ddlUnidadSinc.SelectedValue = this.ddlCentroSincroniza.SelectedValue;
+                    CargarRelojesDetSincroniza();
+                    this.ddlRelojSinc.SelectedValue = this.ddlRelojSincroniza.SelectedValue;
                     CargarSincronizaciones();
                 }
             }
@@ -157,9 +123,80 @@ public partial class contenido_GestionRRHH_GestionSincronizacion : System.Web.UI
     }
     #endregion
 
-    #region cargar sincronizaciones
+    #region cargar y editar sincronizaciones
+    private void CargarCentrosAdmin()
+    {
+        usr.ls_iduser = Session["user"].ToString();
+        DataSet ds = usr.mfBuscarCentrosAdmin();
+
+        if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+            return;
+
+        ddlCentroSincroniza.DataSource = ds;
+        ddlCentroSincroniza.DataTextField = "DESCRIPCION";
+        ddlCentroSincroniza.DataValueField = "CODUNIOP";
+        ddlCentroSincroniza.DataBind();
+        ddlCentroSincroniza.Items.Insert(0, new ListItem("-- Seleccione centro / unidad --", "0"));
+
+        //para detalle sincronizaciones
+        ddlUnidadSinc.DataSource = ds;
+        ddlUnidadSinc.DataTextField = "DESCRIPCION";
+        ddlUnidadSinc.DataValueField = "CODUNIOP";
+        ddlUnidadSinc.DataBind();
+        ddlUnidadSinc.Items.Insert(0, new ListItem("-- Seleccione centro / unidad --", "0"));
+    }
+    private void InicializarRelojAdmin()
+    {
+        ddlRelojSincroniza.Items.Clear();
+        ddlRelojSincroniza.Items.Add(new ListItem("-- Seleccione reloj --", "0"));
+    }
+    private void InicializarRelojDetSinc()
+    {
+        ddlRelojSinc.Items.Clear();
+        ddlRelojSinc.Items.Add(new ListItem("-- Seleccione reloj --", "0"));
+    }
+    protected void ddlCentroSincroniza_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        CargarRelojesSincroniza();
+    }
+    protected void ddlUnidadSinc_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        CargarRelojesDetSincroniza();
+    }
+    protected void ddlRelojSinc_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        CargarSincronizaciones();
+    }
+    private void CargarRelojesSincroniza()
+    {
+        rlj.ls_unidad = ddlCentroSincroniza.SelectedValue;
+
+        ddlRelojSincroniza.DataSource = rlj.mfBuscarRelojesCentro();
+        ddlRelojSincroniza.DataTextField = "DESCRIPCION";
+        ddlRelojSincroniza.DataValueField = "IDRELOJ";
+        ddlRelojSincroniza.DataBind();
+
+        ddlRelojSincroniza.Items.Insert(0, new ListItem("-- Seleccione --", "0"));
+    }
+    private void CargarRelojesDetSincroniza()
+    {
+        rlj.ls_unidad = ddlUnidadSinc.SelectedValue;
+
+        ddlRelojSinc.DataSource = rlj.mfBuscarRelojesCentro();
+        ddlRelojSinc.DataTextField = "DESCRIPCION";
+        ddlRelojSinc.DataValueField = "IDRELOJ";
+        ddlRelojSinc.DataBind();
+
+        ddlRelojSinc.Items.Insert(0, new ListItem("-- Seleccione --", "0"));
+    }
     protected void btnBuscarSincr_Click(object sender, EventArgs e)
     {
+        if (ddlRelojSinc.SelectedValue == "0" || ddlUnidadSinc.SelectedValue == "0")
+        {
+            mens.mensaje(Page, "Debe elegir un Centro y un reloj para buscar...");
+            return;
+        }
+
         CargarSincronizaciones();
         pnlDetalleSincronizacion.Visible = false;
         this.txtBusq.Text = "";
@@ -170,10 +207,17 @@ public partial class contenido_GestionRRHH_GestionSincronizacion : System.Web.UI
         rlj.ls_anio = ddlAnio.SelectedValue;
         rlj.ls_mes = ddlMes.SelectedValue;
         rlj.ls_idestado = ddlEstado.SelectedValue;
+        rlj.ls_idreloj = ddlRelojSinc.SelectedValue;
         ds = rlj.mfBuscarSincronizaciones();
+        
         dgSincronizacion.DataSource = ds;
         dgSincronizacion.DataBind();
         this.lblTotalSinc.Text = ds.Tables[0].Rows.Count.ToString() + " Registro/s";
+        if (ds.Tables[0].Rows.Count == 0)
+        {
+            pnlDetalleSincronizacion.Visible = false;
+            this.txtBusq.Text = "";
+        }
     }
     protected void dgSincronizacion_RowCommand(object sender, GridViewCommandEventArgs e)
     {
@@ -275,14 +319,15 @@ public partial class contenido_GestionRRHH_GestionSincronizacion : System.Web.UI
         rlj.ls_idsincroniza = hdIdSincronizacion.Value;
         rlj.ls_descrip = this.txtBusq.Text.Trim();
         DataSet ds = rlj.mfBuscarMarcasSincronizacion();
-       
+
         if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
         {
             mens.mensaje(Page, "No existen marcas para exportar.");
             return;
         }
-        
+
         excel.Exportar(ds, "Sincronizacion_" + hdIdSincronizacion.Value);
     }
     #endregion
+    
 }

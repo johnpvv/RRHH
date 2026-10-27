@@ -105,7 +105,7 @@ public partial class contenido_Administracion_GestionPersonas : System.Web.UI.Pa
                             }
                             else if (this.hdIdEstado.Value == "2")
                             {
-                                this.lbEstado.Text = "EDITADO";
+                                this.lbEstado.Text = "MODIFICADO";
                                 this.btn_habilitar.Text = "Deshabilitar";
                             }
                             else
@@ -186,7 +186,7 @@ public partial class contenido_Administracion_GestionPersonas : System.Web.UI.Pa
 
         System.Web.UI.WebControls.ListItem item = new ListItem();
         item.Text = "Seleccione Estado";
-        item.Value = "0";
+        item.Value = "";
         this.ddlEstadoCivil.Items.Insert(0, item);
     }
     private void LlenarPrevision()
@@ -201,7 +201,7 @@ public partial class contenido_Administracion_GestionPersonas : System.Web.UI.Pa
 
         System.Web.UI.WebControls.ListItem item = new ListItem();
         item.Text = "Seleccione Unidad";
-        item.Value = "0";
+        item.Value = "";
         this.ddlPrevision.Items.Insert(0, item);
     }
     private void LlenarCentros()
@@ -216,7 +216,7 @@ public partial class contenido_Administracion_GestionPersonas : System.Web.UI.Pa
 
         System.Web.UI.WebControls.ListItem item = new ListItem();
         item.Text = "Seleccione Unidad";
-        item.Value = "0";
+        item.Value = "";
         this.ddlCentro.Items.Insert(0, item);
     }
     #endregion

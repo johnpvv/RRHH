@@ -94,8 +94,22 @@
                             </div>
                             <div class="campo">
                                 <label>Mes:</label>
-                                <asp:DropDownList ID="ddlMes" runat="server" Width="150px"
+                                <asp:DropDownList ID="ddlMes" runat="server" Width="130px"
                                     CssClass="form-control">
+                                </asp:DropDownList>
+                            </div>
+                            <div class="campo">
+                                <label>Centro / Unidad:</label>
+                                <asp:DropDownList ID="ddlUnidadSinc" runat="server" CssClass="form-control"
+                                    AutoPostBack="true" Width="250px" onchange="mostrarSpinner();"
+                                    OnSelectedIndexChanged="ddlUnidadSinc_SelectedIndexChanged">
+                                </asp:DropDownList>
+                            </div>
+                            <div class="campo">
+                                <label>Reloj:</label>
+                                <asp:DropDownList ID="ddlRelojSinc" runat="server" CssClass="form-control" 
+                                    AutoPostBack="true" onchange="mostrarSpinner();" Width="200px" 
+                                    OnSelectedIndexChanged="ddlRelojSinc_SelectedIndexChanged">
                                 </asp:DropDownList>
                             </div>
                             <div class="campo">

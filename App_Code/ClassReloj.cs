@@ -805,6 +805,9 @@ public class ClassReloj
         if (ls_idestado != "")
             lsWhere += " AND S.IDESTADO=" + ls_idestado;
 
+        if(ls_idreloj != "")
+            lsWhere += " AND S.IDRELOJ=" + ls_idreloj;
+
         lsSql = "SELECT " +
                 "S.IDSINCRONIZA, " +
                 "S.IDRELOJ, " +
