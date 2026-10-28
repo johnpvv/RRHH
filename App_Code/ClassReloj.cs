@@ -805,7 +805,7 @@ public class ClassReloj
         if (ls_idestado != "")
             lsWhere += " AND S.IDESTADO=" + ls_idestado;
 
-        if(ls_idreloj != "")
+        if (ls_idreloj != "")
             lsWhere += " AND S.IDRELOJ=" + ls_idreloj;
 
         lsSql = "SELECT " +
@@ -950,113 +950,136 @@ public class ClassReloj
     }
     #endregion
     #region Marcas Reloj Edicion    
+    //public DataSet mfBuscarTrabajadoresMarcas()
+    //{
+    //    string lsSql;
+    //    DataSet ds;
+
+    //    lsSql =
+    //        "DECLARE @FECHA_INICIO DATE=DATEFROMPARTS(" + ls_anio + "," + ls_mes + ",1); " +
+    //        "DECLARE @FECHA_FIN DATE=DATEADD(MONTH,1,@FECHA_INICIO); " +
+    //        "DECLARE @BUSQUEDA VARCHAR(100)='" + ls_nombre.Replace("'", "''") + "'; " +
+    //        "DECLARE @CENTRO INT=" + ls_unidad.Replace("'", "''") + "; " +
+
+    //        ";WITH MARCAS AS " +
+    //        "( " +
+    //            "SELECT " +
+    //                "M.IDMARCACION,M.CODIGO_EMP_RELOJ,M.IDRELOJ,M.F_H_MARCA,M.TIPO_MARCA, " +
+    //                "UR.IDUSUARIO,U.RUT,U.DV, " +
+    //                "CONVERT(VARCHAR,U.RUT)+'-'+U.DV RUT_C, " +
+    //                "U.NOMBRE,U.AP_PATERNO,U.AP_MATERNO, " +
+    //                "CASE WHEN UR.IDUSRRELOJ IS NULL THEN 'SIN EQUIVALENCIA' " +
+    //                "WHEN U.IDUSUARIO IS NULL THEN 'PENDIENTE RRHH' " +
+    //                "ELSE 'REGISTRADO RRHH' END ESTADO_RRHH, " +
+    //                "CASE WHEN UR.IDUSUARIO IS NULL " +
+    //                    "THEN 'R:'+M.CODIGO_EMP_RELOJ " +
+    //                    "ELSE 'U:'+CAST(UR.IDUSUARIO AS VARCHAR(20)) END TRABAJADOR_KEY " +
+    //            "FROM " + modConstantes.gsDbRH + "M_MARCACIONES M " +
+    //            "OUTER APPLY " +
+    //            "( " +
+    //                "SELECT TOP 1 UR1.IDUSRRELOJ,UR1.IDUSUARIO " +
+    //                "FROM " + modConstantes.gsDbRH + "M_USR_RELOJ UR1 " +
+    //                "WHERE UR1.IDUSRELOJ=M.CODIGO_EMP_RELOJ AND UR1.IDESTADO <> 3 " +
+    //                "ORDER BY CASE WHEN UR1.IDUSUARIO IS NOT NULL THEN 0 ELSE 1 END,UR1.IDUSRRELOJ DESC " +
+    //            ") UR " +
+    //            "LEFT JOIN " + modConstantes.gsDbRH + "M_USUARIOS U ON U.IDUSUARIO=UR.IDUSUARIO " +
+    //            "LEFT JOIN " + modConstantes.gsDbRH + "M_USER_UNIDAD UU ON UU.IDUSUARIO = UR.IDUSUARIO " +
+    //            "WHERE M.F_H_MARCA >= @FECHA_INICIO " +
+    //            "AND M.F_H_MARCA < @FECHA_FIN " +
+    //            "AND ISNULL(M.IDESTADO,1) <> 3 " +
+    //            "AND UU.CODUNIOP = @CENTRO " +
+    //            "AND (@BUSQUEDA='' " +
+    //                "OR CAST(U.RUT AS VARCHAR(20)) LIKE '%'+@BUSQUEDA+'%' " +
+    //                "OR U.NOMBRE LIKE '%'+@BUSQUEDA+'%' " +
+    //                "OR U.AP_PATERNO LIKE '%'+@BUSQUEDA+'%' " +
+    //                "OR U.AP_MATERNO LIKE '%'+@BUSQUEDA+'%' " +
+    //                "OR M.CODIGO_EMP_RELOJ LIKE '%'+@BUSQUEDA+'%') " +
+    //        "), " +
+
+    //        "CONTEO_DIAS AS " +
+    //        "( " +
+    //            "SELECT TRABAJADOR_KEY,CAST(F_H_MARCA AS DATE) FECHA, " +
+    //                "SUM(CASE WHEN TIPO_MARCA=0 THEN 1 ELSE 0 END) ENTRADAS, " +
+    //                "SUM(CASE WHEN TIPO_MARCA=1 THEN 1 ELSE 0 END) SALIDAS " +
+    //            "FROM MARCAS " +
+    //            "GROUP BY TRABAJADOR_KEY,CAST(F_H_MARCA AS DATE) " +
+    //        "), " +
+
+    //        "ESTADOS AS " +
+    //        "( " +
+    //            "SELECT M.TRABAJADOR_KEY,M.IDMARCACION, " +
+    //                "CASE " +
+    //                    "WHEN C.ENTRADAS=1 AND C.SALIDAS=1 THEN 'OK' " +
+    //                    "WHEN C.ENTRADAS>1 AND M.TIPO_MARCA=0 THEN 'ENTRADA REPETIDA' " +
+    //                    "WHEN C.SALIDAS>1 AND M.TIPO_MARCA=1 THEN 'SALIDA REPETIDA' " +
+    //                    "WHEN C.ENTRADAS=1 AND C.SALIDAS=0 THEN 'SALIDA FALTANTE' " +
+    //                    "WHEN C.ENTRADAS=0 AND C.SALIDAS=1 THEN 'ENTRADA FALTANTE' " +
+    //                    "ELSE 'REVISAR' " +
+    //                "END ESTADO " +
+    //            "FROM MARCAS M " +
+    //            "INNER JOIN CONTEO_DIAS C " +
+    //                "ON C.TRABAJADOR_KEY=M.TRABAJADOR_KEY " +
+    //                "AND C.FECHA=CAST(M.F_H_MARCA AS DATE) " +
+    //        "), " +
+
+    //        "PROBLEMAS AS " +
+    //        "( " +
+    //            "SELECT TRABAJADOR_KEY,COUNT(*) CANT_PROBLEMAS " +
+    //            "FROM ESTADOS " +
+    //            "WHERE ESTADO<>'OK' " +
+    //            "GROUP BY TRABAJADOR_KEY " +
+    //        ") " +
+
+    //        "SELECT " +
+    //            "M.TRABAJADOR_KEY ID_SELECCION, " +
+    //            "MAX(M.IDUSUARIO) IDUSUARIO, " +
+    //            "CASE WHEN MAX(M.IDUSUARIO) IS NULL THEN MAX(M.CODIGO_EMP_RELOJ) ELSE MAX(M.CODIGO_EMP_RELOJ) END CODIGO_EMP_RELOJ, " +
+    //            "MAX(M.RUT) RUT, " +
+    //            "MAX(M.DV) DV, " +
+    //            "MAX(M.RUT_C) RUT_C, " +
+    //            "CASE WHEN MAX(M.IDUSUARIO) IS NULL THEN 'Pendiente de identificación' " +
+    //                "ELSE LTRIM(RTRIM(MAX(ISNULL(M.NOMBRE,''))+' '+MAX(ISNULL(M.AP_PATERNO,''))+' '+MAX(ISNULL(M.AP_MATERNO,'')))) END NOMBRE, " +
+    //            "COUNT(*) CANT_MARCAS, " +
+    //            "COUNT(DISTINCT CAST(M.F_H_MARCA AS DATE)) CANT_DIAS, " +
+    //            "COUNT(DISTINCT M.IDRELOJ) CANT_RELOJES, " +
+    //            "ISNULL(MAX(P.CANT_PROBLEMAS),0) CANT_PROBLEMAS, " +
+    //            "CASE " +
+    //                "WHEN SUM(CASE WHEN M.ESTADO_RRHH='SIN EQUIVALENCIA' THEN 1 ELSE 0 END)>0 THEN 'SIN EQUIVALENCIA' " +
+    //                "WHEN SUM(CASE WHEN M.ESTADO_RRHH='PENDIENTE RRHH' THEN 1 ELSE 0 END)>0 THEN 'PENDIENTE RRHH' " +
+    //                "ELSE 'REGISTRADO RRHH' " +
+    //            "END ESTADO_RRHH " +
+    //        "FROM MARCAS M " +
+    //        "LEFT JOIN PROBLEMAS P ON P.TRABAJADOR_KEY=M.TRABAJADOR_KEY " +
+    //        "GROUP BY M.TRABAJADOR_KEY " +
+    //        "ORDER BY CASE WHEN LEFT(M.TRABAJADOR_KEY,2)='R:' THEN 0 ELSE 1 END,NOMBRE";
+
+    //    con = bd.fnGetConn();
+    //    ds = bd.Fill(con, lsSql);
+    //    con.Close();
+
+    //    return ds;
+    //}
+
     public DataSet mfBuscarTrabajadoresMarcas()
     {
-        string lsSql;
-        DataSet ds;
+        DataSet ds = new DataSet();
 
-        lsSql =
-            "DECLARE @FECHA_INICIO DATE=DATEFROMPARTS(" + ls_anio + "," + ls_mes + ",1); " +
-            "DECLARE @FECHA_FIN DATE=DATEADD(MONTH,1,@FECHA_INICIO); " +
-            "DECLARE @BUSQUEDA VARCHAR(100)='" + ls_nombre.Replace("'", "''") + "'; " +
-
-            ";WITH MARCAS AS " +
-            "( " +
-                "SELECT " +
-                    "M.IDMARCACION,M.CODIGO_EMP_RELOJ,M.IDRELOJ,M.F_H_MARCA,M.TIPO_MARCA, " +
-                    "UR.IDUSUARIO,U.RUT,U.DV, " +
-                    "CONVERT(VARCHAR,U.RUT)+'-'+U.DV RUT_C, " +
-                    "U.NOMBRE,U.AP_PATERNO,U.AP_MATERNO, " +
-                    "CASE WHEN UR.IDUSRRELOJ IS NULL THEN 'SIN EQUIVALENCIA' " +
-                    "WHEN U.IDUSUARIO IS NULL THEN 'PENDIENTE RRHH' " +
-                    "ELSE 'REGISTRADO RRHH' END ESTADO_RRHH, " +
-                    "CASE WHEN UR.IDUSUARIO IS NULL " +
-                        "THEN 'R:'+M.CODIGO_EMP_RELOJ " +
-                        "ELSE 'U:'+CAST(UR.IDUSUARIO AS VARCHAR(20)) END TRABAJADOR_KEY " +
-                "FROM " + modConstantes.gsDbRH + "M_MARCACIONES M " +
-                "OUTER APPLY " +
-                "( " +
-                    "SELECT TOP 1 UR1.IDUSRRELOJ,UR1.IDUSUARIO " +
-                    "FROM " + modConstantes.gsDbRH + "M_USR_RELOJ UR1 " +
-                    "WHERE UR1.IDUSRELOJ=M.CODIGO_EMP_RELOJ AND UR1.IDESTADO <> 3" +
-                    "ORDER BY CASE WHEN UR1.IDUSUARIO IS NOT NULL THEN 0 ELSE 1 END,UR1.IDUSRRELOJ DESC " +
-                ") UR " +
-                "LEFT JOIN " + modConstantes.gsDbRH + "M_USUARIOS U " +
-                    "ON U.IDUSUARIO=UR.IDUSUARIO " +
-                "WHERE M.F_H_MARCA>=@FECHA_INICIO " +
-                "AND M.F_H_MARCA<@FECHA_FIN " +
-                "AND ISNULL(M.IDESTADO,1)<>3 " +
-                "AND (@BUSQUEDA='' " +
-                    "OR CAST(U.RUT AS VARCHAR(20)) LIKE '%'+@BUSQUEDA+'%' " +
-                    "OR U.NOMBRE LIKE '%'+@BUSQUEDA+'%' " +
-                    "OR U.AP_PATERNO LIKE '%'+@BUSQUEDA+'%' " +
-                    "OR U.AP_MATERNO LIKE '%'+@BUSQUEDA+'%' " +
-                    "OR M.CODIGO_EMP_RELOJ LIKE '%'+@BUSQUEDA+'%') " +
-            "), " +
-
-            "CONTEO_DIAS AS " +
-            "( " +
-                "SELECT TRABAJADOR_KEY,CAST(F_H_MARCA AS DATE) FECHA, " +
-                    "SUM(CASE WHEN TIPO_MARCA=0 THEN 1 ELSE 0 END) ENTRADAS, " +
-                    "SUM(CASE WHEN TIPO_MARCA=1 THEN 1 ELSE 0 END) SALIDAS " +
-                "FROM MARCAS " +
-                "GROUP BY TRABAJADOR_KEY,CAST(F_H_MARCA AS DATE) " +
-            "), " +
-
-            "ESTADOS AS " +
-            "( " +
-                "SELECT M.TRABAJADOR_KEY,M.IDMARCACION, " +
-                    "CASE " +
-                        "WHEN C.ENTRADAS=1 AND C.SALIDAS=1 THEN 'OK' " +
-                        "WHEN C.ENTRADAS>1 AND M.TIPO_MARCA=0 THEN 'ENTRADA REPETIDA' " +
-                        "WHEN C.SALIDAS>1 AND M.TIPO_MARCA=1 THEN 'SALIDA REPETIDA' " +
-                        "WHEN C.ENTRADAS=1 AND C.SALIDAS=0 THEN 'SALIDA FALTANTE' " +
-                        "WHEN C.ENTRADAS=0 AND C.SALIDAS=1 THEN 'ENTRADA FALTANTE' " +
-                        "ELSE 'REVISAR' " +
-                    "END ESTADO " +
-                "FROM MARCAS M " +
-                "INNER JOIN CONTEO_DIAS C " +
-                    "ON C.TRABAJADOR_KEY=M.TRABAJADOR_KEY " +
-                    "AND C.FECHA=CAST(M.F_H_MARCA AS DATE) " +
-            "), " +
-
-            "PROBLEMAS AS " +
-            "( " +
-                "SELECT TRABAJADOR_KEY,COUNT(*) CANT_PROBLEMAS " +
-                "FROM ESTADOS " +
-                "WHERE ESTADO<>'OK' " +
-                "GROUP BY TRABAJADOR_KEY " +
-            ") " +
-
-            "SELECT " +
-                "M.TRABAJADOR_KEY ID_SELECCION, " +
-                "MAX(M.IDUSUARIO) IDUSUARIO, " +
-                "CASE WHEN MAX(M.IDUSUARIO) IS NULL THEN MAX(M.CODIGO_EMP_RELOJ) ELSE MAX(M.CODIGO_EMP_RELOJ) END CODIGO_EMP_RELOJ, " +
-                "MAX(M.RUT) RUT, " +
-                "MAX(M.DV) DV, " +
-                "MAX(M.RUT_C) RUT_C, " +
-                "CASE WHEN MAX(M.IDUSUARIO) IS NULL THEN 'Pendiente de identificación' " +
-                    "ELSE LTRIM(RTRIM(MAX(ISNULL(M.NOMBRE,''))+' '+MAX(ISNULL(M.AP_PATERNO,''))+' '+MAX(ISNULL(M.AP_MATERNO,'')))) END NOMBRE, " +
-                "COUNT(*) CANT_MARCAS, " +
-                "COUNT(DISTINCT CAST(M.F_H_MARCA AS DATE)) CANT_DIAS, " +
-                "COUNT(DISTINCT M.IDRELOJ) CANT_RELOJES, " +
-                "ISNULL(MAX(P.CANT_PROBLEMAS),0) CANT_PROBLEMAS, " +
-                "CASE " +
-                    "WHEN SUM(CASE WHEN M.ESTADO_RRHH='SIN EQUIVALENCIA' THEN 1 ELSE 0 END)>0 THEN 'SIN EQUIVALENCIA' " +
-                    "WHEN SUM(CASE WHEN M.ESTADO_RRHH='PENDIENTE RRHH' THEN 1 ELSE 0 END)>0 THEN 'PENDIENTE RRHH' " +
-                    "ELSE 'REGISTRADO RRHH' " +
-                "END ESTADO_RRHH " +
-            "FROM MARCAS M " +
-            "LEFT JOIN PROBLEMAS P ON P.TRABAJADOR_KEY=M.TRABAJADOR_KEY " +
-            "GROUP BY M.TRABAJADOR_KEY " +
-            "ORDER BY CASE WHEN LEFT(M.TRABAJADOR_KEY,2)='R:' THEN 0 ELSE 1 END,NOMBRE";
-
-        con = bd.fnGetConn();
-        ds = bd.Fill(con, lsSql);
-        con.Close();
-
+        using (System.Data.SqlClient.SqlConnection conexion = bd.fnGetConn())
+        using (System.Data.SqlClient.SqlCommand comando = new System.Data.SqlClient.SqlCommand("dbo.pu_buscar_trabajadores_marcas", conexion))
+        {
+            comando.CommandType = System.Data.CommandType.StoredProcedure;
+            comando.Parameters.Add("@ANIO", System.Data.SqlDbType.Int).Value = Convert.ToInt32(ls_anio);
+            comando.Parameters.Add("@MES", System.Data.SqlDbType.Int).Value = Convert.ToInt32(ls_mes);
+            comando.Parameters.Add("@BUSQUEDA", System.Data.SqlDbType.VarChar, 100).Value = (ls_nombre ?? "").Trim();
+            comando.Parameters.Add("@CENTRO", System.Data.SqlDbType.Int).Value = Convert.ToInt32(ls_unidad);
+            using (System.Data.SqlClient.SqlDataAdapter adaptador = new System.Data.SqlClient.SqlDataAdapter(comando))
+            {
+                adaptador.Fill(ds);
+            }
+        }
         return ds;
     }
+
     public DataSet mfBuscarMarcasTrabajador()
     {
         string lsSql;

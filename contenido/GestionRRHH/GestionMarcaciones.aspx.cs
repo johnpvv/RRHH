@@ -10,7 +10,8 @@ using System.Web.UI.WebControls;
 public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Page
 {
     Mensaje mens = new Mensaje();
-    Usuarios usr = new Usuarios();
+    //Usuarios usr = new Usuarios();
+    ClassTrabajadores usr = new ClassTrabajadores();
     ClassTurnos tur = new ClassTurnos();
     ClassHorarios hor = new ClassHorarios();
     ClassReloj rlj = new ClassReloj();
@@ -23,6 +24,7 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
         {
             CargarMeses();
             CargarAnios();
+            CargarCentrosAdmin();
         }
     }
     #region General
@@ -59,6 +61,25 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
                 feriados.Add(fechaVal.Date);
         }
     }
+    private void CargarCentrosAdmin()
+    {
+        usr.ls_iduser = Session["user"].ToString();
+        DataSet ds = usr.mfBuscarCentrosAdmin();
+
+        if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+            return;
+
+        ddlCentro.DataSource = ds;
+        ddlCentro.DataTextField = "DESCRIPCION";
+        ddlCentro.DataValueField = "CODUNIOP";
+        ddlCentro.DataBind();
+        ddlCentro.Items.Insert(0, new ListItem("-- Seleccione centro / unidad --", "0"));
+    }
+
+    protected void ddlCentro_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        CargarTrabajadoresMarcas();
+    }
     protected void btnVolver_Click(object sender, EventArgs e)
     {
         Response.Redirect("~/contenido/frmblksiab.aspx");
@@ -80,6 +101,13 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
         rlj.ls_mes = this.ddlMes.SelectedValue;
         rlj.ls_anio = this.ddlAnio.SelectedValue;
         rlj.ls_nombre = this.txtBuscarTrab.Text.Trim();
+        rlj.ls_unidad = this.ddlCentro.SelectedValue;
+        // Validar que se haya seleccionado un centro
+        if (string.IsNullOrEmpty(ddlCentro.SelectedValue) || ddlCentro.SelectedValue == "0")
+        {
+            mens.mensaje(Page, "Debe seleccionar un centro antes de buscar las marcaciones.");
+            return;
+        }
         DataSet ds = rlj.mfBuscarTrabajadoresMarcas();
         if (ds != null && ds.Tables.Count > 0)
         {
@@ -88,11 +116,13 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
             dgTrabajadores.DataSource = dv;
             dgTrabajadores.DataBind();
             lblTotalTrab.Text = ds.Tables[0].Rows.Count.ToString();
+            divDetalleMarcas.Visible = false;
         }
         else
         {
             dgTrabajadores.DataSource = null;
             dgTrabajadores.DataBind();
+            divDetalleMarcas.Visible = false;
         }
     }
     private string OrdenTrabajadores
@@ -127,7 +157,6 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
     protected void btnBuscarMarcas_Click(object sender, EventArgs e)
     {
         CargarTrabajadoresMarcas();
-        divDetalleMarcas.Visible = false;
     }
     protected void dgTrabajadores_SelectedIndexChanged(object sender, EventArgs e)
     {
@@ -366,6 +395,35 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
             rlj.ls_obs = "Marca Modificada Por Analista";
         }
 
+        //archivos a cargar - JVV - 26/10/2026
+
+        string archivoBase64 = null;
+        string nombreArchivo = null;
+        string tipoContenido = null;
+
+        if (fuRespaldoMarca.HasFile)
+        {
+            string extension = System.IO.Path.GetExtension(fuRespaldoMarca.FileName).ToLowerInvariant();//validar archivos permitidos
+            string[] extensionesPermitidas =  {".pdf", ".doc", ".docx", ".xls", ".xlsx", ".jpg" };
+
+            if (Array.IndexOf(extensionesPermitidas, extension) < 0)
+            {
+                mens.mensaje(Page, "Solo se permiten documentos PDF, Word, Excel e Imágenes JPG.");
+                return;
+            }
+            if (fuRespaldoMarca.PostedFile.ContentLength > 5 * 1024 * 1024)// Validar tamaño máximo: 5 MB
+            {
+                mens.mensaje(Page, "El archivo no puede superar los 5 MB.");
+                return;
+            }
+
+            byte[] bytesArchivo = fuRespaldoMarca.FileBytes;
+
+            archivoBase64 = Convert.ToBase64String(bytesArchivo);
+            nombreArchivo = System.IO.Path.GetFileName(fuRespaldoMarca.FileName);
+            tipoContenido = fuRespaldoMarca.PostedFile.ContentType;
+        }
+
         if (hdIdMarcacion.Value != "")
         {
             rlj.mfActualizarMarca();
@@ -467,6 +525,12 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
         rlj.ls_mes = this.ddlMes.SelectedValue;
         rlj.ls_anio = this.ddlAnio.SelectedValue;
         rlj.ls_nombre = this.txtBuscarTrab.Text.Trim();
+        rlj.ls_unidad = this.ddlCentro.SelectedValue;
+        if (string.IsNullOrEmpty(ddlCentro.SelectedValue) || ddlCentro.SelectedValue == "0")
+        {
+            mens.mensaje(Page, "Debe seleccionar un centro antes de exportar los Datos.");
+            return;
+        }
         DataSet ds = rlj.mfBuscarTrabajadoresMarcas();
         if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
         {
@@ -501,4 +565,5 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
         excel.Exportar(ds, "Trabajadores_marcacion_Gral");
     }
     #endregion
+
 }

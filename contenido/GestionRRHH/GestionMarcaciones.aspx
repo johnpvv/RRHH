@@ -37,15 +37,6 @@
             </div>
             <div class="filtros-grid">
                 <div class="campo">
-                    <label>Mes:</label>
-                    <asp:DropDownList ID="ddlMes" runat="server" Width="150px"
-                        CssClass="form-control"
-                        AutoPostBack="true"
-                        OnSelectedIndexChanged="ddlMes_SelectedIndexChanged"
-                        onchange="mostrarSpinner();">
-                    </asp:DropDownList>
-                </div>
-                <div class="campo">
                     <label>Año:</label>
                     <asp:DropDownList ID="ddlAnio" runat="server" Width="100px"
                         CssClass="form-control"
@@ -55,11 +46,27 @@
                     </asp:DropDownList>
                 </div>
                 <div class="campo">
+                    <label>Mes:</label>
+                    <asp:DropDownList ID="ddlMes" runat="server" Width="150px"
+                        CssClass="form-control"
+                        AutoPostBack="true"
+                        OnSelectedIndexChanged="ddlMes_SelectedIndexChanged"
+                        onchange="mostrarSpinner();">
+                    </asp:DropDownList>
+                </div>
+                <div class="campo">
+                    <label>Centro / Unidad:</label>
+                    <asp:DropDownList ID="ddlCentro" runat="server" CssClass="form-control"
+                        AutoPostBack="true" Width="250px"
+                        OnSelectedIndexChanged="ddlCentro_SelectedIndexChanged" onchange="mostrarSpinner();">
+                    </asp:DropDownList>
+                </div>
+                <div class="campo">
                     <label>Nombre, ID o RUN a Buscar:</label>
                     <asp:TextBox ID="txtBuscarTrab"
                         runat="server"
                         CssClass="form-control"
-                        Width="240px"
+                        Width="200px"
                         MaxLength="100" />
                 </div>
                 <div class="campo">
@@ -104,7 +111,7 @@
                     AllowPaging="True"
                     PageSize="20"
                     DataKeyNames="ID_SELECCION"
-                    EmptyDataText="No Hay Trabajadores con Marcas en el Período"
+                    EmptyDataText="No se han encontrado registros con los filtros aplicados"
                     EmptyDataRowStyle-CssClass="textoEmpty"
                     OnSelectedIndexChanged="dgTrabajadores_SelectedIndexChanged"
                     OnPageIndexChanging="dgTrabajadores_PageIndexChanging"
@@ -117,7 +124,9 @@
                         <asp:BoundField DataField="CANT_MARCAS" HeaderText="Marcas" SortExpression="CANT_MARCAS" />
                         <asp:BoundField DataField="CANT_DIAS" HeaderText="Días" SortExpression="CANT_DIAS" />
                         <asp:BoundField DataField="CANT_RELOJES" HeaderText="Relojes" SortExpression="CANT_RELOJES" />
-                        <asp:BoundField DataField="CANT_PROBLEMAS" HeaderText="Posibles Problemas" SortExpression="CANT_PROBLEMAS" ItemStyle-ForeColor="Blue" ItemStyle-Font-Bold="true" HeaderStyle-Width="120px" />
+                        <asp:BoundField DataField="CANT_PROBLEMAS" HeaderText="Posibles Problemas" SortExpression="CANT_PROBLEMAS" ItemStyle-ForeColor="Blue" ItemStyle-Font-Bold="true" HeaderStyle-Width="100px" />
+                        <asp:BoundField DataField="CANT_MARCAS_OTRO_CENTRO" HeaderText="Cant. Marcas en Otros Centros" SortExpression="CANT_MARCAS_OTRO_CENTRO" ItemStyle-Font-Bold="true" HeaderStyle-Width="100px" />
+                        <asp:BoundField DataField="ANOMALIA_CENTRO" HeaderText="Marcas en diferentes Centros" SortExpression="ANOMALIA_CENTRO" ItemStyle-Font-Bold="true" HeaderStyle-Width="100px" />
                         <asp:BoundField DataField="ESTADO_RRHH" HeaderText="Estado" SortExpression="ESTADO_RRHH" />
                         <asp:TemplateField HeaderText="Revisar">
                             <ItemTemplate>
@@ -231,15 +240,15 @@
                 </div>
                 <div class="filtros-grid">
                     <div class="campo">
-                        <label>Fecha:</label><asp:TextBox ID="txtFechaMarca" runat="server" CssClass="form-control" Width="120px" Enabled="false" />
+                        <label>Fecha:</label><asp:TextBox ID="txtFechaMarca" runat="server" CssClass="form-control" Width="130px" Enabled="false" />
                         <ajaxToolkit:CalendarExtender ID="calFechaMarca" runat="server" TargetControlID="txtFechaMarca" Format="dd/MM/yyyy" />
                     </div>
                     <div class="campo">
-                        <label>Hora:</label><asp:TextBox ID="txtHoraMarca" runat="server" CssClass="form-control" Width="120px" Height="39px" TextMode="Time" step="1" MaxLength="8" />
+                        <label>Hora:</label><asp:TextBox ID="txtHoraMarca" runat="server" CssClass="form-control" Width="130px" Height="39px" TextMode="Time" step="1" MaxLength="8" />
 
                     </div>
                     <div class="campo">
-                        <label>Tipo:</label><asp:DropDownList ID="ddlTipoMarca" runat="server" CssClass="form-control" Width="120px">
+                        <label>Tipo:</label><asp:DropDownList ID="ddlTipoMarca" runat="server" CssClass="form-control" Width="180px">
                             <asp:ListItem Value="0">ENTRADA</asp:ListItem>
                             <asp:ListItem Value="1">SALIDA</asp:ListItem>
                         </asp:DropDownList>
@@ -249,12 +258,22 @@
                         <asp:DropDownList ID="ddlCentroMarca" runat="server"
                             CssClass="form-control"
                             AutoPostBack="true"
+                            Width="300px"
                             OnSelectedIndexChanged="ddlCentroMarca_SelectedIndexChanged"
                             onchange="mostrarSpinner();">
                         </asp:DropDownList>
                     </div>
+                </div>
+                <div class="filtros-grid">
                     <div class="campo">
-                        <label>Observación:</label><asp:TextBox ID="txtObsMarca" runat="server" CssClass="form-control" MaxLength="800" Width="200px" TextMode="MultiLine" />
+                        <label>Observación:</label><asp:TextBox ID="txtObsMarca" runat="server" CssClass="form-control" MaxLength="800" Width="320px" TextMode="MultiLine" />
+                    </div>
+                    <div class="campo">
+                        <label>Archivo de respaldo:</label>
+                        <asp:FileUpload ID="fuRespaldoMarca" runat="server"
+                            CssClass="form-control"
+                            Width="450px" />
+                        <asp:Label ID="lblArchivoRespaldo" runat="server" />
                     </div>
                 </div>
                 <asp:HiddenField ID="hdIdMarcacion" runat="server" />
