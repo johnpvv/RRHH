@@ -187,6 +187,18 @@
                                 </span>
                             </ItemTemplate>
                         </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Respaldo" ItemStyle-HorizontalAlign="Center" HeaderStyle-Width="70px">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="btnDescarga" runat="server"
+                                    ImageUrl="~/imagenes/respaldo.png"
+                                    CommandName="DescargaDoc"
+                                    CommandArgument='<%# Eval("IDMARCACION") %>'
+                                    ToolTip="Descargar documento de respaldo"
+                                    AlternateText="Descargar respaldo"
+                                    Visible='<%# Eval("TIENE_RESPALDO").ToString().Contains("SI") %>'
+                                    OnClientClick="guardarScroll();" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
                         <asp:TemplateField HeaderText="Acciones" HeaderStyle-Width="50px">
                             <ItemTemplate>
                                 <asp:ImageButton ID="btnEditar" runat="server" ImageUrl="~/imagenes/edit.png"
@@ -215,7 +227,7 @@
             <div class="botones-form">
                 <asp:Button ID="btnNuevaMarca" runat="server"
                     Text="+ Agregar Marcación"
-                    CssClass="BotonPortalAmarillo"
+                    CssClass="BotonPortalAzul"
                     OnClick="btnNuevaMarca_Click"
                     Width="200px"
                     OnClientClick="guardarScroll();" />
@@ -224,6 +236,11 @@
                     Text="Exportar Excel"
                     CssClass="BotonPortalVerde"
                     OnClick="btnExportarMarcas_Click" />
+                <asp:Button ID="btnImprimirPDF"
+                    runat="server"
+                    Text="Generar PDF Pre - Marcas"
+                    CssClass="BotonPortalAmarillo"
+                    OnClick="btnExportarPDF_Click" />
             </div>
             <div class="filtros-grid">
                 <asp:Label ID="lblTotalMarcas" runat="server" CssClass="contador-grid" Text="0 registro(s)">

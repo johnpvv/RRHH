@@ -298,6 +298,60 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
             mfAnularMarca(id);
         else if (e.CommandName == "InsertarMarca")
             mfInsertarMarca(e.CommandArgument.ToString(), idUserReloj, idReloj);
+        else if (e.CommandName == "DescargaDoc")
+        {
+            long idMarcacion = Convert.ToInt64(e.CommandArgument);
+            DataSet dsDoc = rlj.mfBuscarDocumentoMarca(idMarcacion);
+            if (dsDoc == null || dsDoc.Tables.Count == 0 ||
+                dsDoc.Tables[0].Rows.Count == 0)
+            {
+                mens.mensaje(Page, "No se encontró el documento de respaldo.");
+                return;
+            }
+            DataRow fila = dsDoc.Tables[0].Rows[0];
+            try
+            {
+                string base64 = Convert.ToString(fila["DOCUMENTO"]);
+                string nombre = Convert.ToString(fila["DESCRIPCION"]);
+                string tipo = Convert.ToString(fila["TIPO"]);
+                byte[] archivo = Convert.FromBase64String(base64);
+                nombre = System.IO.Path.GetFileName(nombre);
+                string contentType = "application/octet-stream";
+                switch (tipo.ToLowerInvariant())
+                {
+                    case ".pdf":
+                        contentType = "application/pdf";
+                        break;
+                    case ".jpg":
+                        contentType = "image/jpeg";
+                        break;
+                    case ".doc":
+                        contentType = "application/msword";
+                        break;
+                    case ".docx":
+                        contentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+                        break;
+                    case ".xls":
+                        contentType = "application/vnd.ms-excel";
+                        break;
+                    case ".xlsx":
+                        contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                        break;
+                }
+                Response.Clear();
+                Response.ContentType = contentType;
+                Response.AddHeader("Content-Disposition", "attachment; filename=\"" + nombre.Replace("\"", "") + "\"");
+                Response.BinaryWrite(archivo);
+                Response.Flush();
+                HttpContext.Current.ApplicationInstance.CompleteRequest();
+                return;
+            }
+            catch (FormatException)
+            {
+                mens.mensaje(Page, "El documento almacenado no tiene un formato válido.");
+                return;
+            }
+        }
     }
     private void mfEditarMarca(string id, string idUserReloj)
     {
@@ -346,8 +400,9 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
         rlj.ls_idreloj = hdIdReloj.Value;
         rlj.ls_iduserweb = Session["user"].ToString();
         string iduser = dgTrabajadores.SelectedDataKey.Values["ID_SELECCION"].ToString();
-
+        long idmarcacion;
         DateTime fechaVal;
+
         if (!DateTime.TryParseExact(txtFechaMarca.Text, "dd/MM/yyyy", null, DateTimeStyles.None, out fechaVal))
         {
             mens.mensaje(Page, "La fecha ingresada no es válida.");
@@ -395,16 +450,25 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
             rlj.ls_obs = "Marca Modificada Por Analista";
         }
 
-        //archivos a cargar - JVV - 26/10/2026
+        if (hdIdMarcacion.Value != "")
+        {
+            rlj.mfActualizarMarca();
+            idmarcacion = Convert.ToInt64(hdIdMarcacion.Value);
+        }
+        else
+        {
+            idmarcacion = rlj.mfInsertarMarca();
+        }
 
-        string archivoBase64 = null;
-        string nombreArchivo = null;
-        string tipoContenido = null;
+        //archivos a cargar - JVV - 26/10/2026
+        string archBase64 = null;
+        string nomArch = null;
+        string tipoArch = null;
 
         if (fuRespaldoMarca.HasFile)
         {
             string extension = System.IO.Path.GetExtension(fuRespaldoMarca.FileName).ToLowerInvariant();//validar archivos permitidos
-            string[] extensionesPermitidas =  {".pdf", ".doc", ".docx", ".xls", ".xlsx", ".jpg" };
+            string[] extensionesPermitidas = { ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".jpg" };
 
             if (Array.IndexOf(extensionesPermitidas, extension) < 0)
             {
@@ -419,18 +483,19 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
 
             byte[] bytesArchivo = fuRespaldoMarca.FileBytes;
 
-            archivoBase64 = Convert.ToBase64String(bytesArchivo);
-            nombreArchivo = System.IO.Path.GetFileName(fuRespaldoMarca.FileName);
-            tipoContenido = fuRespaldoMarca.PostedFile.ContentType;
+            archBase64 = Convert.ToBase64String(bytesArchivo);
+            nomArch = System.IO.Path.GetFileName(fuRespaldoMarca.FileName);
+            tipoArch = System.IO.Path.GetExtension(fuRespaldoMarca.FileName).ToLowerInvariant();
         }
-
-        if (hdIdMarcacion.Value != "")
+        if (fuRespaldoMarca.HasFile)
         {
-            rlj.mfActualizarMarca();
-        }
-        else
-        {
-            rlj.mfInsertarMarca();
+            string mensajeError;
+            bool docEst = rlj.mfGuardaArchMarca(idmarcacion, archBase64, nomArch, tipoArch, out mensajeError);
+            if (!docEst)
+            {
+                mens.mensaje(Page, mensajeError);
+                return;
+            }
         }
         txtFechaMarca.Enabled = false;
         hdTipoAgrega.Value = "0";
@@ -565,5 +630,60 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
         excel.Exportar(ds, "Trabajadores_marcacion_Gral");
     }
     #endregion
+    #region PDF
+    protected void btnExportarPDF_Click(object sender, EventArgs e)
+    {
+        ClassPDF pdf = new ClassPDF();
+        string idSeleccion = dgTrabajadores.SelectedDataKey.Values["ID_SELECCION"].ToString();
+        rlj.ls_mes = ddlMes.SelectedValue;
+        rlj.ls_anio = ddlAnio.SelectedValue;
+        rlj.ls_iduser = "";
+        rlj.ls_iduserreloj = "";
+        if (idSeleccion.StartsWith("U:"))
+        {
+            rlj.ls_iduser = idSeleccion.Substring(2);
+        }
+        else if (idSeleccion.StartsWith("R:"))
+        {
+            rlj.ls_iduserreloj = idSeleccion.Substring(2);
+        }
+        DataSet ds = rlj.mfBuscarMarcasTrabajador();
+        if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+        {
+            mens.mensaje(Page, "No existen datos para generar reporte.");
+            return;
+        }
+        //setear variables para informe
+        pdf.Titulo = "Listado Preliminar de Marcaciones por Trabajador";
+        pdf.Subtitulo = "Nombre: "+dgTrabajadores.SelectedRow.Cells[2].Text + "\nRUT: " + dgTrabajadores.SelectedRow.Cells[0].Text + "\nPeriodo: " + ddlMes.SelectedItem + " " + ddlAnio.SelectedValue;
+        pdf.OrientacionHorizontal = false;
+        pdf.MostrarFecha = true;
+        pdf.MostrarNumeracion = true;
 
+        //columnas a excluir
+        pdf.ColumnasExcluir.Add("IDMARCACION");
+        pdf.ColumnasExcluir.Add("IDRELOJ");
+        pdf.ColumnasExcluir.Add("F_H_MARCA");
+        pdf.ColumnasExcluir.Add("TIPO_MARCA");
+        pdf.ColumnasExcluir.Add("F_H_CREACION");
+        pdf.ColumnasExcluir.Add("TIPO");
+        pdf.ColumnasExcluir.Add("IDUSR");
+        pdf.ColumnasExcluir.Add("IDESTADO");
+        pdf.ColumnasExcluir.Add("TIPO_CARGA");
+
+        //configurar columnas formato fecha hora
+        pdf.ColumnasFechaHora.Add("F_H_MARCA");
+        pdf.ColumnasFechaHora.Add("HORA");
+
+        //configurar ancho columnas
+        pdf.AnchosColumnas.Add("OBSERVACIONES", 25f);
+        pdf.AnchosColumnas.Add("FECHA", 14f);
+        pdf.AnchosColumnas.Add("HORA", 13f);
+        pdf.AnchosColumnas.Add("CENTRO", 30f);
+        pdf.AnchosColumnas.Add("DIA", 13f);
+
+        //generar nombre archivo y descargar
+        pdf.ExportarDataTable(Response, ds.Tables[0], "Listado_preliminar_Marcas_" + ddlMes.SelectedValue + "_" + Session["rut"].ToString());
+    }
+    #endregion
 }

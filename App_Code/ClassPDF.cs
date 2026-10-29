@@ -44,7 +44,7 @@ public class ClassPDF
         MargenIzquierdo = 20f;
         MargenDerecho = 20f;
         MargenSuperior = 25f;
-        MargenInferior = 25f;
+        MargenInferior = 28f;
         FormatoFecha = "dd/MM/yyyy";
         RutaLogo = HttpContext.Current.Server.MapPath("~/imagenes/logo.jpg");
         NombreInstitucion = "I.Municipalidad de Lo Espejo";
@@ -97,7 +97,7 @@ public class ClassPDF
             if (!string.IsNullOrWhiteSpace(RutaLogo) && File.Exists(RutaLogo))
             {
                 iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(RutaLogo);
-                logo.ScaleToFit(70f, 70f);
+                logo.ScaleToFit(90f, 90f);
                 celdaLogo.AddElement(logo);
             }
             encabezado.AddCell(celdaLogo);
@@ -142,8 +142,7 @@ public class ClassPDF
             tabla.SetWidths(anchos);
             foreach (DataColumn columna in columnas)
             {
-                PdfPCell celda = new PdfPCell(
-                    new Phrase(columna.Caption, fuenteEncabezado));
+                PdfPCell celda = new PdfPCell(new Phrase(columna.Caption, fuenteEncabezado));
 
                 celda.BackgroundColor = new BaseColor(48, 71, 94);
                 celda.HorizontalAlignment = Element.ALIGN_CENTER;

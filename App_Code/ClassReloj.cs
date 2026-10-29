@@ -1091,7 +1091,14 @@ public class ClassReloj
         if (ls_iduser != "")
         {
             lsSql +=
-                "SELECT M.IDMARCACION, CAST(M.F_H_MARCA AS DATE) FECHA, CONVERT(VARCHAR(8),M.F_H_MARCA,108) HORA, " +
+                "SELECT M.IDMARCACION, " +
+                "CAST( CASE WHEN EXISTS ( " +
+                "SELECT 1 " +
+                "FROM " + modConstantes.gsDbRH + "M_MARCA_DOC D " +
+                "WHERE D.IDMARCACION = M.IDMARCACION " +
+                "AND ISNULL(D.IDESTADO, 1) <> 3) " +
+                "THEN 'SI' ELSE 'NO' END AS VARCHAR) AS TIENE_RESPALDO, " +
+                "CAST(M.F_H_MARCA AS DATE) FECHA, CONVERT(VARCHAR(8),M.F_H_MARCA,108) HORA, " +
                 "CASE DATEPART(WEEKDAY, M.F_H_MARCA) " +
                 "WHEN 1 THEN 'Lunes' " +
                 "WHEN 2 THEN 'Martes' " +
@@ -1130,7 +1137,9 @@ public class ClassReloj
         else
         {
             lsSql +=
-                "SELECT M.IDMARCACION,CAST(M.F_H_MARCA AS DATE) FECHA,CONVERT(VARCHAR(8),M.F_H_MARCA,108) HORA, " +
+                "SELECT M.IDMARCACION," +
+                "CAST(0 AS BIT) TIENE_DOCUMENTO, " +
+                "CAST(M.F_H_MARCA AS DATE) FECHA,CONVERT(VARCHAR(8),M.F_H_MARCA,108) HORA, " +
                 "CASE DATEPART(WEEKDAY, M.F_H_MARCA) " +
                 "WHEN 1 THEN 'Lunes' " +
                 "WHEN 2 THEN 'Martes' " +
@@ -1215,24 +1224,67 @@ public class ClassReloj
         bd.ExecuteScalar(con, lsSql);
         con.Close();
     }
-    public void mfInsertarMarca()
+    //public void mfInsertarMarca()
+    //{
+    //    string lsSql =
+    //        "INSERT INTO " + modConstantes.gsDbRH + "M_MARCACIONES " +
+    //        "(IDSINCRONIZA,CODIGO_EMP_RELOJ,F_H_MARCA,TIPO_MARCA,F_H_CARGA, " +
+    //        "TIPO_CARGA,OBSERVACIONES,IDRELOJ,IDESTADO,F_H_MOD,IDUSERMOD) " +
+    //        "VALUES (NULL,'" + ls_iduserreloj + "', " +
+    //        "CONVERT(DATETIME,'" + ls_fecha + " " + ls_hora + "',103)," +
+    //        " " + ls_tipo + ",GETDATE(),2,'" +
+    //        " " + ls_obs.Replace("'", "''") + "'," +
+    //        " " + ls_idreloj + "," +
+    //        " 2," +
+    //        " GETDATE()," +
+    //        " " + ls_iduserweb + ")";
+    //    con = bd.fnGetConn();
+    //    bd.ExecuteScalar(con, lsSql);
+    //    con.Close();
+    //}
+
+    public long mfInsertarMarca()
     {
+        DateTime fechaHora;
+
+        if (!DateTime.TryParseExact(
+            ls_fecha + " " + ls_hora,
+            "dd/MM/yyyy HH:mm:ss",
+            System.Globalization.CultureInfo.InvariantCulture,
+            System.Globalization.DateTimeStyles.None,
+            out fechaHora))
+        {
+            throw new ArgumentException("La fecha y hora de la marcación no son válidas.");
+        }
+
         string lsSql =
             "INSERT INTO " + modConstantes.gsDbRH + "M_MARCACIONES " +
-            "(IDSINCRONIZA,CODIGO_EMP_RELOJ,F_H_MARCA,TIPO_MARCA,F_H_CARGA, " +
-            "TIPO_CARGA,OBSERVACIONES,IDRELOJ,IDESTADO,F_H_MOD,IDUSERMOD) " +
-            "VALUES (NULL,'" + ls_iduserreloj + "', " +
-            "CONVERT(DATETIME,'" + ls_fecha + " " + ls_hora + "',103)," +
-            " " + ls_tipo + ",GETDATE(),2,'" +
-            " " + ls_obs.Replace("'", "''") + "'," +
-            " " + ls_idreloj + "," +
-            " 2," +
-            " GETDATE()," +
-            " " + ls_iduserweb + ")";
-        con = bd.fnGetConn();
-        bd.ExecuteScalar(con, lsSql);
-        con.Close();
+            "(IDSINCRONIZA, CODIGO_EMP_RELOJ, F_H_MARCA, TIPO_MARCA, " +
+            "F_H_CARGA, TIPO_CARGA, OBSERVACIONES, IDRELOJ, IDESTADO, " +
+            "F_H_MOD, IDUSERMOD) " +
+            "OUTPUT INSERTED.IDMARCACION " +
+            "VALUES " +
+            "(NULL, @CODIGO_EMP_RELOJ, @F_H_MARCA, @TIPO_MARCA, " +
+            "GETDATE(), 2, @OBSERVACIONES, @IDRELOJ, 2, GETDATE(), @IDUSERMOD)";
+
+        using (System.Data.SqlClient.SqlConnection conexion = bd.fnGetConn())
+        using (System.Data.SqlClient.SqlCommand comando = new System.Data.SqlClient.SqlCommand(lsSql, conexion))
+        {
+            comando.Parameters.Add("@CODIGO_EMP_RELOJ", System.Data.SqlDbType.VarChar, 50).Value = ls_iduserreloj;
+            comando.Parameters.Add("@F_H_MARCA", System.Data.SqlDbType.DateTime).Value = fechaHora;
+            comando.Parameters.Add("@TIPO_MARCA", System.Data.SqlDbType.Int).Value = Convert.ToInt32(ls_tipo);
+            comando.Parameters.Add("@OBSERVACIONES", System.Data.SqlDbType.VarChar, 800).Value = ls_obs ?? "";
+            comando.Parameters.Add("@IDRELOJ", System.Data.SqlDbType.Int).Value = Convert.ToInt32(ls_idreloj);
+            comando.Parameters.Add("@IDUSERMOD", System.Data.SqlDbType.Int).Value = Convert.ToInt32(ls_iduserweb);
+            object resultado = comando.ExecuteScalar();
+
+            if (resultado == null || resultado == DBNull.Value)
+                throw new Exception("No se pudo obtener el ID de la marcación creada.");
+
+            return Convert.ToInt64(resultado);
+        }
     }
+
     public DataSet mfBuscarRelojesUsuario()
     {
         string lsSql =
@@ -1268,6 +1320,65 @@ public class ClassReloj
         con = bd.fnGetConn();
         DataSet ds = bd.Fill(con, lsSql);
         con.Close();
+        return ds;
+    }
+    #endregion
+    #region Carga Archivos
+    public bool mfGuardaArchMarca(long idMarca, string docBase64, string nomArch, string tipoArch, out string mensajeError)
+    {
+        mensajeError = "";
+
+        try
+        {
+            string lsSql =
+                "INSERT INTO " + modConstantes.gsDbRH + "M_MARCA_DOC " +
+                "(IDMARCACION, F_H_CREACION, IDESTADO, DOCUMENTO, " +
+                "IDTIPODOC, DESCRIPCION, TIPO) " +
+                "VALUES (@IDMARCACION, GETDATE(), 1, @DOCUMENTO, " +
+                "1, @DESCRIPCION, @TIPO)";
+
+            using (System.Data.SqlClient.SqlConnection conexion = bd.fnGetConn())
+            using (System.Data.SqlClient.SqlCommand comando = new System.Data.SqlClient.SqlCommand(lsSql, conexion))
+            {
+                comando.Parameters.Add("@IDMARCACION", System.Data.SqlDbType.BigInt).Value = idMarca;
+                comando.Parameters.Add("@DOCUMENTO", System.Data.SqlDbType.VarChar, -1).Value = docBase64;
+                comando.Parameters.Add("@DESCRIPCION", System.Data.SqlDbType.VarChar, 100).Value = nomArch;
+                comando.Parameters.Add("@TIPO", System.Data.SqlDbType.VarChar, 10).Value = tipoArch;
+                comando.ExecuteNonQuery();
+            }
+            return true;
+        }
+        catch (Exception ex)
+        {
+            mensajeError = "No fue posible guardar el documento de respaldo. " + "Detalle: " + ex.Message;
+            return false;
+        }
+    }
+
+    public DataSet mfBuscarDocumentoMarca(long idMarca)
+    {
+        DataSet ds = new DataSet();
+        string sql =
+            "SELECT TOP 1 D.DOCUMENTO, D.DESCRIPCION, D.TIPO " +
+            "FROM " + modConstantes.gsDbRH + "M_MARCA_DOC D " +
+            "INNER JOIN " + modConstantes.gsDbRH + "M_MARCACIONES M ON M.IDMARCACION = D.IDMARCACION " +
+            "WHERE D.IDMARCACION = @IDMARCACION " +
+            "AND ISNULL(D.IDESTADO, 1) <> 3 " +
+            "AND ISNULL(M.IDESTADO, 1) <> 3 " +
+            "AND EXISTS (" +
+            "    SELECT 1 " +
+            "    FROM " + modConstantes.gsDbRH + "M_USR_RELOJ UR " +
+            "    INNER JOIN " + modConstantes.gsDbRH + "M_USUARIOS U ON U.IDUSUARIO = UR.IDUSUARIO " +
+            "    WHERE UR.IDUSRELOJ = M.CODIGO_EMP_RELOJ AND ISNULL(UR.IDESTADO, 1) <> 3 " +
+            ") " +
+            "ORDER BY D.IDMARCADOC DESC";
+        using (System.Data.SqlClient.SqlConnection conexion = bd.fnGetConn())
+        using (System.Data.SqlClient.SqlCommand comando = new System.Data.SqlClient.SqlCommand(sql, conexion))
+        using (System.Data.SqlClient.SqlDataAdapter adaptador = new System.Data.SqlClient.SqlDataAdapter(comando))
+        {
+            comando.Parameters.Add("@IDMARCACION", System.Data.SqlDbType.BigInt).Value = idMarca;
+            adaptador.Fill(ds);
+        }
         return ds;
     }
     #endregion
