@@ -21,7 +21,8 @@
                     <asp:TextBox ID="TxtAcceso"
                         runat="server"
                         CssClass="form-control"
-                        Width="350px">
+                        Width="350px"
+                        TextMode="Search">
                     </asp:TextBox>
                 </div>
                 <div class="campo">

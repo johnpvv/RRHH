@@ -700,7 +700,7 @@ public class ClassReloj
                 "UP.NOMBRE AS NOMBRE_TRAB_RELOJ, " +
                 "U.RUT, " +
                 "CONVERT(VARCHAR, U.RUT) + '-' + U.DV as RUT_C, " +
-                "U.NOMBRE AS NOMBRE_RRHH, " +
+                "(U.NOMBRE + ' ' + ISNULL(U.AP_PATERNO,'') + ' ' + ISNULL(U.AP_MATERNO,'')) AS NOMBRE_RRHH, " +
                 "UR.FCREACION AS FECHA " +
                 "FROM " + modConstantes.gsDbRH + "M_USR_RELOJ UR " +
                 "LEFT JOIN " + modConstantes.gsDbRH + "M_RELOJES R ON R.IDRELOJ = UR.IDRELOJ " +
@@ -1138,7 +1138,7 @@ public class ClassReloj
         {
             lsSql +=
                 "SELECT M.IDMARCACION," +
-                "CAST(0 AS BIT) TIENE_DOCUMENTO, " +
+                "CAST(0 AS BIT) TIENE_RESPALDO, " +
                 "CAST(M.F_H_MARCA AS DATE) FECHA,CONVERT(VARCHAR(8),M.F_H_MARCA,108) HORA, " +
                 "CASE DATEPART(WEEKDAY, M.F_H_MARCA) " +
                 "WHEN 1 THEN 'Lunes' " +

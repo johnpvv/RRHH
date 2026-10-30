@@ -25,7 +25,7 @@
             <div class="filtros-grid">
                 <div class="campo">
                     <label>RUT</label>
-                    <asp:TextBox ID="TxtRut" runat="server" CssClass="form-control"
+                    <asp:TextBox ID="TxtRut" runat="server" CssClass="form-control" TextMode="Search"
                         onkeypress="KeyEnter(event)" MaxLength="9" onblur="IsInteger(this);" Width="200px" />
                 </div>
 
@@ -37,17 +37,17 @@
             <div class="filtros-grid">
                 <div class="campo">
                     <label>Nombre</label>
-                    <asp:TextBox ID="TxtNombre" runat="server" CssClass="form-control"
+                    <asp:TextBox ID="TxtNombre" runat="server" CssClass="form-control" TextMode="Search"
                         placeholder="Nombres" onkeypress="KeyEnter(event)" MaxLength="80" Width="300px" />
                 </div>
                 <div class="campo">
                     <label>Paterno</label>
-                    <asp:TextBox ID="TxtPaterno" runat="server" CssClass="form-control"
+                    <asp:TextBox ID="TxtPaterno" runat="server" CssClass="form-control" TextMode="Search"
                         placeholder="Paterno" onkeypress="KeyEnter(event)" MaxLength="80" />
                 </div>
                 <div class="campo">
                     <label>Materno</label>
-                    <asp:TextBox ID="TxtMaterno" runat="server" CssClass="form-control"
+                    <asp:TextBox ID="TxtMaterno" runat="server" CssClass="form-control" TextMode="Search"
                         placeholder="Materno" onkeypress="KeyEnter(event)" MaxLength="80" />
                 </div>
                 <div class="campo">

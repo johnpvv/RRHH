@@ -11,9 +11,10 @@
     <form id="form1" runat="server">
         <div class="PortalContainer">
             <div class="PortalTitulo">
+                <asp:Image ID="caps" ImageUrl="~/imagenes/user_white.png" runat="server" Width="35px" Height="30px" />
                 Portal del Trabajador
             </div>
-            <div class="PortalSubTitulo">
+            <div class="PortalSubTitulo">                
                 Bienvenido al sistema de autoservicio institucional
             </div>
             <div class="MenuGrid">

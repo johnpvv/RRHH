@@ -78,7 +78,7 @@
                                     </div>
                                     <div class="campo">
                                         <label>Nombre:</label>
-                                        <asp:TextBox ID="txtFiltroNombreReloj" runat="server" CssClass="form-control" Width="220px">
+                                        <asp:TextBox ID="txtFiltroNombreReloj" runat="server" CssClass="form-control" Width="220px" TextMode="Search">
                                         </asp:TextBox>
                                     </div>
                                     <asp:Button ID="btnCargarReloj"
@@ -101,7 +101,7 @@
                                     </div>
                                     <div class="campo">
                                         <label>Nombre:</label>
-                                        <asp:TextBox ID="txtNombre" runat="server" CssClass="form-control" Width="220px">
+                                        <asp:TextBox ID="txtNombre" runat="server" CssClass="form-control" Width="220px" TextMode="Search">
                                         </asp:TextBox>
                                     </div>
                                     <asp:Button ID="btnBuscarRRHH"
@@ -319,17 +319,17 @@
 
                             <div class="campo">
                                 <label>Cód. Trab. Reloj:</label>
-                                <asp:TextBox ID="txtFiltroCodigo" runat="server" CssClass="form-control" Width="100px">
+                                <asp:TextBox ID="txtFiltroCodigo" runat="server" CssClass="form-control" Width="100px" TextMode="Search">
                                 </asp:TextBox>
                             </div>
                             <div class="campo">
                                 <label>Nombre:</label>
-                                <asp:TextBox ID="txtFiltroNombre" runat="server" CssClass="form-control" Width="200px">
+                                <asp:TextBox ID="txtFiltroNombre" runat="server" CssClass="form-control" Width="200px" TextMode="Search">
                                 </asp:TextBox>
                             </div>
                             <div class="campo">
                                 <label>RUT:</label>
-                                <asp:TextBox ID="txtFiltroRut" runat="server" CssClass="form-control" Width="120px">
+                                <asp:TextBox ID="txtFiltroRut" runat="server" CssClass="form-control" Width="120px" TextMode="Search">
                                 </asp:TextBox>
                             </div>
                             <div class="campo">

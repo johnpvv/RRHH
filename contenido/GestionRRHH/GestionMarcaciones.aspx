@@ -14,8 +14,15 @@
                 spinner.style.display = 'flex';
             }
         }
-    </script>
-    <script>
+        function mostrarNombreArchivo(input) {
+            var etiqueta = document.getElementById('nombreArchivoSeleccionado');
+
+            if (input.files && input.files.length > 0) {
+                etiqueta.innerText = input.files[0].name;
+            } else {
+                etiqueta.innerText = 'Ningún archivo seleccionado';
+            }
+        }
         function guardarScroll() {
             sessionStorage.setItem('scrollMarcas', window.scrollY);
         }
@@ -67,7 +74,8 @@
                         runat="server"
                         CssClass="form-control"
                         Width="200px"
-                        MaxLength="100" />
+                        MaxLength="100"
+                        TextMode="Search" />
                 </div>
                 <div class="campo">
                     <label>&nbsp;</label>
@@ -283,14 +291,21 @@
                 </div>
                 <div class="filtros-grid">
                     <div class="campo">
-                        <label>Observación:</label><asp:TextBox ID="txtObsMarca" runat="server" CssClass="form-control" MaxLength="800" Width="320px" TextMode="MultiLine" />
+                        <label>Observación:</label><asp:TextBox ID="txtObsMarca" runat="server" CssClass="form-control" MaxLength="800" Width="320px" Height="40px" TextMode="MultiLine" />
                     </div>
                     <div class="campo">
-                        <label>Archivo de respaldo:</label>
-                        <asp:FileUpload ID="fuRespaldoMarca" runat="server"
-                            CssClass="form-control"
-                            Width="450px" />
-                        <asp:Label ID="lblArchivoRespaldo" runat="server" />
+                        <label>Archivo de respaldo (opcional):</label>
+                        <div class="archivo-personalizado">
+                            <label for="<%= fuRespaldoMarca.ClientID %>" class="btn-archivo" title="Si ya existe un documento, se dejará el ultimo subido como respaldo" >
+                            <span style="font-size: 14px;">📎 Seleccionar archivo</span>
+                            </label>
+                            <asp:FileUpload ID="fuRespaldoMarca" runat="server"
+                                CssClass="input-archivo-oculto"
+                                accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg"
+                                onchange="mostrarNombreArchivo(this);" />
+                            <asp:Label ID="lblArchivoRespaldo" runat="server" />
+                            <span id="nombreArchivoSeleccionado" class="nombre-archivo">Ningún archivo seleccionado</span>
+                        </div>
                     </div>
                 </div>
                 <asp:HiddenField ID="hdIdMarcacion" runat="server" />

@@ -35,6 +35,7 @@
                         MaxLength="5"
                         Width="150px"
                         onkeypress="KeyEnter(event)"
+                        TextMode="Search"
                         Style="text-transform: uppercase;" />
                 </div>
                 <div class="campo">
@@ -43,6 +44,7 @@
                         CssClass="form-control"
                         MaxLength="100"
                         onkeypress="KeyEnter(event)"
+                        TextMode="Search"
                         Style="text-transform: uppercase;" />
                 </div>
                 <div class="campo" style="display: flex; align-items: end; padding-bottom: 5px;">

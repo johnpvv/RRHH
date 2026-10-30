@@ -15,15 +15,15 @@
             <div class="filtros-grid">
                 <div class="campo">
                     <label>Dirección IP:</label>
-                    <asp:TextBox ID="txtIp" runat="server" CssClass="form-control" MaxLength="100" />
+                    <asp:TextBox ID="txtIp" runat="server" CssClass="form-control" MaxLength="100" TextMode="Search" />
                 </div>
                 <div class="campo">
                     <label>Serie:</label>
-                    <asp:TextBox ID="txtSerie" runat="server" CssClass="form-control" Width="100px" />
+                    <asp:TextBox ID="txtSerie" runat="server" CssClass="form-control" Width="100px" TextMode="Search"/>
                 </div>
                 <div class="campo">
                     <label>Nombre Reloj:</label>
-                    <asp:TextBox ID="txtDescr" runat="server" CssClass="form-control" MaxLength="800" />
+                    <asp:TextBox ID="txtDescr" runat="server" CssClass="form-control" MaxLength="800" TextMode="Search" />
                 </div>
                 <div class="campo">
                     <asp:Button ID="btnBuscar" runat="server"

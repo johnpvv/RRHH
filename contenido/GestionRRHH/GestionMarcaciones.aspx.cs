@@ -655,7 +655,7 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
         }
         //setear variables para informe
         pdf.Titulo = "Listado Preliminar de Marcaciones por Trabajador";
-        pdf.Subtitulo = "Nombre: "+dgTrabajadores.SelectedRow.Cells[2].Text + "\nRUT: " + dgTrabajadores.SelectedRow.Cells[0].Text + "\nPeriodo: " + ddlMes.SelectedItem + " " + ddlAnio.SelectedValue;
+        pdf.Subtitulo = "Nombre: " + System.Web.HttpUtility.HtmlDecode(dgTrabajadores.SelectedRow.Cells[2].Text) + "\nRUT: " + System.Web.HttpUtility.HtmlDecode(dgTrabajadores.SelectedRow.Cells[0].Text) + "\nPeríodo: " + ddlMes.SelectedItem + " " + ddlAnio.SelectedValue;
         pdf.OrientacionHorizontal = false;
         pdf.MostrarFecha = true;
         pdf.MostrarNumeracion = true;

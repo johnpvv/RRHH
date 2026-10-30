@@ -14,7 +14,7 @@
 @import url('https://fonts.googleapis.com/css?family=Numans');
 
 html,body{
-background-image: url('../../imagenes/Frontis-HCSBA.jpg');
+background-image: url('../../imagenes/fachada__LoEspejo.jpg');
 background-size: cover;
 background-repeat: no-repeat;
 height: 100%;
@@ -109,7 +109,7 @@ margin-left: 4px;
         <div class="d-flex justify-content-center h-100">
             <div class="card">
                 <div class="card-header">
-				    <h3 id="id" runat="server">SOFYA</h3>
+				    <h3><asp:Image ID="caps" ImageUrl="~/imagenes/user_white.png" runat="server" Width="35px" Height="30px" /> Login RR.HH.</h3>
                     <asp:Label ID="lblTit" runat="server"></asp:Label>
                 </div>
                 <div class="card-body">

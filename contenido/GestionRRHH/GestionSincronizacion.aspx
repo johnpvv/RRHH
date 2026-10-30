@@ -208,7 +208,7 @@
                                     <div class="filtros-grid">
                                         <div class="campo">
                                             <label>Código, RUT o Nombre Trabajador:</label>
-                                            <asp:TextBox ID="txtBusq" runat="server" CssClass="form-control">
+                                            <asp:TextBox ID="txtBusq" runat="server" CssClass="form-control" TextMode="Search">
                                             </asp:TextBox>
                                         </div>
                                         <div class="campo">

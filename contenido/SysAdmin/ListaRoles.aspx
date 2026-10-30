@@ -18,7 +18,8 @@
                     <label>Roles:</label>
                     <asp:TextBox ID="txtBNom" runat="server"
                         CssClass="form-control"
-                        Width="455px">
+                        Width="455px"
+                        TextMode="Search">
                     </asp:TextBox>
                 </div>
                 <div class="campo">
