@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -12,6 +13,7 @@ public partial class contenido_Administracion_ListaHorarios : System.Web.UI.Page
     ClassHorarios hor = new ClassHorarios();
     ClassTrabajadores usr = new ClassTrabajadores();
     Mensaje mens = new Mensaje();
+    ClassExcelExportar excel = new ClassExcelExportar();
     protected void Page_Load(object sender, EventArgs e)
     {
 
@@ -35,10 +37,7 @@ public partial class contenido_Administracion_ListaHorarios : System.Web.UI.Page
     {
         Response.Redirect("~/contenido/GestionRRHH/GestionHorarios.aspx?key=0");
     }
-    protected void btnExportar_Click(object sender, EventArgs e)
-    {
 
-    }
     private void CargarHorarios()
     {
         hor.ls_descrip = this.txtDescr.Text;
@@ -62,4 +61,19 @@ public partial class contenido_Administracion_ListaHorarios : System.Web.UI.Page
             e.Row.CssClass = e.Row.RowState.ToString();
         }
     }
+    #region Excel
+    protected void btnExportar_Click(object sender, EventArgs e)
+    {
+        hor.ls_descrip = this.txtDescr.Text;
+        DataSet ds = hor.mfBuscarHorarios();
+
+        if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+        {
+            mens.mensaje(Page, "No existen horarios para exportar.");
+            return;
+        }
+
+        excel.Exportar(ds, "Horarios_rrhh");
+    }
+    #endregion
 }

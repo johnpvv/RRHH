@@ -212,6 +212,11 @@ public partial class contenido_GestionRRHH_GestionHorarios : System.Web.UI.Page
     }
     protected void btnCalcular_Click(object sender, EventArgs e)
     {
+        if (String.IsNullOrEmpty(this.txtint.Text))
+        {
+            mens.mensaje(Page, "Debe Escribir un intervalo para generar los Horarios... ");
+            return;
+        }
         int intervalo = Convert.ToInt32(this.txtint.Text);
         CargarHoras(intervalo);
     }

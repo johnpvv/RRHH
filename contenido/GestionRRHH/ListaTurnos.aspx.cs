@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -11,6 +12,7 @@ public partial class contenido_Administracion_ListaTurnos : System.Web.UI.Page
     ClassTurnos tur = new ClassTurnos();
     ClassTrabajadores usr = new ClassTrabajadores();
     Mensaje mens = new Mensaje();
+    ClassExcelExportar excel = new ClassExcelExportar();
     protected void Page_Load(object sender, EventArgs e)
     {
 
@@ -35,10 +37,7 @@ public partial class contenido_Administracion_ListaTurnos : System.Web.UI.Page
         //CrearTurno();
         Response.Redirect("~/contenido/GestionRRHH/GestionTurnos.aspx?key=0");
     }
-    protected void btnExportar_Click(object sender, EventArgs e)
-    {
 
-    }
     private void CargarTurnos()
     {
         tur.ls_codigo = this.txtCod.Text;
@@ -88,4 +87,22 @@ public partial class contenido_Administracion_ListaTurnos : System.Web.UI.Page
             e.Row.CssClass = e.Row.RowState.ToString();
         }
     }
+
+    #region Excel
+    protected void btnExportar_Click(object sender, EventArgs e)
+    {
+        tur.ls_codigo = this.txtCod.Text;
+        tur.ls_descrip = this.txtDescr.Text;
+        tur.ls_turno = "";
+        DataSet ds = tur.mfBuscarTurnos();
+
+        if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+        {
+            mens.mensaje(Page, "No existen Turnos para exportar.");
+            return;
+        }
+
+        excel.Exportar(ds, "Turnos_rrhh");
+    }
+    #endregion
 }

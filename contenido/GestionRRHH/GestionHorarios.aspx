@@ -10,12 +10,10 @@
     <link runat="server" href="~/css/Estilos1.css" rel="stylesheet" type="text/css" id="Link1" />
     <link href="~/css/all.min.css" rel="stylesheet" />
     <link href="~/css/EstiloRRHH.css" rel="stylesheet" />
-
     <script type="text/javascript">
-
         function ConfirmarGuardar() {
             if (confirm('¿Desea guardar los Cambios?')) {
-                document.getElementById('divCargando').style.display = 'block';
+                document.getElementById('spinnerCarga').style.display = 'block';
                 return true;
             }
             return false;
@@ -35,222 +33,188 @@
             }
         }
     </script>
+    <script type="text/javascript">
+        function mostrarSpinner() {
+            var spinner = document.getElementById('spinnerCarga');
+            if (spinner) {
+                spinner.style.display = 'flex';
+            }
+        }
+    </script>
 </head>
 <body>
     <form id="form1" runat="server">
         <asp:ScriptManager ID="TS_1" runat="server" EnableScriptGlobalization="True"></asp:ScriptManager>
-        <table class="TextoLeft">
-            <tr>
-                <td class="TextoLeft">Gestión
-                        <label>
-                            Horarios --&gt; Antecedentes --&gt;
-                        <asp:Label ID="LbTitulo" runat="server" Text="Label"></asp:Label>
-                        </label>
-                </td>
-                <td style="text-align: right"></td>
-            </tr>
-        </table>
-        <ajaxToolkit:TabContainer runat="server" ID="TC_1" Height="700px" Width="960px"
-            Font-Names="Tahoma" Font-Size="13px" ForeColor="#666666" ScrollBars="Auto" ActiveTabIndex="0">
-
-            <ajaxToolkit:TabPanel runat="server" ID="TabPanel1" Font-Names="Tahoma" ForeColor="#666666" Font-Size="13px">
-                <HeaderTemplate>Información General</HeaderTemplate>
+        <div class="bloque">
+            <div class="titulo-seccion">
+                Gestión Horarios
+                <span>/ Antecedentes / Codigo: </span>
+                <asp:Label ID="LbTitulo" runat="server" Text="Label" />
+            </div>
+        </div>
+        <ajaxToolkit:TabContainer runat="server" ID="TC_1" ActiveTabIndex="0" CssClass="tabs-moderno" ScrollBars="Auto">
+            <ajaxToolkit:TabPanel runat="server" ID="TabPanel1">
+                <HeaderTemplate>
+                    Información General
+                </HeaderTemplate>
                 <ContentTemplate>
-                    <table border="0" style="width: 900px;" class="table table-hover table-bordered">
-                        <tr>
-                            <td>
-                                <table style="width: 100%; margin-top: 10px;" border="0">
-                                    <tr>
-                                        <td colspan="2" style="font-weight: bold; background-color: #EAEAEA; padding: 5px;">Información Básica:
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width: 200px;"></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="TextoRigth"></td>
-                                        <td class="TextoLeft"></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="TextoRigth">Estado:</td>
-                                        <td class="TextoLeft">
-                                            <asp:Label ID="lbEstado" runat="server" Font-Bold="True"></asp:Label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="TextoRigth">ID:</td>
-                                        <td class="TextoLeft">
-                                            <asp:TextBox ID="TxtId" runat="server" Width="141px" Font-Bold="True" Enabled="False"></asp:TextBox>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="TextoRigth">Descripción:</td>
-                                        <td class="TextoLeft">
-                                            <asp:TextBox ID="TxtDescr"
-                                                runat="server"
-                                                Width="350px"
-                                                Height="80px"
-                                                TextMode="MultiLine"
-                                                MaxLength="700"></asp:TextBox>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="TextoRigth">Fecha Creacion:</td>
-                                        <td>
-                                            <asp:TextBox ID="txtFCrea" runat="server" Width="120px" Enabled="False"></asp:TextBox>
-                                            <ajaxToolkit:CalendarExtender ID="CE2" TargetControlID="txtFCrea"
-                                                runat="server" BehaviorID="_content_CE2"></ajaxToolkit:CalendarExtender>
-                                            <ajaxToolkit:MaskedEditExtender ID="MEE"
-                                                TargetControlID="txtFCrea"
-                                                Mask="99/99/9999" runat="server"
-                                                MaskType="Date" BehaviorID="_content_MEE" Century="2000" CultureAMPMPlaceholder="" CultureCurrencySymbolPlaceholder="" CultureDateFormat="" CultureDatePlaceholder="" CultureDecimalPlaceholder="" CultureThousandsPlaceholder="" CultureTimePlaceholder=""></ajaxToolkit:MaskedEditExtender>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <asp:HiddenField ID="hdIdHora" runat="server" />
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
-                    <table style="width: 100%; margin-bottom: 10px;">
-                        <tr>
-                            <td align="center">
-                                <asp:Button ID="btn_Agregar"
-                                    Text="Grabar"
-                                    CssClass="BotonPortalAzul"
-                                    runat="server"
-                                    OnClick="btn_Agregar_Click"
-                                    OnClientClick="return ConfirmarGuardar();" />&nbsp
-                                <asp:Button ID="btn_habilitar"
-                                    runat="server"
-                                    CssClass="BotonPortalAmarillo"
-                                    Text="Habilitar"
-                                    OnClick="btn_habilitar_Click"
-                                    OnClientClick="javascript:Confirm('Desea realizar la actualización de los Datos..')" />&nbsp
-                                <asp:Button ID="btnVolver_1"
-                                    runat="server"
-                                    Text="Volver"
-                                    CssClass="BotonPortalGris"
-                                    OnClick="btnVolver_Click" />
-                            </td>
-                        </tr>
-                    </table>
-                    <div id="divCargando" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.3); z-index: 9999;">
+                    <div class="bloque">
+                        <div class="titulo-seccion">
+                            Información Básica
+                        </div>
+                        <div class="filtros-grid-center">
+                            <div class="campo">
+                                <label>Estado:</label>
+                                <asp:Label ID="lbEstado" runat="server" Font-Bold="True" />
+                            </div>
+                            <div class="campo">
+                                <label>ID:</label>
+                                <asp:TextBox ID="TxtId" runat="server"
+                                    CssClass="form-control" Width="100px"
+                                    Font-Bold="True" Enabled="False" />
+                            </div>
+                            <div class="campo">
+                                <label>Descripción:</label>
+                                <asp:TextBox ID="TxtDescr" runat="server"
+                                    CssClass="form-control" Width="450px"
+                                    Height="120px" TextMode="MultiLine"
+                                    MaxLength="700" />
+                            </div>
+                            <div class="campo">
+                                <label>Fecha Creación:</label>
+                                <asp:TextBox ID="txtFCrea" runat="server"
+                                    CssClass="form-control"
+                                    Width="150px" Enabled="False" />
+                                <ajaxToolkit:CalendarExtender ID="CE2"
+                                    TargetControlID="txtFCrea" runat="server"
+                                    BehaviorID="_content_CE2" />
+                                <ajaxToolkit:MaskedEditExtender
+                                    ID="MEE" TargetControlID="txtFCrea"
+                                    Mask="99/99/9999" runat="server"
+                                    MaskType="Date" BehaviorID="_content_MEE"
+                                    Century="2000" />
+                            </div>
+                        </div>
+                        <asp:HiddenField ID="hdIdHora" runat="server" />
+                        <div class="botones-form">
+                            <asp:Button ID="btn_Agregar"
+                                Text="Grabar"
+                                CssClass="BotonPortalAzul"
+                                runat="server"
+                                OnClick="btn_Agregar_Click"
+                                OnClientClick="return ConfirmarGuardar();" />
+                            <asp:Button ID="btn_habilitar"
+                                runat="server"
+                                CssClass="BotonPortalAmarillo"
+                                Text="Habilitar"
+                                OnClick="btn_habilitar_Click"
+                                OnClientClick="javascript:Confirm('Desea realizar la actualización de los Datos..');mostrarSpinner();" />
 
-                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 300px; height: 180px; background: white; border-radius: 10px; text-align: center; padding-top: 30px; box-shadow: 0 0 15px #666;">
-
-                            <img src="../../imagenes/ajax-loader.gif" style="width: 120px; height: 120px;" alt="Cargando..." />
-                            <br />
-                            <br />
-                            <span style="font-size: 16px; font-weight: bold;">Guardando información...
-                            </span>
-
+                            <asp:Button ID="btnVolver_1"
+                                runat="server"
+                                Text="Volver"
+                                CssClass="BotonPortalGris"
+                                OnClick="btnVolver_Click"
+                                CausesValidation="false" />
                         </div>
                     </div>
                 </ContentTemplate>
             </ajaxToolkit:TabPanel>
-            <ajaxToolkit:TabPanel ID="TabPanel2" runat="server" HeaderText="TabPanel2">
-                <HeaderTemplate>Detalle Horario</HeaderTemplate>
+            <ajaxToolkit:TabPanel ID="TabPanel2" runat="server">
+                <HeaderTemplate>
+                    Detalle Horario
+                </HeaderTemplate>
                 <ContentTemplate>
-                    <table class="GridGral" style="width: 900px; margin: auto;">
-                        <tr>
-                            <td colspan="2" class="TituloSeccion">Detalle del Horario
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="TextoLeft">&nbsp;</td>
-                            <td class="TextoLeft">&nbsp;</td>
-                        </tr>
-                        <tr>
-                            <td class="textoNormRigth">Intervalo en Minutos:
-                            </td>
-                            <td class="textoNormLeft">
-                                <asp:TextBox ID="txtint" runat="server" Width="60px" CssClass="TextBoxHora" MaxLength="3" onblur="ValidarTexto(this.id)"></asp:TextBox>
-                                <asp:Button ID="btnCalcular"
-                                    runat="server"
-                                    Text="Generar Intervalos"
-                                    CssClass="BotonPortalVerde"
-                                    OnClick="btnCalcular_Click" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="TextoLeft">&nbsp;</td>
-                            <td class="TextoLeft">&nbsp;</td>
-                        </tr>
-                        <tr>
-                            <td class="textoNormRigth">Hora de Entrada:
-                            </td>
-                            <td class="textoNormLeft">
+                    <div class="bloque">
+                        <div class="titulo-seccion">
+                            Configuración del Horario
+                        </div>
+                        <div class="filtros-grid-center">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div class="campo">
+                                    <label>Intervalo en Minutos:</label>
+                                    <asp:TextBox ID="txtint" runat="server"
+                                        CssClass="form-control" Width="100px"
+                                        MaxLength="3" onblur="ValidarTexto(this.id)" />
+                                </div>
+                                <div class="campo">
+                                    <label>&nbsp;</label>
+                                    <asp:Button ID="btnCalcular"
+                                        runat="server"
+                                        Text="Generar Intervalos"
+                                        CssClass="BotonPortalVerde"
+                                        OnClick="btnCalcular_Click"
+                                        OnClientClick="mostrarSpinner();" />
+                                </div>
+                            </div>
+                            <div class="campo">
+                                <label>Hora de Entrada:</label>
                                 <asp:DropDownList ID="ddlHoraEntrada"
                                     runat="server"
-                                    Width="120px"
-                                    CssClass="GridGralRow"
+                                    CssClass="form-control"
+                                    Width="150px"
                                     AutoPostBack="true"
                                     OnSelectedIndexChanged="calcHoras">
                                 </asp:DropDownList>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="textoNormRigth">Hora de Salida:
-                            </td>
-                            <td class="textoNormLeft">
+                            </div>
+                            <div class="campo">
+                                <label>Hora de Salida:</label>
                                 <asp:DropDownList ID="ddlHoraSalida"
                                     runat="server"
-                                    Width="120px"
+                                    CssClass="form-control"
+                                    Width="150px"
                                     AutoPostBack="true"
-                                    CssClass="GridGralRow"
                                     OnSelectedIndexChanged="calcHoras">
                                 </asp:DropDownList>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="TextoLeft">&nbsp;</td>
-                            <td class="TextoLeft">&nbsp;</td>
-                        </tr>
-                        <tr>
-                            <td class="textoNormRigth">Duración:
-                            </td>
-                            <td class="textoNormLeft">
-                                <asp:TextBox ID="txtHoras"
-                                    runat="server"
-                                    Width="60px"
-                                    Enabled="false"
-                                    CssClass="TextBoxHora" />
-                                <span>Horas</span>
-                                <asp:TextBox ID="txtMinuto"
-                                    runat="server"
-                                    Width="60px"
-                                    Enabled="false"
-                                    CssClass="TextBoxHora" />
-                                <span>Minutos</span>
-                            </td>
-                        </tr>
-                    </table>
-                    <br />
-                    <table style="width: 100%; margin-bottom: 10px;">
-                        <tr>
-                            <td align="center">
-                                <asp:Button ID="btnGuardarDetalle"
-                                    runat="server"
-                                    Text="Guardar Horario"
-                                    CssClass="BotonPortalAzul"
-                                    OnClick="btnGuardarDetalle_Click" />
-                                <asp:Button ID="btnVolver"
-                                    runat="server"
-                                    Text="Volver"
-                                    CssClass="BotonPortalGris"
-                                    OnClick="btnVolver_Click" />
-                            </td>
-                        </tr>
-                    </table>
-                    <asp:Label ID="lblResultado" runat="server" ForeColor="Red"></asp:Label>
+                            </div>
+                            <div class="campo">
+                                <label>Duración:</label>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <asp:TextBox ID="txtHoras"
+                                        runat="server"
+                                        Width="65px"
+                                        Enabled="false"
+                                        CssClass="form-control"
+                                        Font-Bold="true"
+                                        Font-Size="18px"
+                                        ForeColor="Black" />
+                                    <span>Horas</span>
+                                    <asp:TextBox ID="txtMinuto"
+                                        runat="server"
+                                        Width="65px"
+                                        Enabled="false"
+                                        CssClass="form-control"
+                                        Font-Bold="true"
+                                        Font-Size="18px"
+                                        ForeColor="Black" />
+                                    <span>Minutos</span>
+                                </div>
+                            </div>
+                        </div>
+                        <asp:Label ID="lblResultado" runat="server" ForeColor="Red" />
+                        <div class="botones-form">
+                            <asp:Button ID="btnGuardarDetalle"
+                                runat="server"
+                                Text="Guardar Horario"
+                                CssClass="BotonPortalAzul"
+                                OnClick="btnGuardarDetalle_Click"
+                                OnClientClick="mostrarSpinner();" />
+                            <asp:Button ID="btnVolver"
+                                runat="server"
+                                Text="Volver"
+                                CssClass="BotonPortalGris"
+                                OnClick="btnVolver_Click" />
+                        </div>
+                    </div>
                 </ContentTemplate>
             </ajaxToolkit:TabPanel>
         </ajaxToolkit:TabContainer>
+        <div id="spinnerCarga" class="spinner-overlay" style="display: none;">
+            <div class="spinner"></div>
+            <div class="spinner-text">
+                Cargando Datos, Favor Espere...
+            </div>
+        </div>
     </form>
 </body>
 </html>

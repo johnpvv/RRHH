@@ -24,12 +24,13 @@
     <form id="form1" runat="server">
         <asp:ScriptManager ID="TS_1" runat="server" EnableScriptGlobalization="True"></asp:ScriptManager>
         <div class="bloque">
-            <div class="bloque-titulo">
-                Gestión Turnos --&gt; Antecedentes --&gt;
+            <div class="titulo-seccion">
+                Gestión Turnos 
+                <span>/ Antecedentes / Codigo: </span>
                 <asp:Label ID="LbTitulo" runat="server" Text="Label"></asp:Label>
             </div>
         </div>
-        <ajaxToolkit:TabContainer runat="server" ID="TC_1" Height="100%" Width="100%" ScrollBars="Auto" ActiveTabIndex="0">
+        <ajaxToolkit:TabContainer runat="server" ID="TC_1" Height="100%" Width="100%" ScrollBars="Auto" ActiveTabIndex="0" CssClass="tabs-moderno">
 
             <ajaxToolkit:TabPanel runat="server" ID="TabPanel1" Font-Names="Tahoma" ForeColor="#666666" Font-Size="13px">
                 <HeaderTemplate>Información General</HeaderTemplate>
@@ -38,80 +39,80 @@
                         <div class="titulo-seccion">
                             Información del Turno       
                         </div>
-                        <div class="filtros-grid">
-                            <div class="campo">
-                                <label>ID:</label>
-                                <asp:TextBox ID="TxtId" runat="server"
-                                    CssClass="form-control"
-                                    Width="120px"
-                                    Enabled="False"></asp:TextBox>
+                        <div class="filtros-grid-center">
+                            <div class="filtros-grid">
+                                <div class="campo">
+                                    <label>ID:</label>
+                                    <asp:TextBox ID="TxtId" runat="server"
+                                        CssClass="form-control"
+                                        Width="120px"
+                                        Enabled="False"></asp:TextBox>
+                                </div>
+                                <div class="campo">
+                                    <label>Estado:</label>
+                                    <asp:TextBox ID="lbEstado" runat="server"
+                                        CssClass="form-control"
+                                        Width="300px"
+                                        Enabled="False"></asp:TextBox>
+                                </div>
                             </div>
-                            <div class="campo">
-                                <label>Estado:</label>
-                                <asp:TextBox ID="lbEstado" runat="server"
-                                    CssClass="form-control"
-                                    Width="300px"
-                                    Enabled="False"></asp:TextBox>
+                            <div class="filtros-grid">
+                                <div class="campo">
+                                    <label>Descripción:</label>
+                                    <asp:TextBox ID="TxtDescr"
+                                        runat="server"
+                                        CssClass="form-control"
+                                        Width="500px"
+                                        Height="70px"
+                                        TextMode="MultiLine"
+                                        MaxLength="700"></asp:TextBox>
+                                </div>
                             </div>
+                            <div class="filtros-grid">
+                                <div class="campo">
+                                    <label>Código:</label>
+                                    <asp:TextBox ID="txtCod"
+                                        runat="server"
+                                        CssClass="form-control"
+                                        Width="140px"
+                                        Font-Bold="True"></asp:TextBox>
+                                </div>
+                                <div class="campo">
+                                    <label>Fecha Creación:</label>
+                                    <asp:TextBox ID="txtFCrea"
+                                        runat="server"
+                                        CssClass="form-control"
+                                        Width="120px"
+                                        Enabled="False"></asp:TextBox>
+                                    <ajaxToolkit:CalendarExtender
+                                        ID="CE2"
+                                        TargetControlID="txtFCrea"
+                                        runat="server"
+                                        BehaviorID="_content_CE2"></ajaxToolkit:CalendarExtender>
+                                    <ajaxToolkit:MaskedEditExtender
+                                        ID="MEE"
+                                        TargetControlID="txtFCrea"
+                                        Mask="99/99/9999"
+                                        runat="server"
+                                        MaskType="Date"
+                                        BehaviorID="_content_MEE"
+                                        Century="2000" CultureAMPMPlaceholder="" CultureCurrencySymbolPlaceholder="" CultureDateFormat="" CultureDatePlaceholder="" CultureDecimalPlaceholder="" CultureThousandsPlaceholder="" CultureTimePlaceholder=""></ajaxToolkit:MaskedEditExtender>
+                                </div>
+                                <div class="campo">
+                                    <label>Considera Feriados:</label>
+                                    <asp:CheckBox ID="chkFer"
+                                        runat="server"
+                                        CssClass="TextoCheck"></asp:CheckBox>
+                                </div>
+                                <div class="campo">
+                                    <label>Turno Mensual:</label>
+                                    <asp:CheckBox ID="chkTipo"
+                                        runat="server"
+                                        CssClass="TextoCheck"></asp:CheckBox>
+                                </div>
+                            </div>
+                            <asp:HiddenField ID="hdIdTurno" runat="server" />
                         </div>
-                        <div class="filtros-grid">
-                            <div class="campo">
-                                <label>Descripción:</label>
-                                <asp:TextBox ID="TxtDescr"
-                                    runat="server"
-                                    CssClass="form-control"
-                                    Width="500px"
-                                    Height="70px"
-                                    TextMode="MultiLine"
-                                    MaxLength="700"></asp:TextBox>
-                            </div>
-                        </div>
-                        <div class="filtros-grid">
-                            <div class="campo">
-                                <label>Código:</label>
-                                <asp:TextBox ID="txtCod"
-                                    runat="server"
-                                    CssClass="form-control"
-                                    Width="140px"
-                                    Font-Bold="True"></asp:TextBox>
-                            </div>
-                            <div class="campo">
-                                <label>Fecha Creación:</label>
-                                <asp:TextBox ID="txtFCrea"
-                                    runat="server"
-                                    CssClass="form-control"
-                                    Width="120px"
-                                    Enabled="False"></asp:TextBox>
-                                <ajaxToolkit:CalendarExtender
-                                    ID="CE2"
-                                    TargetControlID="txtFCrea"
-                                    runat="server"
-                                    BehaviorID="_content_CE2"></ajaxToolkit:CalendarExtender>
-                                <ajaxToolkit:MaskedEditExtender
-                                    ID="MEE"
-                                    TargetControlID="txtFCrea"
-                                    Mask="99/99/9999"
-                                    runat="server"
-                                    MaskType="Date"
-                                    BehaviorID="_content_MEE"
-                                    Century="2000" CultureAMPMPlaceholder="" CultureCurrencySymbolPlaceholder="" CultureDateFormat="" CultureDatePlaceholder="" CultureDecimalPlaceholder="" CultureThousandsPlaceholder="" CultureTimePlaceholder=""></ajaxToolkit:MaskedEditExtender>
-                            </div>
-                        </div>
-                        <div class="filtros-grid">
-                            <div class="campo">
-                                <label>Considera Feriados:</label>
-                                <asp:CheckBox ID="chkFer"
-                                    runat="server"
-                                    CssClass="TextoCheck"></asp:CheckBox>
-                            </div>
-                            <div class="campo">
-                                <label>Turno Mensual:</label>
-                                <asp:CheckBox ID="chkTipo"
-                                    runat="server"
-                                    CssClass="TextoCheck"></asp:CheckBox>
-                            </div>
-                        </div>
-                        <asp:HiddenField ID="hdIdTurno" runat="server" />
                     </div>
                     <div class="botones-form">
                         <asp:Button ID="btn_Agregar"
@@ -134,7 +135,6 @@
                     </div>
                 </ContentTemplate>
             </ajaxToolkit:TabPanel>
-
             <ajaxToolkit:TabPanel ID="TabPanel2" runat="server" HeaderText="TabPanel2">
                 <HeaderTemplate>Detalle Turno Días</HeaderTemplate>
                 <ContentTemplate>
@@ -215,7 +215,7 @@
                                     Text="Guardar Turno"
                                     CssClass="BotonPortalAzul"
                                     OnClick="btnGuardarDetalle_Click"
-                                    OnClientClick="mostrarSpinner();"/>
+                                    OnClientClick="mostrarSpinner();" />
                                 <asp:Button ID="btnVolver_2"
                                     runat="server"
                                     Text="Volver"
@@ -244,7 +244,7 @@
                             <td class="TextoLeft" style="width: 200px;">
                                 <asp:DropDownList ID="ddlMes" runat="server" Width="150px" CssClass="form-control">
                                 </asp:DropDownList>
-                                <asp:Button ID="btnGenerarMes" runat="server" 
+                                <asp:Button ID="btnGenerarMes" runat="server"
                                     CssClass="BotonPortalVerde" OnClientClick="mostrarSpinner();"
                                     OnClick="btnGenerarMes_Click" Text="Cargar Mes" />
                             </td>
@@ -261,8 +261,8 @@
                                     <asp:ListItem Value="6-1">6 días / 1 libre</asp:ListItem>
                                     <asp:ListItem Value="7-7">7 días / 7 libres</asp:ListItem>
                                 </asp:DropDownList>
-                                <asp:Button ID="btnAplicarPatron" runat="server" 
-                                    CssClass="BotonPortalAmarillo" 
+                                <asp:Button ID="btnAplicarPatron" runat="server"
+                                    CssClass="BotonPortalAmarillo"
                                     OnClientClick="mostrarSpinner();"
                                     OnClick="btnAplicarPatron_Click" Text="Aplicar" />
                             </td>
@@ -347,7 +347,7 @@
                                     Text="Guardar Turno Mensual"
                                     CssClass="BotonPortalAzul"
                                     OnClick="btnGuardarDetalleMes_Click"
-                                    OnClientClick="mostrarSpinner();"/>
+                                    OnClientClick="mostrarSpinner();" />
                                 <asp:Button ID="btnVolver_3"
                                     runat="server"
                                     Text="Volver"
