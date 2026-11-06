@@ -13,6 +13,7 @@ public partial class contenido_RRHH_VistaTurnosTrab : System.Web.UI.Page
     ClassTurnos tur = new ClassTurnos();
     ClassTrabajadores usr = new ClassTrabajadores();
     ClassFeriado fer = new ClassFeriado();
+    Mensaje mens = new Mensaje();
     private HashSet<DateTime> feriados = new HashSet<DateTime>();
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -137,11 +138,6 @@ public partial class contenido_RRHH_VistaTurnosTrab : System.Web.UI.Page
             pnlCalendario.Visible = true;
             CargarCalendario();
         }
-    }
-
-    protected void btnExportar_Click(object sender, EventArgs e)
-    {
-
     }
 
     protected void ddlMes_SelectedIndexChanged(object sender, EventArgs e)
@@ -272,6 +268,128 @@ public partial class contenido_RRHH_VistaTurnosTrab : System.Web.UI.Page
             return hora.ToString("HH:mm");
 
         return valor.ToString();
+    }
+    #endregion
+
+    #region Exportar
+    protected void btnExportar_Click(object sender, EventArgs e)
+    {
+        ClassExcelExportar excel = new ClassExcelExportar();
+        usr.ls_rut = Session["rut"].ToString();
+        tur.ls_user = usr.mfDevuelveID();
+
+        DataSet dsTurno = tur.mfBuscarTurnoActivoTrab();
+
+        if (dsTurno == null || dsTurno.Tables.Count == 0 || dsTurno.Tables[0].Rows.Count == 0)
+        {
+            dgData.DataSource = null;
+            dgData.DataBind();
+            return;
+        }
+
+        DataRow dr = dsTurno.Tables[0].Rows[0];
+
+        string idTurno = dr["IDTURNOS"].ToString();
+        string tipoTurno = dr["TIPO"].ToString();
+
+        DataSet ds;
+        tur.ls_mes = ddlMes.SelectedValue;
+        tur.ls_anio = ddlAnio.SelectedValue;
+        tur.ls_idturno = idTurno;
+
+        if (tipoTurno == "1")
+        {
+            ds = tur.mfBuscarTurnosTrabMes();
+            CargarFeriados();
+        }
+        else
+        {
+            ds = tur.mfBuscarTurnosTrab();
+        }
+
+        if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+        {
+            mens.mensaje(Page, "No existen datos para exportar.");
+            return;
+        }
+        //excluir columnas
+        excel.ColumnasExcluir.Add("IDTURNUS");
+        excel.ColumnasExcluir.Add("IDTURNOS");
+        excel.ColumnasExcluir.Add("FECHA");
+        excel.ColumnasExcluir.Add("IDDIA");
+        excel.ColumnasExcluir.Add("IDHORA");
+        excel.ColumnasExcluir.Add("FERIADOS");
+        //solo formato hora
+        excel.ColumnasSoloHora.Add("HORA_INI");
+        excel.ColumnasSoloHora.Add("HORA_FIN");
+
+        excel.Exportar(ds, "Listado_Turnos_" + ddlMes.SelectedValue + "_" + Session["rut"].ToString());
+    }
+    protected void btnImprimir_Click(object sender, EventArgs e)
+    {
+        ClassPDF pdf = new ClassPDF();
+        usr.ls_rut = Session["rut"].ToString();
+        tur.ls_user = usr.mfDevuelveID();
+
+        DataSet dsTurno = tur.mfBuscarTurnoActivoTrab();
+
+        if (dsTurno == null || dsTurno.Tables.Count == 0 || dsTurno.Tables[0].Rows.Count == 0)
+        {
+            dgData.DataSource = null;
+            dgData.DataBind();
+            return;
+        }
+
+        DataRow dr = dsTurno.Tables[0].Rows[0];
+
+        string idTurno = dr["IDTURNOS"].ToString();
+        string tipoTurno = dr["TIPO"].ToString();
+
+        DataSet ds;
+        tur.ls_mes = ddlMes.SelectedValue;
+        tur.ls_anio = ddlAnio.SelectedValue;
+        tur.ls_idturno = idTurno;
+
+        if (tipoTurno == "1")
+        {
+            ds = tur.mfBuscarTurnosTrabMes();
+            CargarFeriados();
+        }
+        else
+        {
+            ds = tur.mfBuscarTurnosTrab();
+        }
+
+        //setear variables para informe
+        pdf.Titulo = "Turnos por Trabajador";
+        pdf.Subtitulo = "Nombre: "+Session["nombre"].ToString() + "\nRUT: " + Session["rut"].ToString() + "\nPeriodo: " + ddlMes.SelectedItem + " " + ddlAnio.SelectedValue;
+        pdf.OrientacionHorizontal = false;
+        pdf.MostrarFecha = true;
+        pdf.MostrarNumeracion = true;
+
+        //columnas a excluir
+        pdf.ColumnasExcluir.Add("IDTURNUS");
+        pdf.ColumnasExcluir.Add("IDTURNOS");
+        pdf.ColumnasExcluir.Add("FECHA");
+        pdf.ColumnasExcluir.Add("IDDIA");
+        pdf.ColumnasExcluir.Add("IDHORA");
+        pdf.ColumnasExcluir.Add("FERIADOS");
+
+        //configurar columnas formato hora
+        pdf.ColumnasSoloHora.Add("HORA_INI");
+        pdf.ColumnasSoloHora.Add("HORA_FIN");
+
+        //configurar ancho columnas
+        pdf.AnchosColumnas.Add("TURNO", 20f);
+        pdf.AnchosColumnas.Add("HORARIO", 22f);
+        pdf.AnchosColumnas.Add("ESTADO", 12f);
+        pdf.AnchosColumnas.Add("HORA_INI", 12f);
+        pdf.AnchosColumnas.Add("HORA_FIN", 12f);
+        pdf.AnchosColumnas.Add("MINUTO", 10f);
+        pdf.AnchosColumnas.Add("DIA", 13f);
+
+        //generar nombre archivo y descargar
+        pdf.ExportarDataTable(Response, ds.Tables[0], "Listado_TURNOS_" + ddlMes.SelectedValue + "_" + Session["rut"].ToString());
     }
     #endregion
 }

@@ -31,6 +31,7 @@ public class ClassPDF
     public string NombreInstitucion { get; set; }
     public List<string> ColumnasFechaHora { get; set; }
     public List<string> ColumnasExcluir { get; set; }
+    public List<string> ColumnasSoloHora { get; private set; }
     public Dictionary<string, float> AnchosColumnas { get; set; }
     public ClassPDF()//constructor define valores por defecto, John Vaccarella
     {
@@ -51,6 +52,7 @@ public class ClassPDF
         ColumnasExcluir = new List<string>();
         AnchosColumnas = new Dictionary<string, float>(StringComparer.OrdinalIgnoreCase);
         ColumnasFechaHora = new List<string>();
+        ColumnasSoloHora = new List<string>();
     }
     public void ExportarDataTable(HttpResponse response, DataTable datos, string nombreArchivo)
     {
@@ -162,10 +164,28 @@ public class ClassPDF
                     {
                         if (valor is DateTime)
                         {
-                            texto = ColumnasFechaHora.Contains(columna.ColumnName,
-                                StringComparer.OrdinalIgnoreCase)
-                                ? ((DateTime)valor).ToString("dd/MM/yyyy HH:mm:ss")
-                                : ((DateTime)valor).ToString(FormatoFecha);
+                            DateTime fecha = (DateTime)valor;
+
+                            if (ColumnasSoloHora.Contains(
+                                columna.ColumnName,
+                                StringComparer.OrdinalIgnoreCase))
+                            {
+                                texto = fecha.ToString("HH:mm:ss");
+                            }
+                            else
+                            {
+                                texto = ColumnasFechaHora.Contains(
+                                    columna.ColumnName,
+                                    StringComparer.OrdinalIgnoreCase)
+                                    ? fecha.ToString("dd/MM/yyyy HH:mm:ss")
+                                    : fecha.ToString(FormatoFecha);
+                            }
+                        }
+                        else if (valor is TimeSpan && ColumnasSoloHora.Contains(
+                                columna.ColumnName,
+                                StringComparer.OrdinalIgnoreCase))
+                        {
+                            texto = ((TimeSpan)valor).ToString(@"hh\:mm\:ss");
                         }
                         else
                         {

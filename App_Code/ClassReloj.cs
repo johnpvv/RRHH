@@ -186,13 +186,9 @@ public class ClassReloj
               "ELSE 'MARCA ORIGINAL' " +
               "END AS ESTADO_MARCA " +
               "FROM " + modConstantes.gsDbRH + "M_MARCACIONES M " +
-              "INNER JOIN " + modConstantes.gsDbRH + "M_USR_RELOJ UR " +
-              "ON UR.IDUSRELOJ=M.CODIGO_EMP_RELOJ " +
-              "AND UR.IDUSUARIO=" + ls_iduser + " " +
-              "INNER JOIN " + modConstantes.gsDbRH + "M_RELOJES RE " +
-              "ON RE.IDRELOJ=M.IDRELOJ " +
-              "INNER JOIN " + modConstantes.gsDbRH + "M_UNIDAD_OPERATIVA UOP " +
-              "ON UOP.CODUNIOP=RE.CODUNIOP " +
+              "INNER JOIN " + modConstantes.gsDbRH + "M_USR_RELOJ UR ON UR.IDUSRELOJ=M.CODIGO_EMP_RELOJ AND UR.IDUSUARIO=" + ls_iduser + " AND UR.IDESTADO <> 3 " +
+              "INNER JOIN " + modConstantes.gsDbRH + "M_RELOJES RE ON RE.IDRELOJ=M.IDRELOJ " +
+              "INNER JOIN " + modConstantes.gsDbRH + "M_UNIDAD_OPERATIVA UOP ON UOP.CODUNIOP=RE.CODUNIOP " +
               "WHERE ISNULL(M.IDESTADO,1)<>3 " +
               lsWhe +
               " ORDER BY M.F_H_MARCA DESC";

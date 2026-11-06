@@ -189,7 +189,7 @@ public partial class contenido_RRHH_VistaMarcacionesTrab : System.Web.UI.Page
 
         //setear variables para informe
         pdf.Titulo = "Listado de Marcaciones por Trabajador";
-        pdf.Subtitulo = Session["nombre"].ToString() + "\n" + Session["rut"].ToString() + "\nPeriodo: " + ddlMes.SelectedItem + " " + ddlAnio.SelectedValue;
+        pdf.Subtitulo = "Nombre: " + Session["nombre"].ToString() + "\nRUT: " + Session["rut"].ToString() + "\nPeriodo: " + ddlMes.SelectedItem + " " + ddlAnio.SelectedValue;
         pdf.OrientacionHorizontal = false;
         pdf.MostrarFecha = true;
         pdf.MostrarNumeracion = true;
@@ -209,12 +209,16 @@ public partial class contenido_RRHH_VistaMarcacionesTrab : System.Web.UI.Page
 
         //configurar columnas formato fecha hora
         pdf.ColumnasFechaHora.Add("F_H_MARCA");
-        pdf.ColumnasFechaHora.Add("ENTRADA");
-        pdf.ColumnasFechaHora.Add("SALIDA");
+        pdf.ColumnasSoloHora.Add("ENTRADA");
+        pdf.ColumnasSoloHora.Add("SALIDA");
 
         //configurar ancho columnas
         pdf.AnchosColumnas.Add("FECHA", 13f);
         pdf.AnchosColumnas.Add("DIA", 12f);
+        pdf.AnchosColumnas.Add("ENTRADA", 12f);
+        pdf.AnchosColumnas.Add("SALIDA", 12f);
+        pdf.AnchosColumnas.Add("CENTRO_ENT", 22f);
+        pdf.AnchosColumnas.Add("CENTRO_SAL", 22f);
 
         //generar nombre archivo y descargar
         pdf.ExportarDataTable(Response, ds.Tables[0], "Listado_Marcaciones_" + ddlMes.SelectedValue + "_" + Session["rut"].ToString());

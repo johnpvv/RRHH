@@ -24,15 +24,15 @@
                 <td style="width: 70px;" class="textoNorm">Año:
                 </td>
                 <td style="width: 100px;">
-                    <asp:DropDownList ID="ddlAnio" runat="server" Width="100px" CssClass="form-control" 
-                        AutopostBack="true" OnSelectedIndexChanged="ddlAnio_SelectedIndexChanged" onchange="mostrarSpinner();">
+                    <asp:DropDownList ID="ddlAnio" runat="server" Width="100px" CssClass="form-control"
+                        AutoPostBack="true" OnSelectedIndexChanged="ddlAnio_SelectedIndexChanged" onchange="mostrarSpinner();">
                     </asp:DropDownList>
                 </td>
                 <td style="width: 70px;" class="textoNorm">Mes:
                 </td>
                 <td style="width: 120px;">
-                    <asp:DropDownList ID="ddlMes" runat="server" Width="150px" CssClass="form-control" 
-                        AutopostBack="true" OnSelectedIndexChanged="ddlMes_SelectedIndexChanged" onchange="mostrarSpinner();">
+                    <asp:DropDownList ID="ddlMes" runat="server" Width="150px" CssClass="form-control"
+                        AutoPostBack="true" OnSelectedIndexChanged="ddlMes_SelectedIndexChanged" onchange="mostrarSpinner();">
                     </asp:DropDownList>
                 </td>
                 <td style="width: 70px;" class="textoNorm">Vista:
@@ -133,7 +133,7 @@
                         runat="server"
                         Text="Imprimir Turnos"
                         CssClass="BotonPortalAmarillo"
-                        OnClientClick="return imprimirVista();" />
+                        OnClick="btnImprimir_Click" />
                     &nbsp;
                     <asp:Button ID="btnVolver"
                         runat="server"
@@ -153,7 +153,7 @@
 </body>
 </html>
 
-<script type="text/javascript">
+<%--<script type="text/javascript"> REVISAR AL IMPRIMIR CALENDARIO
     function imprimirGrid() {
 
         var contenido = document.getElementById("divImpresion").innerHTML;
@@ -367,4 +367,4 @@
         ventana.focus();
         setTimeout(function () { ventana.print(); ventana.close(); }, 500);
     }
-</script>
+</script>--%>
