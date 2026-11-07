@@ -249,6 +249,12 @@
                     Text="Generar PDF Pre - Marcas"
                     CssClass="BotonPortalAmarillo"
                     OnClick="btnExportarPDF_Click" />
+                <asp:Button ID="btnMostrarCalculoHoras"
+                    runat="server"
+                    Text="Calcular Horas"
+                    CssClass="BotonPortalRojo"
+                    OnClick="btnMostrarCalculoHoras_Click"
+                    OnClientClick="guardarScroll();" />
             </div>
             <div class="filtros-grid">
                 <asp:Label ID="lblTotalMarcas" runat="server" CssClass="contador-grid" Text="0 registro(s)">
@@ -258,6 +264,107 @@
                 <asp:Label ID="lblResumenMarcas" runat="server" CssClass="resumen-marcas" />
             </div>
         </div>
+        <asp:Panel ID="pnlCalculoHoras" runat="server" CssClass="modal-marca" Style="display: none;">
+            <div class="modal-marca-contenido modal-calculo-horas">
+                <div class="modal-marca-titulo">
+                    Cálculo de Horas del Trabajador:
+                    <label>&nbsp;</label>
+                    <asp:Label ID="lblTituloCalculoHoras" runat="server" />
+                </div>
+                <div class="botones-form">
+                    <asp:Button ID="btnCalcularHoras" runat="server"
+                        Text="Calcular Horas"
+                        CssClass="BotonPortalAzul"
+                        OnClick="btnCalcularHoras_Click"
+                        OnClientClick="guardarScroll();mostrarSpinner();" />
+                    <asp:Button ID="btnExportarPDFHoras" runat="server"
+                        Text="Generar PDF Preliminar"
+                        CssClass="BotonPortalAmarillo"
+                        OnClick="btnExportarPDFHoras_Click"
+                        Visible="false" />
+                    <asp:Button ID="btnVolverMarcas" runat="server"
+                        Text="Cerrar"
+                        CssClass="BotonPortalGris"
+                        OnClick="btnVolverMarcas_Click"
+                        OnClientClick="guardarScroll();" />
+                </div>
+                <div class="bloque-titulo">
+                    1.- Resumen del Período:
+                </div>
+                <div class="filtros-grid">
+                    <div class="campo">
+                        <label>Días trabajados:</label>
+                        <asp:Label ID="lblDiasTrabajados" runat="server"
+                            CssClass="form-control" Text="0" Width="100px" />
+                    </div>
+                    <label>&nbsp;</label>
+                    <div class="campo">
+                        <label>Horas trabajadas:</label>
+                        <asp:Label ID="lblHorasTrabajadas" runat="server"
+                            CssClass="form-control" Text="00:00" Width="100px" />
+                    </div>
+                    <label>&nbsp;</label>
+                    <div class="campo">
+                        <label>Horas Atrasos:</label>
+                        <asp:Label ID="lblAtrasos" runat="server"
+                            CssClass="form-control" Text="00:00" Width="100px" ForeColor="Red" />
+                    </div>
+                    <label>&nbsp;</label>
+                    <div class="campo">
+                        <label>Horas extras diurnas:</label>
+                        <asp:Label ID="lblExtrasDiurnas" runat="server"
+                            CssClass="form-control" Text="00:00" Width="100px" ForeColor="Blue" />
+                    </div>
+                    <label>&nbsp;</label>
+                    <div class="campo">
+                        <label>Horas extras festivas:</label>
+                        <asp:Label ID="lblExtrasFestivas" runat="server"
+                            CssClass="form-control" Text="00:00" Width="100px" ForeColor="Green" />
+                    </div>
+                    <label>&nbsp;</label>
+                    <div class="campo">
+                        <label>Inasistencias:</label>
+                        <asp:Label ID="lblInasistencias" runat="server"
+                            CssClass="form-control" Text="0" Width="100px" ForeColor="Red" />
+                    </div>
+                </div>
+                <br />
+                <div class="bloque-titulo">
+                    2.- Detalle Diario del Cálculo:
+                </div>
+                <div class="campo">
+                    <asp:GridView ID="dgCalculoHoras"
+                        runat="server"
+                        AutoGenerateColumns="False"
+                        Width="100%"
+                        CssClass="grid-reloj"
+                        GridLines="None"
+                        EmptyDataText="Sin datos..."
+                        EmptyDataRowStyle-CssClass="textoEmpty"
+                        OnRowDataBound="dgCalculoHoras_RowDataBound">
+                        <Columns>
+                            <asp:BoundField DataField="FECHA" HeaderText="Fecha" DataFormatString="{0:dd/MM/yyyy}" ItemStyle-Font-Bold="true" />
+                            <asp:BoundField DataField="DIA" HeaderText="Día" />
+                            <asp:BoundField DataField="HORA_ENTRADA_TURNO" HeaderText="Entrada Turno" DataFormatString="{0:HH:mm:ss}" ItemStyle-Font-Italic="true" />
+                            <asp:BoundField DataField="HORA_SALIDA_TURNO" HeaderText="Salida Turno" DataFormatString="{0:HH:mm:ss}" ItemStyle-Font-Italic="true" />
+                            <asp:BoundField DataField="ENTRADA_REAL" HeaderText="Entrada Real" DataFormatString="{0:HH:mm:ss}" />
+                            <asp:BoundField DataField="SALIDA_REAL" HeaderText="Salida Real" DataFormatString="{0:HH:mm:ss}" />
+                            <asp:BoundField DataField="HORAS_TRABAJADAS_TEXTO" HeaderText="Horas Trabajadas" ItemStyle-Font-Bold="true" />
+                            <asp:BoundField DataField="HORAS_ATRASO_TEXTO" HeaderText="Atrasos" ItemStyle-ForeColor="Red" />
+                            <asp:BoundField DataField="HORAS_EXTRAS_DIURNAS_TEXTO" HeaderText="Extras Diurnas" ItemStyle-ForeColor="Blue" />
+                            <asp:BoundField DataField="HORAS_EXTRAS_FESTIVAS_TEXTO" HeaderText="Extras Festivas" ItemStyle-ForeColor="Green" />
+                            <asp:BoundField DataField="INASISTENCIA" HeaderText="Inasistencia" />
+                        </Columns>
+                        <PagerStyle CssClass="GridPager" HorizontalAlign="Center" />
+                    </asp:GridView>
+                </div>
+                <br />
+                <div class="bloque-titulo">
+                    3.- Resultado: 
+                    <asp:Label ID="lblEstadoCalculo" runat="server" CssClass="textoNormLeft"  />
+                </div>
+            </div>
+        </asp:Panel>
         <asp:Panel ID="pnlEditarMarca" runat="server" CssClass="modal-marca" Style="display: none;">
             <div class="modal-marca-contenido">
                 <div class="modal-marca-titulo">
@@ -296,8 +403,8 @@
                     <div class="campo">
                         <label>Archivo de respaldo (opcional):</label>
                         <div class="archivo-personalizado">
-                            <label for="<%= fuRespaldoMarca.ClientID %>" class="btn-archivo" title="Si ya existe un documento, se dejará el ultimo subido como respaldo" >
-                            <span style="font-size: 14px;">📎 Seleccionar archivo</span>
+                            <label for="<%= fuRespaldoMarca.ClientID %>" class="btn-archivo" title="Si ya existe un documento, se dejará el ultimo subido como respaldo">
+                                <span style="font-size: 14px;">📎 Seleccionar archivo</span>
                             </label>
                             <asp:FileUpload ID="fuRespaldoMarca" runat="server"
                                 CssClass="input-archivo-oculto"

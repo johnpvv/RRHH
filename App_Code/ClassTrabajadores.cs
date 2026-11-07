@@ -311,7 +311,27 @@ public class ClassTrabajadores
         }
         return lsRet;
     }
-
+    public string mfDevuelveRut(string id)
+    {
+        string lsRet = "";
+        con = bd.fnGetConnRH();
+        try
+        {
+            string lsSql;
+            lsSql = "SELECT P.RUT " +
+                    "FROM " + modConstantes.gsDbRH + "M_USUARIOS P " +
+                    "WHERE (P.IDUSUARIO = " + id + " ) ";
+            lsRet = bd.ExecuteScalar(con, lsSql);
+            if (lsRet == "") lsRet = "0";
+            con.Close();
+        }
+        catch (Exception e)
+        {
+            con.Close();
+            lsRet = "0";
+        }
+        return lsRet;
+    }
     public DataSet ConsultaRegion()
     {
         DataSet aoDF;

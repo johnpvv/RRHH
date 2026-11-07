@@ -33,6 +33,13 @@ public class ClassPDF
     public List<string> ColumnasExcluir { get; set; }
     public List<string> ColumnasSoloHora { get; private set; }
     public Dictionary<string, float> AnchosColumnas { get; set; }
+    // Tablas adicionales que se mostrarán después de la tabla principal
+    public List<DataTable> TablasAdicionales { get; set; }
+    // Títulos para cada tabla adicional
+    public List<string> TitulosTablasAdicionales { get; set; }
+    // Información adicional en formato texto
+    public List<string> InformacionAdicional { get; set; }
+
     public ClassPDF()//constructor define valores por defecto, John Vaccarella
     {
         Titulo = "";
@@ -48,11 +55,14 @@ public class ClassPDF
         MargenInferior = 28f;
         FormatoFecha = "dd/MM/yyyy";
         RutaLogo = HttpContext.Current.Server.MapPath("~/imagenes/logo.jpg");
-        NombreInstitucion = "I.Municipalidad de Lo Espejo";
+        NombreInstitucion = "I. Municipalidad de Lo Espejo";
         ColumnasExcluir = new List<string>();
         AnchosColumnas = new Dictionary<string, float>(StringComparer.OrdinalIgnoreCase);
         ColumnasFechaHora = new List<string>();
         ColumnasSoloHora = new List<string>();
+        TablasAdicionales = new List<DataTable>();
+        TitulosTablasAdicionales = new List<string>();
+        InformacionAdicional = new List<string>();
     }
     public void ExportarDataTable(HttpResponse response, DataTable datos, string nombreArchivo)
     {
@@ -133,87 +143,55 @@ public class ClassPDF
             }
             encabezado.AddCell(celdaTexto);
             documento.Add(encabezado);
-            PdfPTable tabla = new PdfPTable(columnas.Count);
-            tabla.WidthPercentage = 100f;
-            tabla.HeaderRows = 1;
-            tabla.SpacingBefore = 5f;
-            tabla.SpacingAfter = 5f;
-            tabla.SplitRows = true;
-            tabla.SplitLate = false;
-            float[] anchos = ObtenerAnchos(columnas, datos);
-            tabla.SetWidths(anchos);
-            foreach (DataColumn columna in columnas)
-            {
-                PdfPCell celda = new PdfPCell(new Phrase(columna.Caption, fuenteEncabezado));
 
-                celda.BackgroundColor = new BaseColor(48, 71, 94);
-                celda.HorizontalAlignment = Element.ALIGN_CENTER;
-                celda.VerticalAlignment = Element.ALIGN_MIDDLE;
-                celda.Padding = 4f;
-                celda.NoWrap = false;
-                tabla.AddCell(celda);
-            }
-            for (int i = 0; i < datos.Rows.Count; i++)
+            // TABLA PRINCIPAL
+            AgregarTabla(documento, datos, fuenteEncabezado, fuenteCelda);
+
+            // TABLAS ADICIONALES
+            if (TablasAdicionales != null)
             {
-                DataRow fila = datos.Rows[i];
-                foreach (DataColumn columna in columnas)
+                for (int i = 0; i < TablasAdicionales.Count; i++)
                 {
-                    object valor = fila[columna];
-                    string texto = "";
-                    if (valor != DBNull.Value && valor != null)
-                    {
-                        if (valor is DateTime)
-                        {
-                            DateTime fecha = (DateTime)valor;
+                    DataTable tablaAdicional = TablasAdicionales[i];
 
-                            if (ColumnasSoloHora.Contains(
-                                columna.ColumnName,
-                                StringComparer.OrdinalIgnoreCase))
-                            {
-                                texto = fecha.ToString("HH:mm:ss");
-                            }
-                            else
-                            {
-                                texto = ColumnasFechaHora.Contains(
-                                    columna.ColumnName,
-                                    StringComparer.OrdinalIgnoreCase)
-                                    ? fecha.ToString("dd/MM/yyyy HH:mm:ss")
-                                    : fecha.ToString(FormatoFecha);
-                            }
-                        }
-                        else if (valor is TimeSpan && ColumnasSoloHora.Contains(
-                                columna.ColumnName,
-                                StringComparer.OrdinalIgnoreCase))
-                        {
-                            texto = ((TimeSpan)valor).ToString(@"hh\:mm\:ss");
-                        }
-                        else
-                        {
-                            texto = Convert.ToString(valor, CultureInfo.CurrentCulture);
-                        }
+                    if (tablaAdicional == null)
+                        continue;
+
+                    documento.Add(new Paragraph(" "));
+
+                    if (TitulosTablasAdicionales != null &&
+                        i < TitulosTablasAdicionales.Count &&
+                        !string.IsNullOrWhiteSpace(TitulosTablasAdicionales[i]))
+                    {
+                        Paragraph tituloAdicional = new Paragraph(TitulosTablasAdicionales[i], fuenteTitulo);
+
+                        tituloAdicional.SpacingBefore = 8f;
+                        tituloAdicional.SpacingAfter = 6f;
+
+                        documento.Add(tituloAdicional);
                     }
-                    PdfPCell celda = new PdfPCell(new Phrase(texto, fuenteCelda));
-                    celda.Padding = 4f;
-                    celda.VerticalAlignment = Element.ALIGN_MIDDLE;
-                    celda.NoWrap = false;
-                    if (i % 2 == 1)
-                        celda.BackgroundColor = new BaseColor(240, 243, 246);
-                    if (EsNumerica(columna.DataType))
-                        celda.HorizontalAlignment = Element.ALIGN_RIGHT;
-                    else
-                        celda.HorizontalAlignment = Element.ALIGN_LEFT;
-                    tabla.AddCell(celda);
+                    AgregarTabla(documento, tablaAdicional, fuenteEncabezado, fuenteCelda);
                 }
             }
-            if (datos.Rows.Count == 0)
+            // INFORMACIÓN ADICIONAL
+            if (InformacionAdicional != null)
             {
-                PdfPCell vacio = new PdfPCell(new Phrase("No existen registros para mostrar.", fuenteCelda));
-                vacio.Colspan = columnas.Count;
-                vacio.HorizontalAlignment = Element.ALIGN_CENTER;
-                vacio.Padding = 10f;
-                tabla.AddCell(vacio);
+                Font fuenteInfo = FontFactory.GetFont(
+                    FontFactory.HELVETICA,
+                    9f,
+                    Font.NORMAL,
+                    BaseColor.BLACK);
+
+                foreach (string informacion in InformacionAdicional)
+                {
+                    if (!string.IsNullOrWhiteSpace(informacion))
+                    {
+                        Paragraph parrafo = new Paragraph(informacion, fuenteInfo);
+                        parrafo.SpacingBefore = 5f;
+                        documento.Add(parrafo);
+                    }
+                }
             }
-            documento.Add(tabla);
             documento.Close();
             response.Clear();
             response.Buffer = true;
@@ -260,6 +238,111 @@ public class ClassPDF
                tipo == typeof(float) ||
                tipo == typeof(double) ||
                tipo == typeof(decimal);
+    }
+
+    //tablas adicionales.
+    private void AgregarTabla(Document documento, DataTable datos, Font fuenteEncabezado, Font fuenteCelda, bool alternarFilas = true)
+    {
+        if (datos == null || datos.Columns.Count == 0)
+            return;
+        List<DataColumn> columnas = new List<DataColumn>();
+        foreach (DataColumn columna in datos.Columns)
+        {
+            if (!ColumnasExcluir.Contains(
+                columna.ColumnName,
+                StringComparer.OrdinalIgnoreCase))
+            {
+                columnas.Add(columna);
+            }
+        }
+
+        if (columnas.Count == 0)
+            return;
+
+        PdfPTable tabla = new PdfPTable(columnas.Count);
+        tabla.WidthPercentage = 100f;
+        tabla.HeaderRows = 1;
+        tabla.SplitRows = true;
+        tabla.SplitLate = false;
+
+        tabla.SetWidths(ObtenerAnchos(columnas, datos));
+
+        foreach (DataColumn columna in columnas)
+        {
+            PdfPCell celda = new PdfPCell(new Phrase(columna.Caption, fuenteEncabezado));
+
+            celda.BackgroundColor = new BaseColor(48, 71, 94);
+            celda.HorizontalAlignment = Element.ALIGN_CENTER;
+            celda.VerticalAlignment = Element.ALIGN_MIDDLE;
+            celda.Padding = 4f;
+            tabla.AddCell(celda);
+        }
+
+        for (int i = 0; i < datos.Rows.Count; i++)
+        {
+            foreach (DataColumn columna in columnas)
+            {
+                object valor = datos.Rows[i][columna];
+                string texto = "";
+
+                if (valor != DBNull.Value && valor != null)
+                {
+                    if (valor is DateTime)
+                    {
+                        DateTime fecha = (DateTime)valor;
+
+                        if (ColumnasSoloHora.Contains(
+                            columna.ColumnName,
+                            StringComparer.OrdinalIgnoreCase))
+                        {
+                            texto = fecha.ToString("HH:mm:ss");
+                        }
+                        else
+                        {
+                            texto = ColumnasFechaHora.Contains(
+                                columna.ColumnName,
+                                StringComparer.OrdinalIgnoreCase)
+                                ? fecha.ToString("dd/MM/yyyy HH:mm:ss")
+                                : fecha.ToString(FormatoFecha);
+                        }
+                    }
+                    else if (valor is TimeSpan &&
+                        ColumnasSoloHora.Contains(columna.ColumnName, StringComparer.OrdinalIgnoreCase))
+                    {
+                        texto = ((TimeSpan)valor).ToString(@"hh\:mm\:ss");
+                    }
+                    else
+                    {
+                        texto = Convert.ToString(valor, CultureInfo.CurrentCulture);
+                    }
+                }
+
+                PdfPCell celda = new PdfPCell(new Phrase(texto, fuenteCelda));
+
+                celda.Padding = 4f;
+                celda.VerticalAlignment = Element.ALIGN_MIDDLE;
+
+                if (alternarFilas && i % 2 == 1)
+                    celda.BackgroundColor = new BaseColor(240, 243, 246);
+
+                celda.HorizontalAlignment = EsNumerica(columna.DataType)
+                    ? Element.ALIGN_RIGHT
+                    : Element.ALIGN_LEFT;
+
+                tabla.AddCell(celda);
+            }
+        }
+
+        if (datos.Rows.Count == 0)
+        {
+            PdfPCell vacio = new PdfPCell(new Phrase("No existen registros para mostrar.", fuenteCelda));
+
+            vacio.Colspan = columnas.Count;
+            vacio.HorizontalAlignment = Element.ALIGN_CENTER;
+            vacio.Padding = 10f;
+            tabla.AddCell(vacio);
+        }
+        documento.Add(tabla);
     }
     private class EventoPaginaPDF : PdfPageEventHelper
     {

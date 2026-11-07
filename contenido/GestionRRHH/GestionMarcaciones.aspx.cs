@@ -17,6 +17,7 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
     ClassReloj rlj = new ClassReloj();
     ClassFeriado fer = new ClassFeriado();
     ClassExcelExportar excel = new ClassExcelExportar();
+    ClassPDF pdf = new ClassPDF();
     private HashSet<DateTime> feriados = new HashSet<DateTime>();
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -584,6 +585,101 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
     }
     #endregion
 
+    #region panel calculo horas
+    protected void btnMostrarCalculoHoras_Click(object sender, EventArgs e)
+    {
+        limpiaPanelCalc();
+        divDetalleMarcas.Visible = true;
+        pnlCalculoHoras.Style["display"] = "flex";
+        lblTituloCalculoHoras.Text = lblTituloMarcas.Text;
+    }
+    protected void btnCalcularHoras_Click(object sender, EventArgs e)
+    {
+        mfCargarCalculoHoras();
+    }
+    protected void btnVolverMarcas_Click(object sender, EventArgs e)
+    {
+        pnlCalculoHoras.Style["display"] = "none";
+    }
+    private void mfCargarCalculoHoras()
+    {
+        try
+        {
+            string iduser = dgTrabajadores.SelectedDataKey.Values["ID_SELECCION"].ToString();
+            if (!iduser.StartsWith("U:"))
+            {
+                mens.mensaje(Page, "El Trabajador no está registrado en sistema WEB RR.HH, no se puede continuar...");
+                return;
+            }
+            CargarFeriados();
+            rlj.ls_rut = usr.mfDevuelveRut(iduser.Substring(2));
+            rlj.ls_mes = ddlMes.SelectedValue;
+            rlj.ls_anio = ddlAnio.SelectedValue;
+
+            DataSet ds = rlj.mfCalcularHorasTrabajador();
+
+            if (ds.Tables.Count >= 2)
+            {
+                // Detalle diario
+                dgCalculoHoras.DataSource = ds.Tables[0];
+                dgCalculoHoras.DataBind();
+
+                // Resumen mensual
+                if (ds.Tables[1].Rows.Count > 0)
+                {
+                    DataRow fila = ds.Tables[1].Rows[0];
+
+                    lblHorasTrabajadas.Text = fila["TOTAL_HORAS_TRABAJADAS_TEXTO"].ToString();
+                    lblAtrasos.Text = fila["TOTAL_HORAS_ATRASO_TEXTO"].ToString();
+                    lblExtrasDiurnas.Text = fila["TOTAL_HORAS_EXTRAS_DIURNAS_TEXTO"].ToString();
+                    lblExtrasFestivas.Text = fila["TOTAL_HORAS_EXTRAS_FESTIVAS_TEXTO"].ToString();
+                    lblInasistencias.Text = fila["TOTAL_INASISTENCIAS"].ToString();
+                    lblDiasTrabajados.Text = fila["TOTAL_DIAS_TRABAJADOS"].ToString();
+                }
+                pnlCalculoHoras.Visible = true;
+                //divDetalleMarcas.Visible = false;
+                btnExportarPDFHoras.Visible = true;
+                lblTituloCalculoHoras.Text = lblTituloMarcas.Text;
+                lblEstadoCalculo.Text = "Cálculo generado correctamente.";
+            }
+            else
+            {
+                lblEstadoCalculo.Text = "No se recibieron resultados del cálculo.";
+            }
+        }
+        catch (Exception ex)
+        {
+            lblEstadoCalculo.Text = "Error al calcular las horas: " + ex.Message;
+        }
+    }
+    protected void dgCalculoHoras_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType != DataControlRowType.DataRow) return;
+
+        DateTime fechaVal;
+        if (!DateTime.TryParse(DataBinder.Eval(e.Row.DataItem, "FECHA").ToString(), out fechaVal))
+            return;
+
+        if (fechaVal.DayOfWeek == DayOfWeek.Sunday || feriados.Contains(fechaVal.Date))
+        {
+            e.Row.CssClass = "calendario-feriado";
+            e.Row.ToolTip = "Feriado";
+        }
+    }
+    private void limpiaPanelCalc()
+    {
+        lblHorasTrabajadas.Text = "0";
+        lblAtrasos.Text = "00:00";
+        lblExtrasDiurnas.Text = "00:00";
+        lblExtrasFestivas.Text = "00:00";
+        lblInasistencias.Text = "0";
+        dgCalculoHoras.DataSource = null;
+        dgCalculoHoras.DataBind();
+        lblEstadoCalculo.Text = "";
+        btnExportarPDFHoras.Visible = false;
+    }
+    #endregion
+
     #region Exportar Excel
     protected void btnExportarTrab_Click(object sender, EventArgs e)
     {
@@ -630,10 +726,10 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
         excel.Exportar(ds, "Trabajadores_marcacion_Gral");
     }
     #endregion
+
     #region PDF
     protected void btnExportarPDF_Click(object sender, EventArgs e)
-    {
-        ClassPDF pdf = new ClassPDF();
+    {        
         string idSeleccion = dgTrabajadores.SelectedDataKey.Values["ID_SELECCION"].ToString();
         rlj.ls_mes = ddlMes.SelectedValue;
         rlj.ls_anio = ddlAnio.SelectedValue;
@@ -683,7 +779,71 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
         pdf.AnchosColumnas.Add("DIA", 13f);
 
         //generar nombre archivo y descargar
-        pdf.ExportarDataTable(Response, ds.Tables[0], "Listado_preliminar_Marcas_" + ddlMes.SelectedValue + "_" + Session["rut"].ToString());
+        pdf.ExportarDataTable(Response, ds.Tables[0], "Listado_preliminar_Marcas_" + ddlMes.SelectedValue + "_" + System.Web.HttpUtility.HtmlDecode(dgTrabajadores.SelectedRow.Cells[0].Text));
+    }
+    protected void btnExportarPDFHoras_Click(object sender, EventArgs e)
+    {
+        string iduser = dgTrabajadores.SelectedDataKey.Values["ID_SELECCION"].ToString();
+        if (!iduser.StartsWith("U:"))
+        {
+            mens.mensaje(Page, "El Trabajador no está registrado en sistema WEB RR.HH, no se puede continuar...");
+            return;
+        }
+        rlj.ls_rut = usr.mfDevuelveRut(iduser.Substring(2));
+        rlj.ls_mes = ddlMes.SelectedValue;
+        rlj.ls_anio = ddlAnio.SelectedValue;
+
+        DataSet ds = rlj.mfCalcularHorasTrabajador();
+        if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+        {
+            mens.mensaje(Page, "No existen datos para generar reporte.");
+            return;
+        }
+        //setear variables para informe
+        pdf.Titulo = "Cálculo de Horas por Trabajador";
+        pdf.Subtitulo = "Nombre: " + System.Web.HttpUtility.HtmlDecode(dgTrabajadores.SelectedRow.Cells[2].Text) + "\nRUT: " + System.Web.HttpUtility.HtmlDecode(dgTrabajadores.SelectedRow.Cells[0].Text) + "\nPeríodo: " + ddlMes.SelectedItem + " " + ddlAnio.SelectedValue;
+        pdf.MostrarFecha = true;
+        pdf.MostrarNumeracion = true;
+        pdf.OrientacionHorizontal = true;
+
+        //columnas a excluir
+        pdf.ColumnasExcluir.Add("IDUSUARIO");
+        pdf.ColumnasExcluir.Add("RUT");
+        pdf.ColumnasExcluir.Add("EXIGE_JORNADA");
+        pdf.ColumnasExcluir.Add("TIENE_TURNO");
+        pdf.ColumnasExcluir.Add("MINUTOS_TRABAJADOS");
+        pdf.ColumnasExcluir.Add("MINUTOS_ATRASO");
+        pdf.ColumnasExcluir.Add("MINUTOS_EXTRAS_DIURNAS");
+        pdf.ColumnasExcluir.Add("MINUTOS_EXTRAS_FESTIVAS");
+        pdf.ColumnasExcluir.Add("IDTURNOS");
+
+        //segunda tabla
+        pdf.ColumnasExcluir.Add("TOTAL_MINUTOS_TRABAJADOS");
+        pdf.ColumnasExcluir.Add("TOTAL_HORAS_TRABAJADAS");
+        pdf.ColumnasExcluir.Add("TOTAL_MINUTOS_ATRASO");
+        pdf.ColumnasExcluir.Add("TOTAL_MINUTOS_EXTRAS");
+        pdf.ColumnasExcluir.Add("TOTAL_MINUTOS_EXTRAS_DIURNAS");
+        pdf.ColumnasExcluir.Add("TOTAL_MINUTOS_EXTRAS_FESTIVAS");
+
+        //configurar columnas formato fecha hora
+        pdf.ColumnasSoloHora.Add("HORA_ENTRADA_TURNO");
+        pdf.ColumnasSoloHora.Add("HORA_SALIDA_TURNO");
+        pdf.ColumnasSoloHora.Add("ENTRADA_REAL");
+        pdf.ColumnasSoloHora.Add("SALIDA_REAL");        
+
+        //configurar ancho columnas
+        pdf.AnchosColumnas.Add("DIA", 15f);
+        pdf.AnchosColumnas.Add("FECHA", 18f);
+
+        // Tabla adicional: resumen
+        pdf.TablasAdicionales.Add(ds.Tables[1]);
+        pdf.TitulosTablasAdicionales.Add("Resumen del Período:");
+
+        pdf.InformacionAdicional.Add("Favor verificar bien los datos antes de generar el cálculo final.");
+
+        //generar nombre archivo y descargar
+        pdf.ExportarDataTable(Response, ds.Tables[0], "Listado_preliminar_Calculo_" + ddlMes.SelectedValue + "_" + System.Web.HttpUtility.HtmlDecode(dgTrabajadores.SelectedRow.Cells[0].Text));
     }
     #endregion
+
 }

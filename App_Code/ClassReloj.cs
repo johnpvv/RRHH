@@ -1378,4 +1378,27 @@ public class ClassReloj
         return ds;
     }
     #endregion
+    #region Calculo Horas desde marcas
+    public DataSet mfCalcularHorasTrabajador()
+    {
+        DataSet ds = new DataSet();
+
+        using (SqlConnection conexion = bd.fnGetConn())
+        using (SqlCommand comando = new SqlCommand("dbo.pu_calcular_horas_trabajador", conexion))
+        {
+            comando.CommandType = CommandType.StoredProcedure;
+
+            comando.Parameters.Add("@RUT", SqlDbType.VarChar, 20).Value = ls_rut;
+            comando.Parameters.Add("@MES", SqlDbType.Int).Value = ls_mes;
+            comando.Parameters.Add("@ANIO", SqlDbType.Int).Value = ls_anio;
+
+            using (SqlDataAdapter da = new SqlDataAdapter(comando))
+            {
+                da.Fill(ds);
+            }
+        }
+
+        return ds;
+    }
+    #endregion
 }
