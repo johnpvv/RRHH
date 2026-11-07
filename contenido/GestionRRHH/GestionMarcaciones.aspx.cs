@@ -699,6 +699,7 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
             mens.mensaje(Page, "No existen datos para exportar.");
             return;
         }
+
         excel.Exportar(ds, "Trabajadores_marcacion_Gral");
     }
 
@@ -724,7 +725,18 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
             mens.mensaje(Page, "No existen datos para exportar.");
             return;
         }
-        excel.Exportar(ds, "Trabajadores_marcacion_Gral");
+        //excluir columnas
+        excel.ColumnasExcluir.Add("IDMARCACION");
+        excel.ColumnasExcluir.Add("IDRELOJ");
+        excel.ColumnasExcluir.Add("TIPO_MARCA");
+        excel.ColumnasExcluir.Add("TIPO_CARGA");
+        excel.ColumnasExcluir.Add("HORA");
+
+        //solo formato hora
+        excel.ColumnasSoloHora.Add("F_H_MARCA");
+        excel.ColumnasSoloFecha.Add("FECHA");
+
+        excel.Exportar(ds, "Trabajador_marcacion_Detalle");
     }
 
     protected void btnExportarCalcExcel_Click(object sender, EventArgs e)
