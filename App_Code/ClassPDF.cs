@@ -17,6 +17,7 @@ public class ClassPDF
 {
     public string Titulo { get; set; }
     public string Subtitulo { get; set; }
+    public string SubtituloNeg { get; set; }
     public bool OrientacionHorizontal { get; set; }
     public bool MostrarFecha { get; set; }
     public bool MostrarNumeracion { get; set; }
@@ -44,6 +45,7 @@ public class ClassPDF
     {
         Titulo = "";
         Subtitulo = "";
+        SubtituloNeg = "";
         OrientacionHorizontal = false;
         MostrarFecha = true;
         MostrarNumeracion = true;
@@ -131,10 +133,15 @@ public class ClassPDF
             }
             if (!string.IsNullOrWhiteSpace(Subtitulo))
             {
-                Paragraph subtitulo = new Paragraph(
-                    Subtitulo, FontFactory.GetFont(FontFactory.HELVETICA, 9f, Font.NORMAL));
+                Paragraph subtitulo = new Paragraph(Subtitulo, FontFactory.GetFont(FontFactory.HELVETICA, 9f, Font.NORMAL));
                 subtitulo.SpacingAfter = 4f;
                 celdaTexto.AddElement(subtitulo);
+            }
+            if (!string.IsNullOrWhiteSpace(SubtituloNeg))
+            {
+                Paragraph subtitulo1 = new Paragraph(SubtituloNeg, FontFactory.GetFont(FontFactory.HELVETICA, 9f, Font.BOLD));
+                subtitulo1.SpacingAfter = 4f;
+                celdaTexto.AddElement(subtitulo1);
             }
             if (MostrarFecha)
             {

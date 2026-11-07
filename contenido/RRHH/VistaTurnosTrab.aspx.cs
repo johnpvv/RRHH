@@ -325,7 +325,7 @@ public partial class contenido_RRHH_VistaTurnosTrab : System.Web.UI.Page
 
         excel.Exportar(ds, "Listado_Turnos_" + ddlMes.SelectedValue + "_" + Session["rut"].ToString());
     }
-    protected void btnImprimir_Click(object sender, EventArgs e)
+    protected void btnGenerarPDF_Click(object sender, EventArgs e)
     {
         ClassPDF pdf = new ClassPDF();
         usr.ls_rut = Session["rut"].ToString();
@@ -353,7 +353,7 @@ public partial class contenido_RRHH_VistaTurnosTrab : System.Web.UI.Page
         if (tipoTurno == "1")
         {
             ds = tur.mfBuscarTurnosTrabMes();
-            CargarFeriados();
+            CargarFeriados(); 
         }
         else
         {
@@ -362,7 +362,8 @@ public partial class contenido_RRHH_VistaTurnosTrab : System.Web.UI.Page
 
         //setear variables para informe
         pdf.Titulo = "Turnos por Trabajador";
-        pdf.Subtitulo = "Nombre: "+Session["nombre"].ToString() + "\nRUT: " + Session["rut"].ToString() + "\nPeriodo: " + ddlMes.SelectedItem + " " + ddlAnio.SelectedValue;
+        pdf.Subtitulo = "Nombre: " + Session["nombre"].ToString() + "\nRUT: " + Session["rut"].ToString();
+        pdf.SubtituloNeg = "Periodo: " + ddlMes.SelectedItem + " " + ddlAnio.SelectedValue;
         pdf.OrientacionHorizontal = false;
         pdf.MostrarFecha = true;
         pdf.MostrarNumeracion = true;
@@ -370,10 +371,11 @@ public partial class contenido_RRHH_VistaTurnosTrab : System.Web.UI.Page
         //columnas a excluir
         pdf.ColumnasExcluir.Add("IDTURNUS");
         pdf.ColumnasExcluir.Add("IDTURNOS");
-        pdf.ColumnasExcluir.Add("FECHA");
+        pdf.ColumnasExcluir.Add("IDTURNODIA");
         pdf.ColumnasExcluir.Add("IDDIA");
         pdf.ColumnasExcluir.Add("IDHORA");
         pdf.ColumnasExcluir.Add("FERIADOS");
+        pdf.ColumnasExcluir.Add("F_H_CREACION");
 
         //configurar columnas formato hora
         pdf.ColumnasSoloHora.Add("HORA_INI");
@@ -384,6 +386,7 @@ public partial class contenido_RRHH_VistaTurnosTrab : System.Web.UI.Page
         pdf.AnchosColumnas.Add("HORARIO", 22f);
         pdf.AnchosColumnas.Add("ESTADO", 12f);
         pdf.AnchosColumnas.Add("HORA_INI", 12f);
+        pdf.AnchosColumnas.Add("FECHA", 12f);
         pdf.AnchosColumnas.Add("HORA_FIN", 12f);
         pdf.AnchosColumnas.Add("MINUTO", 10f);
         pdf.AnchosColumnas.Add("DIA", 13f);

@@ -17,10 +17,12 @@ public class ClassExcelExportar
 {
     public List<string> ColumnasExcluir { get; private set; }
     public List<string> ColumnasSoloHora { get; private set; }
+    public List<string> ColumnasSoloFecha { get; private set; }
     public ClassExcelExportar()
     {
         ColumnasExcluir = new List<string>();
         ColumnasSoloHora = new List<string>();
+        ColumnasSoloFecha = new List<string>();
     }
 
     public void Exportar(DataSet ds, string nombreArchivo)
@@ -30,190 +32,6 @@ public class ClassExcelExportar
 
         Exportar(ds.Tables[0], nombreArchivo);
     }
-
-    //public void Exportar(DataTable dt, string nombreArchivo)
-    //{
-    //    if (dt == null || dt.Columns.Count == 0)
-    //        return;
-
-    //    dt = dt.Copy();
-
-    //    foreach (string columna in ColumnasExcluir)
-    //        if (dt.Columns.Contains(columna))
-    //            dt.Columns.Remove(columna);
-
-    //    if (dt.Columns.Count == 0)
-    //        return;
-
-    //    using (MemoryStream ms = new MemoryStream())
-    //    {
-    //        using (SpreadsheetDocument document = SpreadsheetDocument.Create(ms, SpreadsheetDocumentType.Workbook))
-    //        {
-    //            WorkbookPart workbookPart = document.AddWorkbookPart();
-    //            workbookPart.Workbook = new Workbook();
-    //            WorkbookStylesPart stylesPart = workbookPart.AddNewPart<WorkbookStylesPart>();
-
-    //            stylesPart.Stylesheet = new Stylesheet(
-    //                new NumberingFormats(
-    //                    new NumberingFormat
-    //                    {
-    //                        NumberFormatId = 164,
-    //                        FormatCode = "dd-mm-yyyy hh:mm:ss"
-    //                    },
-    //                    new NumberingFormat
-    //                    {
-    //                        NumberFormatId = 165,
-    //                        FormatCode = "dd-mm-yyyy"
-    //                    },
-    //                    new NumberingFormat
-    //                    {
-    //                        NumberFormatId = 166,
-    //                        FormatCode = "hh:mm:ss"
-    //                    }
-    //                ),
-    //                new Fonts(
-    //                    new Font(),
-    //                    new Font(new Bold())
-    //                ),
-    //                new Fills(
-    //                    new Fill(new PatternFill { PatternType = PatternValues.None }),
-    //                    new Fill(new PatternFill { PatternType = PatternValues.Gray125 })
-    //                ),
-    //                new Borders(
-    //                    new Border()
-    //                ),
-    //                new CellStyleFormats(
-    //                    new CellFormat()
-    //                ),
-    //                new CellFormats(
-    //                    new CellFormat(),
-    //                    new CellFormat { FontId = 1 },
-    //                    new CellFormat
-    //                    {
-    //                        NumberFormatId = 164,
-    //                        ApplyNumberFormat = true
-    //                    }, // fecha y hora
-    //                    new CellFormat
-    //                    {
-    //                        NumberFormatId = 165,
-    //                        ApplyNumberFormat = true
-    //                    }, // 3 solo fecha
-    //                    new CellFormat
-    //                    {
-    //                        NumberFormatId = 166,
-    //                        ApplyNumberFormat = true
-    //                    } // 4 solo hora
-    //                )
-    //            );
-    //            stylesPart.Stylesheet.Save();
-    //            WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
-    //            SheetData sheetData = new SheetData();
-    //            worksheetPart.Worksheet = new Worksheet(sheetData);
-    //            Sheets sheets = workbookPart.Workbook.AppendChild(new Sheets());
-    //            Sheet sheet = new Sheet
-    //            {
-    //                Name = "Hoja1",
-    //                SheetId = 1,
-    //                Id = workbookPart.GetIdOfPart(worksheetPart)
-    //            };
-    //            sheets.Append(sheet);
-    //            // Anchos de columnas
-    //            List<int> anchos = new List<int>();
-
-    //            foreach (DataColumn column in dt.Columns)
-    //                anchos.Add(column.ColumnName.Length);
-
-    //            // Encabezado
-    //            Row headerRow = new Row();
-
-    //            for (int i = 0; i < dt.Columns.Count; i++)
-    //            {
-    //                Cell cell = new Cell
-    //                {
-    //                    DataType = CellValues.InlineString,
-    //                    StyleIndex = 1,
-    //                    InlineString = new InlineString(new Text(dt.Columns[i].ColumnName))
-    //                };
-
-    //                headerRow.Append(cell);
-    //            }
-    //            sheetData.Append(headerRow);
-
-    //            // Datos
-    //            foreach (DataRow row in dt.Rows)
-    //            {
-    //                Row dataRow = new Row();
-    //                for (int i = 0; i < dt.Columns.Count; i++)
-    //                {
-    //                    object valor = row[i];
-    //                    string texto = valor == DBNull.Value ? "" : valor.ToString();
-
-    //                    if (texto.Length > anchos[i])
-    //                        anchos[i] = texto.Length;
-    //                    dataRow.Append(CrearCelda(valor));
-    //                }
-    //                sheetData.Append(dataRow);
-    //            }
-    //            // Aplicar anchos
-    //            Columns columns = new Columns();
-    //            for (int i = 0; i < anchos.Count; i++)
-    //            {
-    //                double ancho = Math.Min(anchos[i] + 2, 50);
-    //                columns.Append(new Column
-    //                {
-    //                    Min = (uint)(i + 1),
-    //                    Max = (uint)(i + 1),
-    //                    Width = ancho,
-    //                    CustomWidth = true
-    //                });
-    //            }
-
-    //            worksheetPart.Worksheet.InsertAt(columns, 0);
-    //            workbookPart.Workbook.Save();
-    //        }
-    //        Descargar(ms, nombreArchivo);
-    //    }
-    //}
-    //private static Cell CrearCelda(object valor)
-    //{
-    //    if (valor == null || valor == DBNull.Value)
-    //    {
-    //        return new Cell
-    //        {
-    //            DataType = CellValues.InlineString,
-    //            InlineString = new InlineString(new Text(""))
-    //        };
-    //    }
-    //    if (valor is DateTime)
-    //    {
-    //        DateTime fecha = (DateTime)valor;
-
-    //        return new Cell
-    //        {
-    //            DataType = CellValues.Number,
-    //            StyleIndex = 2,
-    //            CellValue = new CellValue(fecha.ToOADate().ToString(CultureInfo.InvariantCulture))
-    //        };
-    //    }
-
-    //    if (valor is int || valor is long || valor is short ||
-    //        valor is decimal || valor is double || valor is float)
-    //    {
-    //        return new Cell
-    //        {
-    //            DataType = CellValues.Number,
-    //            CellValue = new CellValue(Convert.ToString(valor, CultureInfo.InvariantCulture))
-    //        };
-    //    }
-
-    //    return new Cell
-    //    {
-    //        DataType = CellValues.InlineString,
-    //        InlineString = new InlineString(
-    //            new Text(valor.ToString())
-    //        )
-    //    };
-    //}
 
     public void Exportar(DataTable dt, string nombreArchivo)
     {
@@ -342,6 +160,13 @@ public class ClassExcelExportar
                                 StringComparison.OrdinalIgnoreCase
                             )
                         );
+                        bool soloFecha = ColumnasSoloFecha.Any(
+                            c => string.Equals(
+                                c,
+                                dt.Columns[i].ColumnName,
+                                StringComparison.OrdinalIgnoreCase
+                            )
+                        );
 
                         string texto = "";
                         if (valor != DBNull.Value && valor != null)
@@ -350,13 +175,15 @@ public class ClassExcelExportar
                                 texto = ((DateTime)valor).ToString("HH:mm:ss");
                             else if (soloHora && valor is TimeSpan)
                                 texto = ((TimeSpan)valor).ToString(@"hh\:mm\:ss");
+                            else if (soloFecha && valor is DateTime)
+                                texto = ((DateTime)valor).ToString("dd/MM/yyyy");
                             else
                                 texto = valor.ToString();
                         }
                         if (texto.Length > anchos[i])
                             anchos[i] = texto.Length;
 
-                        dataRow.Append(CrearCelda(valor, soloHora));
+                        dataRow.Append(CrearCelda(valor, soloHora, soloFecha));
                     }
                     sheetData.Append(dataRow);
                 }
@@ -383,7 +210,7 @@ public class ClassExcelExportar
         }
     }
 
-    private static Cell CrearCelda(object valor, bool soloHora = false)
+    private static Cell CrearCelda(object valor, bool soloHora = false, bool soloFecha = false)
     {
         if (valor == null || valor == DBNull.Value)
         {
@@ -418,9 +245,7 @@ public class ClassExcelExportar
                         return new Cell
                         {
                             DataType = CellValues.InlineString,
-                            InlineString = new InlineString(
-                                new Text(valor.ToString())
-                            )
+                            InlineString = new InlineString(new Text(valor.ToString()))
                         };
                 }
             }
@@ -429,12 +254,31 @@ public class ClassExcelExportar
             {
                 DataType = CellValues.Number,
                 StyleIndex = 4,
-                CellValue = new CellValue(
-                    valorHora.ToString(CultureInfo.InvariantCulture)
-                )
+                CellValue = new CellValue(valorHora.ToString(CultureInfo.InvariantCulture))
             };
         }
+        if (soloFecha)
+        {
+            DateTime fecha;
 
+            if (valor is DateTime)
+                fecha = (DateTime)valor;
+            else if (!DateTime.TryParse(valor.ToString(), out fecha))
+            {
+                return new Cell
+                {
+                    DataType = CellValues.InlineString,
+                    InlineString = new InlineString(new Text(valor.ToString()))
+                };
+            }
+
+            return new Cell
+            {
+                DataType = CellValues.Number,
+                StyleIndex = 3, // Formato fecha dd/MM/yyyy
+                CellValue = new CellValue(fecha.Date.ToOADate().ToString(CultureInfo.InvariantCulture))
+            };
+        }
         if (valor is DateTime)
         {
             DateTime fecha = (DateTime)valor;
@@ -443,11 +287,10 @@ public class ClassExcelExportar
             {
                 DataType = CellValues.Number,
                 StyleIndex = 2,
-                CellValue = new CellValue(
-                    fecha.ToOADate().ToString(CultureInfo.InvariantCulture)
-                )
+                CellValue = new CellValue(fecha.ToOADate().ToString(CultureInfo.InvariantCulture))
             };
         }
+
 
         if (valor is int || valor is long || valor is short ||
             valor is decimal || valor is double || valor is float)
@@ -455,17 +298,14 @@ public class ClassExcelExportar
             return new Cell
             {
                 DataType = CellValues.Number,
-                CellValue = new CellValue(
-                    Convert.ToString(valor, CultureInfo.InvariantCulture)
-                )
+                CellValue = new CellValue(Convert.ToString(valor, CultureInfo.InvariantCulture))
             };
         }
 
         return new Cell
         {
             DataType = CellValues.InlineString,
-            InlineString = new InlineString(
-                new Text(valor.ToString())
+            InlineString = new InlineString(new Text(valor.ToString())
             )
         };
     }

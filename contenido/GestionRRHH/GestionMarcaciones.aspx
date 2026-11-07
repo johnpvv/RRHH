@@ -126,7 +126,7 @@
                     AllowSorting="True"
                     OnSorting="dgTrabajadores_Sorting">
                     <Columns>
-                        <asp:BoundField DataField="RUT_C" HeaderText="R.U.N." SortExpression="RUT" ItemStyle-CssClass="textoGridBoldLeft" />
+                        <asp:BoundField DataField="RUT_C" HeaderText="R.U.N." SortExpression="RUT" ItemStyle-CssClass="textoGridBoldLeft" HeaderStyle-Width="100px"  />
                         <asp:BoundField DataField="CODIGO_EMP_RELOJ" HeaderText="ID en Reloj" SortExpression="CODIGO_EMP_RELOJ" />
                         <asp:BoundField DataField="NOMBRE" HeaderText="Trabajador" SortExpression="NOMBRE" />
                         <asp:BoundField DataField="CANT_MARCAS" HeaderText="Marcas" SortExpression="CANT_MARCAS" />
@@ -282,6 +282,11 @@
                         CssClass="BotonPortalAmarillo"
                         OnClick="btnExportarPDFHoras_Click"
                         Visible="false" />
+                    <asp:Button ID="btnExportarCalcExcel" runat="server"
+                        Text="Generar Excel Preliminar"
+                        CssClass="BotonPortalVerde"
+                        OnClick="btnExportarCalcExcel_Click"
+                        Visible="false" />
                     <asp:Button ID="btnVolverMarcas" runat="server"
                         Text="Cerrar"
                         CssClass="BotonPortalGris"
@@ -301,25 +306,25 @@
                     <div class="campo">
                         <label>Horas trabajadas:</label>
                         <asp:Label ID="lblHorasTrabajadas" runat="server"
-                            CssClass="form-control" Text="00:00" Width="100px" />
+                            CssClass="form-control" Text="0H 00M" Width="100px" />
                     </div>
                     <label>&nbsp;</label>
                     <div class="campo">
                         <label>Horas Atrasos:</label>
                         <asp:Label ID="lblAtrasos" runat="server"
-                            CssClass="form-control" Text="00:00" Width="100px" ForeColor="Red" />
+                            CssClass="form-control" Text="0H 00M" Width="100px" ForeColor="Red" />
                     </div>
                     <label>&nbsp;</label>
                     <div class="campo">
                         <label>Horas extras diurnas:</label>
                         <asp:Label ID="lblExtrasDiurnas" runat="server"
-                            CssClass="form-control" Text="00:00" Width="100px" ForeColor="Blue" />
+                            CssClass="form-control" Text="0H 00M" Width="100px" ForeColor="Blue" />
                     </div>
                     <label>&nbsp;</label>
                     <div class="campo">
                         <label>Horas extras festivas:</label>
                         <asp:Label ID="lblExtrasFestivas" runat="server"
-                            CssClass="form-control" Text="00:00" Width="100px" ForeColor="Green" />
+                            CssClass="form-control" Text="0H 00M" Width="100px" ForeColor="Green" />
                     </div>
                     <label>&nbsp;</label>
                     <div class="campo">

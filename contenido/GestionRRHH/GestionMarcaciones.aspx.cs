@@ -280,7 +280,7 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
         if (fechaVal.DayOfWeek == DayOfWeek.Sunday || feriados.Contains(fechaVal.Date))
         {
             e.Row.CssClass = "calendario-feriado";
-            e.Row.ToolTip = "Feriado";
+            e.Row.ToolTip = "Festivo";
         }
     }
     protected void dgMarcas_RowCommand(object sender, GridViewCommandEventArgs e)
@@ -637,7 +637,7 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
                     lblDiasTrabajados.Text = fila["TOTAL_DIAS_TRABAJADOS"].ToString();
                 }
                 pnlCalculoHoras.Visible = true;
-                //divDetalleMarcas.Visible = false;
+                btnExportarCalcExcel.Visible = true;
                 btnExportarPDFHoras.Visible = true;
                 lblTituloCalculoHoras.Text = lblTituloMarcas.Text;
                 lblEstadoCalculo.Text = "Cálculo generado correctamente.";
@@ -663,20 +663,21 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
         if (fechaVal.DayOfWeek == DayOfWeek.Sunday || feriados.Contains(fechaVal.Date))
         {
             e.Row.CssClass = "calendario-feriado";
-            e.Row.ToolTip = "Feriado";
+            e.Row.ToolTip = "Festivo";
         }
     }
     private void limpiaPanelCalc()
     {
-        lblHorasTrabajadas.Text = "0";
-        lblAtrasos.Text = "00:00";
-        lblExtrasDiurnas.Text = "00:00";
-        lblExtrasFestivas.Text = "00:00";
+        lblHorasTrabajadas.Text = "0H 00M";
+        lblAtrasos.Text = "0H 00M";
+        lblExtrasDiurnas.Text = "0H 00M";
+        lblExtrasFestivas.Text = "0H 00M";
         lblInasistencias.Text = "0";
         dgCalculoHoras.DataSource = null;
         dgCalculoHoras.DataBind();
         lblEstadoCalculo.Text = "";
         btnExportarPDFHoras.Visible = false;
+        btnExportarCalcExcel.Visible = false;
     }
     #endregion
 
@@ -725,11 +726,45 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
         }
         excel.Exportar(ds, "Trabajadores_marcacion_Gral");
     }
+
+    protected void btnExportarCalcExcel_Click(object sender, EventArgs e)
+    {
+        string iduser = dgTrabajadores.SelectedDataKey.Values["ID_SELECCION"].ToString();
+        if (!iduser.StartsWith("U:"))
+        {
+            mens.mensaje(Page, "El Trabajador no está registrado en sistema WEB RR.HH, no se puede continuar...");
+            return;
+        }
+        rlj.ls_rut = usr.mfDevuelveRut(iduser.Substring(2));
+        rlj.ls_mes = ddlMes.SelectedValue;
+        rlj.ls_anio = ddlAnio.SelectedValue;
+
+        DataSet ds = rlj.mfCalcularHorasTrabajador();
+        if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+        {
+            mens.mensaje(Page, "No existen datos para exportar.");
+            return;
+        }
+
+        //excluir columnas
+        excel.ColumnasExcluir.Add("IDUSUARIO");
+        excel.ColumnasExcluir.Add("IDTURNOS");
+        excel.ColumnasExcluir.Add("EXIGE_JORNADA");
+
+        //solo formato hora
+        excel.ColumnasSoloHora.Add("HORA_ENTRADA_TURNO");
+        excel.ColumnasSoloHora.Add("HORA_SALIDA_TURNO");
+        excel.ColumnasSoloHora.Add("ENTRADA_REAL");
+        excel.ColumnasSoloHora.Add("SALIDA_REAL");
+        excel.ColumnasSoloFecha.Add("FECHA");
+
+        excel.Exportar(ds.Tables[0], "calculo_trab_" + ddlMes.SelectedValue + "_" + System.Web.HttpUtility.HtmlDecode(dgTrabajadores.SelectedRow.Cells[0].Text));
+    }
     #endregion
 
     #region PDF
     protected void btnExportarPDF_Click(object sender, EventArgs e)
-    {        
+    {
         string idSeleccion = dgTrabajadores.SelectedDataKey.Values["ID_SELECCION"].ToString();
         rlj.ls_mes = ddlMes.SelectedValue;
         rlj.ls_anio = ddlAnio.SelectedValue;
@@ -829,7 +864,7 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
         pdf.ColumnasSoloHora.Add("HORA_ENTRADA_TURNO");
         pdf.ColumnasSoloHora.Add("HORA_SALIDA_TURNO");
         pdf.ColumnasSoloHora.Add("ENTRADA_REAL");
-        pdf.ColumnasSoloHora.Add("SALIDA_REAL");        
+        pdf.ColumnasSoloHora.Add("SALIDA_REAL");
 
         //configurar ancho columnas
         pdf.AnchosColumnas.Add("DIA", 15f);

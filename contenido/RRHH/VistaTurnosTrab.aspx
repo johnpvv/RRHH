@@ -129,11 +129,17 @@
                         CssClass="BotonPortalVerde"
                         OnClick="btnExportar_Click" />
                     &nbsp;
+                    <asp:Button ID="btnGenerarPDF"
+                        runat="server"
+                        Text="Generar PDF Turnos"
+                        CssClass="BotonPortalAmarillo"
+                        OnClick="btnGenerarPDF_Click" />
+                    &nbsp;
                     <asp:Button ID="btnImprimir"
                         runat="server"
-                        Text="Imprimir Turnos"
-                        CssClass="BotonPortalAmarillo"
-                        OnClick="btnImprimir_Click" />
+                        Text="Imprimir Pantalla"
+                        CssClass="BotonPortalAzul"
+                        OnClientClick="return imprimirVista();" />
                     &nbsp;
                     <asp:Button ID="btnVolver"
                         runat="server"
@@ -153,7 +159,7 @@
 </body>
 </html>
 
-<%--<script type="text/javascript"> REVISAR AL IMPRIMIR CALENDARIO
+<script type="text/javascript">
     function imprimirGrid() {
 
         var contenido = document.getElementById("divImpresion").innerHTML;
@@ -351,7 +357,7 @@
     `);
         ventana.document.write('</style>');
         ventana.document.write('</head>');
-        ventana.document.write('<body>');        
+        ventana.document.write('<body>');
         ventana.document.write('<div class="titulo">TURNOS DEL TRABAJADOR</div>');
         ventana.document.write('<div class="datos">');
         ventana.document.write('<b>Funcionario:</b> ' + nombre);
@@ -367,4 +373,4 @@
         ventana.focus();
         setTimeout(function () { ventana.print(); ventana.close(); }, 500);
     }
-</script>--%>
+</script>
