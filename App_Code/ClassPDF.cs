@@ -40,6 +40,8 @@ public class ClassPDF
     public List<string> TitulosTablasAdicionales { get; set; }
     // Información adicional en formato texto
     public List<string> InformacionAdicional { get; set; }
+    public bool MostrarTablaPrincipal { get; set; }
+    public List<string> InformacionAdNeg { get; private set; }
 
     public ClassPDF()//constructor define valores por defecto, John Vaccarella
     {
@@ -65,6 +67,8 @@ public class ClassPDF
         TablasAdicionales = new List<DataTable>();
         TitulosTablasAdicionales = new List<string>();
         InformacionAdicional = new List<string>();
+        InformacionAdNeg = new List<string>();
+        MostrarTablaPrincipal = true;
     }
     public void ExportarDataTable(HttpResponse response, DataTable datos, string nombreArchivo)
     {
@@ -151,8 +155,11 @@ public class ClassPDF
             encabezado.AddCell(celdaTexto);
             documento.Add(encabezado);
 
-            // TABLA PRINCIPAL
-            AgregarTabla(documento, datos, fuenteEncabezado, fuenteCelda);
+            // TABLA PRINCIPAL, y validar si se muestra o no
+            if (MostrarTablaPrincipal)
+            {
+                AgregarTabla(documento, datos, fuenteEncabezado, fuenteCelda);
+            }
 
             // TABLAS ADICIONALES
             if (TablasAdicionales != null)
@@ -183,13 +190,23 @@ public class ClassPDF
             // INFORMACIÓN ADICIONAL
             if (InformacionAdicional != null)
             {
-                Font fuenteInfo = FontFactory.GetFont(
-                    FontFactory.HELVETICA,
-                    9f,
-                    Font.NORMAL,
-                    BaseColor.BLACK);
+                Font fuenteInfo = FontFactory.GetFont(FontFactory.HELVETICA, 10f, Font.NORMAL,BaseColor.BLACK);
 
                 foreach (string informacion in InformacionAdicional)
+                {
+                    if (!string.IsNullOrWhiteSpace(informacion))
+                    {
+                        Paragraph parrafo = new Paragraph(informacion, fuenteInfo);
+                        parrafo.SpacingBefore = 5f;
+                        documento.Add(parrafo);
+                    }
+                }
+            }
+            if (InformacionAdNeg != null)
+            {
+                Font fuenteInfo = FontFactory.GetFont(FontFactory.HELVETICA, 10f, Font.BOLD, BaseColor.BLACK);
+
+                foreach (string informacion in InformacionAdNeg)
                 {
                     if (!string.IsNullOrWhiteSpace(informacion))
                     {

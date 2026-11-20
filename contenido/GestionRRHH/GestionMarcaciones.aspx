@@ -87,13 +87,6 @@
                         OnClientClick="mostrarSpinner();" />
                 </div>
                 <div class="campo">
-                    <asp:Button ID="btnExportarTrab"
-                        runat="server"
-                        Text="Exportar Excel"
-                        CssClass="BotonPortalVerde"
-                        OnClick="btnExportarTrab_Click" />
-                </div>
-                <div class="campo">
                     <label>&nbsp;</label>
                     <asp:Button ID="btnVolver"
                         runat="server"
@@ -126,7 +119,7 @@
                     AllowSorting="True"
                     OnSorting="dgTrabajadores_Sorting">
                     <Columns>
-                        <asp:BoundField DataField="RUT_C" HeaderText="R.U.N." SortExpression="RUT" ItemStyle-CssClass="textoGridBoldLeft" HeaderStyle-Width="100px"  />
+                        <asp:BoundField DataField="RUT_C" HeaderText="R.U.N." SortExpression="RUT" ItemStyle-CssClass="textoGridBoldLeft" HeaderStyle-Width="100px" />
                         <asp:BoundField DataField="CODIGO_EMP_RELOJ" HeaderText="ID en Reloj" SortExpression="CODIGO_EMP_RELOJ" />
                         <asp:BoundField DataField="NOMBRE" HeaderText="Trabajador" SortExpression="NOMBRE" />
                         <asp:BoundField DataField="CANT_MARCAS" HeaderText="Marcas" SortExpression="CANT_MARCAS" />
@@ -154,15 +147,23 @@
                     <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" />
                 </asp:GridView>
             </div>
-            <div class="campo">
-                <div class="bloque-titulo">
-                    <label>&nbsp;</label>
-                </div>
+            <div class="botones-form">
+                <asp:Button ID="btnExportarTrab"
+                    runat="server"
+                    Text="Exportar Excel"
+                    CssClass="BotonPortalVerde"
+                    OnClick="btnExportarTrab_Click" />
+                <asp:Button ID="btnExportarPDFLista"
+                    runat="server"
+                    Text="Generar PDF Detalle Cálculo"
+                    CssClass="BotonPortalAmarillo"
+                    OnClick="btnExportarPDFLista_Click" />
             </div>
         </div>
+        <br />
         <div class="bloque" id="divDetalleMarcas" runat="server" visible="false">
-            <div class="bloque-titulo">
-                Marcas del Trabajador:
+            <div class="titulo-seccion">
+                Marcas del Trabajador(a):
                 <label>&nbsp;</label>
                 <asp:Label ID="lblTituloMarcas" runat="server" />
             </div>
@@ -232,6 +233,10 @@
                     <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" />
                 </asp:GridView>
             </div>
+            <div class="filtros-grid">
+                <asp:Label ID="lblTotalMarcas" runat="server" CssClass="contador-grid" Text="0 registro(s)">
+                </asp:Label>
+            </div>
             <div class="botones-form">
                 <asp:Button ID="btnNuevaMarca" runat="server"
                     Text="+ Agregar Marcación"
@@ -255,10 +260,6 @@
                     CssClass="BotonPortalRojo"
                     OnClick="btnMostrarCalculoHoras_Click"
                     OnClientClick="guardarScroll();" />
-            </div>
-            <div class="filtros-grid">
-                <asp:Label ID="lblTotalMarcas" runat="server" CssClass="contador-grid" Text="0 registro(s)">
-                </asp:Label>
             </div>
             <div class="campo">
                 <asp:Label ID="lblResumenMarcas" runat="server" CssClass="resumen-marcas" />
@@ -354,6 +355,7 @@
                             <asp:BoundField DataField="HORA_SALIDA_TURNO" HeaderText="Salida Turno" DataFormatString="{0:HH:mm:ss}" ItemStyle-Font-Italic="true" />
                             <asp:BoundField DataField="ENTRADA_REAL" HeaderText="Entrada Real" DataFormatString="{0:HH:mm:ss}" />
                             <asp:BoundField DataField="SALIDA_REAL" HeaderText="Salida Real" DataFormatString="{0:HH:mm:ss}" />
+                            <asp:BoundField DataField="TIENE_TURNO" HeaderText="Tiene Turno" />
                             <asp:BoundField DataField="HORAS_TRABAJADAS_TEXTO" HeaderText="Horas Trabajadas" ItemStyle-Font-Bold="true" />
                             <asp:BoundField DataField="HORAS_ATRASO_TEXTO" HeaderText="Atrasos" ItemStyle-ForeColor="Red" />
                             <asp:BoundField DataField="HORAS_EXTRAS_DIURNAS_TEXTO" HeaderText="Extras Diurnas" ItemStyle-ForeColor="Blue" />
@@ -366,7 +368,7 @@
                 <br />
                 <div class="bloque-titulo">
                     3.- Resultado: 
-                    <asp:Label ID="lblEstadoCalculo" runat="server" CssClass="textoNormLeft"  />
+                    <asp:Label ID="lblEstadoCalculo" runat="server" CssClass="textoNormLeft" />
                 </div>
             </div>
         </asp:Panel>

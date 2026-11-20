@@ -10,7 +10,6 @@ using System.Web.UI.WebControls;
 public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Page
 {
     Mensaje mens = new Mensaje();
-    //Usuarios usr = new Usuarios();
     ClassTrabajadores usr = new ClassTrabajadores();
     ClassTurnos tur = new ClassTurnos();
     ClassHorarios hor = new ClassHorarios();
@@ -857,7 +856,7 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
         pdf.ColumnasExcluir.Add("IDUSUARIO");
         pdf.ColumnasExcluir.Add("RUT");
         pdf.ColumnasExcluir.Add("EXIGE_JORNADA");
-        pdf.ColumnasExcluir.Add("TIENE_TURNO");
+        //pdf.ColumnasExcluir.Add("TIENE_TURNO");
         pdf.ColumnasExcluir.Add("MINUTOS_TRABAJADOS");
         pdf.ColumnasExcluir.Add("MINUTOS_ATRASO");
         pdf.ColumnasExcluir.Add("MINUTOS_EXTRAS_DIURNAS");
@@ -890,6 +889,119 @@ public partial class contenido_GestionRRHH_GestionMarcaciones : System.Web.UI.Pa
 
         //generar nombre archivo y descargar
         pdf.ExportarDataTable(Response, ds.Tables[0], "Listado_preliminar_Calculo_" + ddlMes.SelectedValue + "_" + System.Web.HttpUtility.HtmlDecode(dgTrabajadores.SelectedRow.Cells[0].Text));
+    }
+
+    protected void btnExportarPDFLista_Click(object sender, EventArgs e)
+    {
+        generaPDFLista();
+    }
+    private void generaPDFLista()
+    {
+        // Limpiar colecciones para evitar acumular datos de exportaciones anteriores
+        pdf.TablasAdicionales.Clear();
+        pdf.TitulosTablasAdicionales.Clear();
+        pdf.ColumnasExcluir.Clear();
+        pdf.ColumnasSoloHora.Clear();
+        pdf.AnchosColumnas.Clear();
+        pdf.InformacionAdicional.Clear();
+
+        List<string> trabajadoresConError = new List<string>();
+        bool hayDatos = false;
+
+        // Recorrer trabajadores del GridView
+        foreach (GridViewRow fila in dgTrabajadores.Rows)
+        {
+            string iduser = dgTrabajadores.DataKeys[fila.RowIndex].Values["ID_SELECCION"].ToString();
+
+            // Solo trabajadores registrados en RR.HH.
+            if (!iduser.StartsWith("U:"))
+                continue;
+
+            rlj.ls_rut = usr.mfDevuelveRut(iduser.Substring(2));
+            rlj.ls_mes = ddlMes.SelectedValue;
+            rlj.ls_anio = ddlAnio.SelectedValue;
+
+            try
+            {
+                DataSet ds = rlj.mfCalcularHorasTrabajador();
+                if (ds == null || ds.Tables.Count < 2 || ds.Tables[0].Rows.Count == 0)
+                    continue;
+
+                string nombre = System.Web.HttpUtility.HtmlDecode(fila.Cells[2].Text);
+                string rut = System.Web.HttpUtility.HtmlDecode(fila.Cells[0].Text);
+                pdf.TablasAdicionales.Add(ds.Tables[0]);
+                pdf.TitulosTablasAdicionales.Add("Detalle diario: " + nombre + " - RUT: " + rut);
+
+                pdf.TablasAdicionales.Add(ds.Tables[1]);
+                pdf.TitulosTablasAdicionales.Add("Resumen del Período: " + nombre + " - RUT: " + rut);
+
+                hayDatos = true;
+            }
+            catch (Exception ex)
+            {
+                string nombre = System.Web.HttpUtility.HtmlDecode(fila.Cells[2].Text);
+                string rut = System.Web.HttpUtility.HtmlDecode(fila.Cells[0].Text);
+
+                trabajadoresConError.Add(nombre + " - " + rut + ": " + ex.Message);
+                continue;
+            }
+        }
+
+        if (!hayDatos)
+        {
+            mens.mensaje(Page, "No existen datos para generar reporte.");
+            return;
+        }
+        if (trabajadoresConError.Count > 0)
+        {
+            pdf.InformacionAdicional.Add("TRABAJADORES NO CALCULADOS:");
+            foreach (string error in trabajadoresConError)
+            {
+                pdf.InformacionAdicional.Add(error);
+            }
+        }
+        //setear variables para informe
+        pdf.Titulo = "Cálculo Masivo de Horas por Trabajador";
+        pdf.Subtitulo = "Período: " + ddlMes.SelectedItem + " " + ddlAnio.SelectedValue;
+
+        // Configuración del informe
+        pdf.MostrarFecha = true;
+        pdf.MostrarNumeracion = true;
+        pdf.OrientacionHorizontal = true;
+        pdf.MostrarTablaPrincipal = false;//para ocultar tabla de detalle principal, y dejar listado por trabajador
+
+        // Columnas a excluir
+        pdf.ColumnasExcluir.Add("IDUSUARIO");
+        pdf.ColumnasExcluir.Add("RUT");
+        pdf.ColumnasExcluir.Add("EXIGE_JORNADA");
+        pdf.ColumnasExcluir.Add("MINUTOS_TRABAJADOS");
+        pdf.ColumnasExcluir.Add("MINUTOS_ATRASO");
+        pdf.ColumnasExcluir.Add("MINUTOS_EXTRAS_DIURNAS");
+        pdf.ColumnasExcluir.Add("MINUTOS_EXTRAS_FESTIVAS");
+        pdf.ColumnasExcluir.Add("IDTURNOS");
+
+        pdf.ColumnasExcluir.Add("TOTAL_MINUTOS_TRABAJADOS");
+        pdf.ColumnasExcluir.Add("TOTAL_HORAS_TRABAJADAS");
+        pdf.ColumnasExcluir.Add("TOTAL_MINUTOS_ATRASO");
+        pdf.ColumnasExcluir.Add("TOTAL_MINUTOS_EXTRAS");
+        pdf.ColumnasExcluir.Add("TOTAL_MINUTOS_EXTRAS_DIURNAS");
+        pdf.ColumnasExcluir.Add("TOTAL_MINUTOS_EXTRAS_FESTIVAS");
+
+        // Formato fecha y hora
+        pdf.ColumnasSoloHora.Add("HORA_ENTRADA_TURNO");
+        pdf.ColumnasSoloHora.Add("HORA_SALIDA_TURNO");
+        pdf.ColumnasSoloHora.Add("ENTRADA_REAL");
+        pdf.ColumnasSoloHora.Add("SALIDA_REAL");
+
+        // Ancho columnas
+        pdf.AnchosColumnas.Add("DIA", 15f);
+        pdf.AnchosColumnas.Add("FECHA", 18f);
+
+        pdf.InformacionAdNeg.Add("Favor verificar bien los datos antes de generar el cálculo final.");
+
+        // Generar PDF
+        pdf.ExportarDataTable(Response, pdf.TablasAdicionales[0], "Listado_Calculo_Horas_" + ddlMes.SelectedValue + "_" + ddlAnio.SelectedValue);
+
     }
     #endregion
 
