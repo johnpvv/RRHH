@@ -33,8 +33,6 @@ public partial class contenido_Login : System.Web.UI.Page
         string tablero;
         Boolean salida = true;
         //string clave = modFunciones.DesEncriptar("MgAwADgAMwA=");
-        //ClassReceta re = new ClassReceta();
-        //tipo = this.rbTipo.SelectedValue;
         if (this.txtUser.Text != "" && this.txtClave.Text != "")
         {
             if (Convert.ToInt32(usr.mfIntentos(this.txtUser.Text)) >= 4)
@@ -52,24 +50,6 @@ public partial class contenido_Login : System.Web.UI.Page
                 }
                 else
                 {
-                    //tablero = usr.mfEsMedico(this.txtUser.Text);
-                    //if (tipo == "1" && tablero != "1")
-                    //{
-                    //    mens.mensaje(Page, "Usuario sin acceso a Receta.. ");
-                    //    return;
-                    //}
-                    //tablero = usr.mfEsFarmacia(this.txtUser.Text);
-                    //if (tipo == "2" && tablero != "1")
-                    //{
-                    //    mens.mensaje(Page, "Usuario sin acceso a Farmacia.. ");
-                    //    return;
-                    //}
-                    //tablero = usr.mfEsInfectologia(this.txtUser.Text);
-                    //if (tipo == "3" && tablero != "1")
-                    //{
-                    //    mens.mensaje(Page, "Usuario sin acceso a Infectología.. ");
-                    //    return;
-                    //}
                     nombre = usr.TraeNombre(modFunciones.mfLimpiaString(this.txtUser.Text));
                     user = usr.UserIdentificador(modFunciones.mfLimpiaString(this.txtUser.Text));
                     serv = usr.UserServicio(modFunciones.mfLimpiaString(this.txtUser.Text));

@@ -31,45 +31,15 @@ public partial class contenido_frmleftsiab : System.Web.UI.Page
                     {
                         //TreeView1.Visible = true;
                         TreeView2.Visible = false;
-                        //TreeView5.Visible = false;
-                        //TreeView3.Visible = false;
-                        //TreeView4.Visible = false;
                     }
                     else if (Session["tipo"].ToString() == "3")
                     {
-                        TreeView1.Visible = false;
+                        //TreeView1.Visible = false;
                         TreeView2.Visible = false;
-                        //TreeView5.Visible = false;
-                        //TreeView3.Visible = true;
-                        //TreeView4.Visible = false;
                     }
                     else
                     {
-                        TreeView1.Visible = false;
-                        TreeView3.Visible = false;
-
-                        if (usr.mfEsSalud(Session["user"].ToString()) != "1")
-                        {
-                            if (modConstantes.mfConstante("MICRO") == "NO")
-                            {
-                                TreeView2.Visible = true;
-                                //TreeView5.Visible = false;
-                            }
-                            else
-                            {
-                                //TreeView2.Visible = false;
-                                //TreeView5.Visible = true;
-                                TreeView2.Visible = true;
-                            }
-                            //TreeView4.Visible = false;
-                        }
-                        else
-                        {
-                            //TreeView2.Visible = false;
-                            TreeView2.Visible = true;
-                            //TreeView5.Visible = false;
-                            //TreeView4.Visible = true;
-                        }
+                        TreeView2.Visible = true;
                     }
                 }
                 else
@@ -128,10 +98,10 @@ public partial class contenido_frmleftsiab : System.Web.UI.Page
                 nodes.Remove(nodeEliminar);
             }
         }
-        //if (i == 0)
-        //{
-        //    mens.mensaje(Page, "Usuario Sin Perfil, debe contactar al Administrador... ");
-        //}
+        if (i == 0)
+        {
+            mens.mensaje(Page, "Usuario Sin Perfil, debe contactar al Administrador... ");
+        }
     }
     // Función para verificar si un nodo o alguno de sus hijos está en el DataSet
     private bool nodoHijo(TreeNode parentNode, DataSet dataSet)
